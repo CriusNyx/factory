@@ -1,0 +1,5 @@
+recipe MyOilRecipe
+  out Fuel
+  in CrudeOil
+
+print Motor(10)

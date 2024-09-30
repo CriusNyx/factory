@@ -1,0 +1,229 @@
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+namespace GenParse.Functional
+{
+  public static class FunctionalExtensions
+  {
+    public static U[] Map<T, U>(this T[] arr, Func<T, U> func)
+    {
+      var output = new U[arr.Length];
+      for (var i = 0; i < arr.Length; i++)
+      {
+        output[i] = func(arr[i]);
+      }
+      return output;
+    }
+
+    public static (U[] array, V context) MapReduce<T, U, V>(this T[] arr, V initialContext, Func<T, V, (U element, V context)> func){
+      U[] output = new U[arr.Length];
+      var context = initialContext;
+      for(int i = 0; i < arr.Length; i++){
+        U element;
+        (element, context) = func(arr[i], context);
+        output[i] = element;
+      }
+      return (output, context);
+    }
+
+
+    public static U[] FlatMap<T, U>(this T[] arr, Func<T, U[]> func)
+    {
+      List<U> output = new List<U>();
+      foreach (var element in arr)
+      {
+        foreach (var outputElement in func(element))
+        {
+          output.Add(outputElement);
+        }
+      }
+      return output.ToArray();
+    }
+
+    public static U Reduce<T, U>(this T[] arr, U initialValue, Func<T, U, U> func)
+    {
+      var current = initialValue;
+      foreach (var element in arr)
+      {
+        current = func(element, current);
+      }
+      return current;
+    }
+
+    public static T[] FilterNull<T>(this T?[] arr)
+    {
+      return arr.Filter((value) => value != null)!;
+    }
+
+    public static U[] Collapse<U>(this U[][] arr)
+    {
+      return arr.FlatMap((element) => element);
+    }
+
+#pragma warning disable CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
+    public static Dictionary<T, V> Map<T, U, V>(this IDictionary<T, U> dict, Func<U, V> func)
+    {
+      var output = new Dictionary<T, V>();
+      foreach (var (key, value) in dict)
+      {
+        output[key] = func(value);
+      }
+      return output;
+    }
+#pragma warning restore CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
+
+    public static bool TryMap<T, U>(this T[] arr, Func<T, U> tryFunc, out U[] result)
+    {
+      var output = new U[arr.Length];
+      for (var i = 0; i < arr.Length; i++)
+      {
+        try
+        {
+          output[i] = tryFunc(arr[i]);
+        }
+        catch
+        {
+          result = [];
+          return false;
+        }
+      }
+      result = [];
+      return false;
+    }
+
+    public static T[] Filter<T>(this T[] arr, Func<T, bool> func)
+    {
+      return arr.Where(func).ToArray();
+    }
+
+    public static U[] FilterByType<T, U>(this T[] arr){
+      List<U> output = new List<U>();
+      foreach(var element in arr){
+        if(element is U u){
+          output.Add(u);
+        }
+      }
+      return output.ToArray();
+    }
+
+    public static U FindByType<T, U>(this T[] arr){
+      foreach(var element in arr){
+        if(element is U u){
+          return u;
+        }
+      }
+      return default!;
+    }
+
+    public static IEnumerable<T> UntilNull<T>(this Func<T?> func)
+    {
+      for (var t = func(); t != null; t = func())
+      {
+        yield return t;
+      }
+    }
+
+    public static T? FirstNotNull<T>(this T[] arr)
+    {
+      return arr.FirstNotNull(t => t);
+    }
+
+    public static U? FirstNotNull<T, U>(this T[] arr, Func<T, U?> func)
+    {
+      foreach (var value in arr)
+      {
+        var result = func(value);
+        if (result != null)
+        {
+          return result;
+        }
+      }
+      return default;
+    }
+
+    public static bool TryGet<T>(this T[] arr, int index, out T value)
+    {
+      if (index >= 0 && index < arr.Length)
+      {
+        value = arr[index];
+        return true;
+      }
+      value = default!;
+      return false;
+    }
+
+    public static T? SafeGet<T>(this T[] arr, int index)
+    {
+      if (index >= 0 && index < arr.Length)
+      {
+        return arr[index];
+      }
+      return default;
+    }
+
+    public static U? Safe<T, U>(this IReadOnlyDictionary<T, U> dict, T key) => SafeGet(dict!, key, default);
+
+    public static U? SafeGet<T, U>(this IReadOnlyDictionary<T, U> dict, T key, U defaultValue)
+    {
+      if (dict.ContainsKey(key))
+      {
+        return dict[key];
+      }
+      return defaultValue;
+    }
+
+    public static U AddOrGet<T, U>(this IDictionary<T, U> dict, T key, Func<U> constructor)
+    {
+      if (dict.TryGetValue(key, out var u))
+      {
+        return u;
+      }
+      else
+      {
+        var output = constructor();
+        dict.Add(key, output);
+        return output;
+      }
+    }
+
+    public static (T, U) With<T, U>(this T value, U other){
+      return (value, other);
+    }
+
+    public static T[] Push<T>(this T[] arr, T[] other){
+      T[] output = new T[arr.Length + other.Length];
+      Array.Copy(arr, output, arr.Length);
+      Array.Copy(other, 0, output, arr.Length, other.Length);
+      return output;
+    }
+
+    public static T[] Push<T>(this T[] arr, T other){
+      T[] output = new T[arr.Length + 1];
+      Array.Copy(arr, output, arr.Length);
+      output[arr.Length] = other;
+      return output;
+    }
+
+    public static T[] ToTypedArray<T>(this object o){
+      var arr = (object[])o;
+      return arr!.Map(x => (T)x);
+    }
+
+    public static T[] Spread<T>(this T[] arr, int startIndex, int? endIndex = null){
+      var end = endIndex ?? arr.Length;
+      var len = end - startIndex;
+      if(len < 0){
+        return new T[]{};
+      }
+      var output = new T[len];
+      Array.Copy(arr, startIndex, output, 0, len);
+      return output;
+    }
+
+    public static void Crawl<T>(this T root, Func<T, IEnumerable<T>> getChildren, Action<T> visit){
+      visit(root);
+      foreach(var child in getChildren(root)){
+        Crawl(child, getChildren, visit);
+      }
+    }
+  }
+}

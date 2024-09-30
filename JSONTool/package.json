@@ -1,0 +1,12 @@
+{
+  "name": "JSONTool",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "license": "MIT",
+  "dependencies": {
+    "@types/lodash": "^4.17.9",
+    "@types/node": "^22.7.4",
+    "lodash": "^4.17.21",
+    "satisfactory-docs-parser": "^7.0.1"
+  }
+}

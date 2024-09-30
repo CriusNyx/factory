@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "module": "commonjs", // or "ESNext", depending on your environment
+    "moduleResolution": "node",
+    "esModuleInterop": true, // Important for CommonJS interoperability
+    "allowSyntheticDefaultImports": true, // Also helps with module imports
+    "target": "es2015"
+  }
+}
