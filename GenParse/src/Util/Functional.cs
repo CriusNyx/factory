@@ -6,10 +6,15 @@ namespace GenParse.Functional
   {
     public static U[] Map<T, U>(this T[] arr, Func<T, U> func)
     {
+      return Map(arr, (t, _) => func(t));
+    }
+
+    public static U[] Map<T, U>(this T[] arr, Func<T, int, U> func)
+    {
       var output = new U[arr.Length];
       for (var i = 0; i < arr.Length; i++)
       {
-        output[i] = func(arr[i]);
+        output[i] = func(arr[i], i);
       }
       return output;
     }
@@ -224,6 +229,25 @@ namespace GenParse.Functional
       foreach(var child in getChildren(root)){
         Crawl(child, getChildren, visit);
       }
+    }
+
+    public static void Crawl<T, U>(this T root, U initialContext, Func<T, U, (IEnumerable<T>, U)> traversalFunc, Action<T, U> visitorFunc){
+      visitorFunc(root, initialContext);
+      var (children, newContext) = traversalFunc(root, initialContext);
+      foreach(var child in children){
+        Crawl(child, newContext, traversalFunc, visitorFunc);
+      }
+    }
+
+    public static T[] FilterDefined<T>(this T?[] arr){
+      return arr.Filter(x => x != null)!;
+    }
+
+    public static T NotNull<T>(this T? val){
+      if(val == null){
+        throw new NullReferenceException("Value should not be null");
+      }
+      return val;
     }
   }
 }
