@@ -4,14 +4,14 @@ using GenParse.Parsing;
 
 public static class Executor
 {
-  public static object? Evaluate(ASTNode<FactoryLexon> astNode, ref ExecutionContext context)
+  public static FactVal? Evaluate(ASTNode<FactoryLexon> astNode, ref ExecutionContext context)
   {
-    object? output;
+    FactVal? output;
     (output, context) = Evaluate(astNode, context);
     return output;
   }
 
-  public static (object? value, ExecutionContext context) Evaluate(
+  public static (FactVal? value, ExecutionContext context) Evaluate(
     ASTNode<FactoryLexon> astNode,
     ExecutionContext context
   )
@@ -29,13 +29,13 @@ public static class Executor
       case "InvocationParam*":
         return EvaluateStar(astNode, context);
       case "OutExp":
-        return EvaluateKeywordSymbolArray(astNode, context, "outKeyword", ArrayType.outputArray);
+        return EvaluateKeywordSymbolArray(astNode, context, "outKeyword", ValType.output);
       case "InExp":
-        return EvaluateKeywordSymbolArray(astNode, context, "inKeyword", ArrayType.inputArray);
+        return EvaluateKeywordSymbolArray(astNode, context, "inKeyword", ValType.input);
       case "AltExp":
-        return EvaluateKeywordSymbolArray(astNode, context, "altKeyword", ArrayType.altArray);
+        return EvaluateKeywordSymbolArray(astNode, context, "altKeyword", ValType.alt);
       case "Recipe":
-        return EvaluateRecipe(astNode, context);
+        return EvaluateRecipeExp(astNode, context);
       case "RecipeExp":
       case "ProgramExp":
       case "Program":
@@ -52,53 +52,65 @@ public static class Executor
       case "Invocation":
         return EvaluateInvocation(astNode, context);
       case "TallyExp":
-        return EvaluateTallyExt(astNode, context);
+        return EvaluateTallyExp(astNode, context);
+      case "AssignExp":
+        return EvaluateAssignExp(astNode, context);
       default:
         throw new NotImplementedException($"Not implemented for astNode {astNode.name}");
     }
   }
 
-  static (object value, ExecutionContext context) EvaluateSymbol(
+  static (FactVal value, ExecutionContext context) EvaluateSymbol(
     ASTNode<FactoryLexon> astNode,
     ExecutionContext context
   )
   {
     RuntimeAssert.ASTNodeType(astNode, "symbol");
-    return (astNode.SourceCode(), context);
+    return astNode.SourceCode().ToSymbolVal().With(context);
   }
 
-  static (object value, ExecutionContext context) EvaluateNumberLiteral(
+  static (FactVal value, ExecutionContext context) EvaluateNumberLiteral(
     ASTNode<FactoryLexon> astNode,
     ExecutionContext context
   )
   {
     RuntimeAssert.ASTNodeType(astNode, "numberLiteral");
-    return (decimal.Parse(astNode.SourceCode()), context);
+    return decimal.Parse(astNode.SourceCode()).ToNumVal().With(context);
   }
 
-  static (object value, ExecutionContext context) EvaluateStar(
+  static (FactVal value, ExecutionContext context) EvaluateStar(
     ASTNode<FactoryLexon> astNode,
     ExecutionContext context
   )
   {
-    return astNode.children.MapReduce(context, Evaluate);
+    return astNode.children
+      .Map((x) => Evaluate(x, ref context))
+      .FilterDefined()
+      .ToArrayVal()
+      .With(context);
   }
 
-  static (object? value, ExecutionContext context) EvaluateKeywordSymbolArray(
+  static (FactVal? value, ExecutionContext context) EvaluateKeywordSymbolArray(
     ASTNode<FactoryLexon> astNode,
     ExecutionContext context,
     string keyword,
-    ArrayType arrayType
+    ValType arrayType
   )
   {
     var (_, symbols) = astNode.Match((keyword, "symbol*"));
-    object? symbolsEvaluation;
-    (symbolsEvaluation, context) = Evaluate(symbols!, context);
-    return new AnnotatedArrayValue(arrayType, (object[])symbolsEvaluation!).With(context);
-    throw new RuntimeAssertException("Expression did not match expected type");
+
+    return Evaluate(symbols!, ref context)!
+      .AsArrayVal()
+      .Map(
+        x =>
+          x is SymbolVal symbolVal
+            ? new TypedFactVal(arrayType, symbolVal)
+            : throw new Exception($"Expected a symbol val but got a {x.GetType()} instead.")
+      )
+      .With(context);
   }
 
-  static (object? value, ExecutionContext context) EvaluateSingleChild(
+  static (FactVal? value, ExecutionContext context) EvaluateSingleChild(
     ASTNode<FactoryLexon> astNode,
     ExecutionContext context
   )
@@ -106,49 +118,31 @@ public static class Executor
     return Evaluate(astNode.children[0], context);
   }
 
-  public static (object? value, ExecutionContext context) EvaluateRecipe(
+  public static (FactVal? value, ExecutionContext context) EvaluateRecipeExp(
     ASTNode<FactoryLexon> astNode,
     ExecutionContext context
   )
   {
     var (_, nameNode, expressionsNodes) = astNode.Match(("recipeKeyword", "symbol", "RecipeExp*"));
-    string name = (string)Evaluate(nameNode!, ref context)!;
-    AnnotatedArrayValue[] expressionValues = Evaluate(expressionsNodes!, ref context)!
-      .ToTypedArray<AnnotatedArrayValue>();
+    SymbolVal? name = Evaluate(nameNode!, ref context) as SymbolVal;
+    ArrayVal expressionValues = Evaluate(expressionsNodes!, ref context)!.AsArrayVal();
 
-    string[] inputs = new string[] { };
-    string[] outputs = new string[] { };
-    string[] alts = new string[] { };
-
-    foreach (var value in expressionValues)
-    {
-      switch (value.arrayType)
-      {
-        case ArrayType.inputArray:
-          inputs = inputs.Push(value.array.ToTypedArray<string>());
-          break;
-        case ArrayType.outputArray:
-          outputs = outputs.Push(value.array.ToTypedArray<string>());
-          break;
-        case ArrayType.altArray:
-          alts = alts.Push(value.array.ToTypedArray<string>());
-          break;
-      }
-    }
-
-    var output = new RecipeValue(name, inputs, outputs, alts);
-    context.GlobalValues[name] = output;
-    return (output, context);
+    var recipe = expressionValues.array.Reduce(
+      new RecipeValue(name?.symbol ?? ""),
+      (factVal, recVal) => recVal.Amend(factVal)
+    );
+    context.GlobalValues.Add(recipe.recipeName, recipe);
+    return recipe.With(context);
   }
 
-  public static (object? value, ExecutionContext context) EvaluatePrint(
+  public static (FactVal? value, ExecutionContext context) EvaluatePrint(
     ASTNode<FactoryLexon> astNode,
     ExecutionContext context
   )
   {
     var (_, valuesNodes) = astNode.Match(("printKeyword", "ValueExp*"));
-    object[] values = (object[])Evaluate(valuesNodes!, ref context)!;
-    foreach (var element in values)
+    ArrayVal values = (ArrayVal)Evaluate(valuesNodes!, ref context)!;
+    foreach (var element in values.array)
     {
       context.standardOut.WriteLine(element);
       context.standardOut.WriteLine("");
@@ -157,14 +151,14 @@ public static class Executor
     return (null!, context);
   }
 
-  public static (object? value, ExecutionContext contxet) EvaluateValueExp(
+  public static (FactVal? value, ExecutionContext contxet) EvaluateValueExp(
     ASTNode<FactoryLexon> astNode,
     ExecutionContext context
   )
   {
     if (astNode.TryMatch("symbol", out var symbol))
     {
-      var symbolName = Evaluate(symbol, ref context) as string;
+      SymbolVal symbolName = (SymbolVal)Evaluate(symbol, ref context)!;
       return (context.Resolve(symbolName!), context);
     }
     else if (astNode.TryMatch("Literal", out var literalNode))
@@ -179,30 +173,33 @@ public static class Executor
     {
       return Evaluate(tallyNode, context);
     }
+    else if (astNode.TryMatch("RecipeExp", out var recipeExpNode))
+    {
+      return Evaluate(recipeExpNode, context);
+    }
     else
     {
       throw new NotImplementedException();
     }
   }
 
-  public static (object? value, ExecutionContext context) EvaluateInvocation(
+  public static (FactVal? value, ExecutionContext context) EvaluateInvocation(
     ASTNode<FactoryLexon> astNode,
     ExecutionContext context
   )
   {
     var (nameNode, invocationParamSetNode) = astNode.Match(("symbol", "InvocationParamSet"));
-    var name = Evaluate(nameNode!, ref context);
-    var functionDefinition = context.Resolve((string)name!);
-    var invocationParams = (object[])Evaluate(invocationParamSetNode!, ref context)!;
+    var name = (SymbolVal)Evaluate(nameNode.NotNull(), ref context)!;
+    var functionDefinition = context.Resolve(name).NotNull();
+    var invocationParams = (ArrayVal)Evaluate(invocationParamSetNode!, ref context)!;
 
-    if (GetRecipeForInvocation(functionDefinition!) is RecipeValue recipeVal)
+    if (GetRecipeForInvocation(functionDefinition) is RecipeValue recipeVal)
     {
-      var invocationRequest = new RecipeSearchRequest(
-        recipeVal,
-        invocationParams.Map(RecipeSearchRequestArg.CreateArgFromRawValue)
+      var invocation = invocationParams.array.Reduce(
+        new InvocationContext(recipeVal),
+        (factVal, context) => context.Amend(factVal)
       );
-
-      return RecipeSearch.Search(invocationRequest).With(context);
+      return invocation.Invoke().With(context);
     }
     return (null, context);
   }
@@ -217,15 +214,15 @@ public static class Executor
     {
       return new RecipeValue(
         recipe.identifier,
-        new string[] { },
-        new string[] { recipe.primaryProduct.identifier },
-        new string[] { }
+        new ArrayVal(
+          new TypedFactVal(ValType.output, new SymbolVal(recipe.primaryProduct.identifier))
+        )
       );
     }
     throw new InvalidOperationException($"Could not resolve invocation on object {o}");
   }
 
-  public static (object? value, ExecutionContext context) EvaluateInvocationParamSet(
+  public static (FactVal? value, ExecutionContext context) EvaluateInvocationParamSet(
     ASTNode<FactoryLexon> astNode,
     ExecutionContext context
   )
@@ -233,21 +230,47 @@ public static class Executor
     if (astNode.TryMatch(("InvocationParam*", "FinalInvocationParam"), out var result))
     {
       var (invocationParams, finalParam) = result;
-      var arr = Evaluate(invocationParams, ref context)!
-        .ToTypedArray<object>()
-        .Push(Evaluate(finalParam, ref context));
-      return (arr, context);
+
+      return Evaluate(invocationParams, ref context)!
+        .AsArrayVal()
+        .Push(Evaluate(finalParam, ref context)!)
+        .With(context);
     }
-    return (new object[] { }, context);
+    return (new ArrayVal(), context);
   }
 
-  public static (object? value, ExecutionContext context) EvaluateTallyExt(
+  public static (FactVal? value, ExecutionContext context) EvaluateTallyExp(
     ASTNode<FactoryLexon> astNode,
     ExecutionContext context
   )
   {
-    var (_, symbolNode) = astNode.Match(("tallyKeyword", "symbol"));
+    var (_, inlineNode, symbolNode) = astNode.Match(("tallyKeyword", "inlineKeyword?", "symbol*"));
+    var inline = inlineNode!.children.Length > 0;
+    return Evaluate(symbolNode.NotNull(), ref context)
+      .NotNull()
+      .AsArrayVal()
+      .NotNull()
+      .Map(
+        x =>
+          x is SymbolVal symbolVal
+            ? new TypedFactVal(ValType.tally, new TallyVal(symbolVal.symbol, inline))
+            : throw new InvalidCastException("Unknown grammar")
+      )
+      .With(context);
+  }
+
+  public static (FactVal? value, ExecutionContext context) EvaluateAssignExp(
+    ASTNode<FactoryLexon> astNode,
+    ExecutionContext context
+  )
+  {
+    var (symbolNode, _, valNode) = astNode.Match(("symbol", "equalSign", "ValueExp"));
     var symbol = symbolNode!.SourceCode();
-    return new RecipeSearchRequestTallyArg(symbol).With(context);
+    var value = Evaluate(valNode.NotNull(), ref context);
+    if (value != null)
+    {
+      context.GlobalValues[symbol] = value;
+    }
+    return value.With(context);
   }
 }

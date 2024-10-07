@@ -1,30 +1,30 @@
 public class RecipeSearchRequest
 {
   public readonly RecipeValue recipe;
-  public readonly RecipeSearchRequestArg[] args;
+  public readonly decimal quantity;
 
-  public RecipeSearchRequest(RecipeValue recipe, RecipeSearchRequestArg[] args)
+  public RecipeSearchRequest(RecipeValue recipe, decimal quantity)
   {
     this.recipe = recipe;
-    this.args = args;
+    this.quantity = quantity;
   }
 }
 
-public class RecipeSearchRequestArg
+public class RecipeSearchRequestArg : FactVal
 {
-  public static RecipeSearchRequestArg CreateArgFromRawValue(object value)
+  public static RecipeSearchRequestArg? CreateArgFromRawValue(object value)
   {
     if (value is RecipeSearchRequestArg arg)
     {
       return arg;
     }
-    else if (value is decimal dec)
+    else if (value is NumVal num)
     {
-      return new RecipeSearchRequestQuantityArg(dec);
+      return new RecipeSearchRequestQuantityArg(num.value);
     }
     else
     {
-      throw new NotImplementedException();
+      return null;
     }
   }
 }

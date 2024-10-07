@@ -2,7 +2,7 @@ using GenParse.Functional;
 
 public class ExecutionContext
 {
-  public readonly Dictionary<string, object> GlobalValues = new Dictionary<string, object>();
+  public readonly Dictionary<string, FactVal> GlobalValues = new Dictionary<string, FactVal>();
   public readonly TextReader standardIn;
   public readonly TextWriter standardOut;
 
@@ -14,9 +14,9 @@ public class ExecutionContext
 
   public ExecutionContext() : this(Console.In, Console.Out) { }
 
-  public object? Resolve(string identifier)
+  public FactVal? Resolve(SymbolVal identifier)
   {
-    return GlobalValues.Safe(identifier)
-      ?? Docs.recipesByProductIdentifier.Safe(identifier)?.First();
+    return GlobalValues.Safe(identifier.symbol)
+      ?? Docs.recipesByProductIdentifier.Safe(identifier.symbol)?.First();
   }
 }

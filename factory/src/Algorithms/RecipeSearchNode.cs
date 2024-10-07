@@ -1,3 +1,4 @@
+using GenParse.Functional;
 using GenParse.Util;
 
 public class RecipeSearchNode
@@ -26,19 +27,25 @@ public class RecipeSearchNode
 
   public override string ToString()
   {
-    return Formatting.PrintTree(
-      this,
-      x => $"{x.FormatQuantity()} {x.recipe?.identifier ?? x.nodeName}",
-      x => x.children
-    );
+    return $"{FormatQuantity()} {recipe?.identifier ?? nodeName}";
   }
 
-  string FormatQuantity()
+  public string PrintTree()
+  {
+    return Formatting.PrintTree(this, x => x.ToString(), x => x.children);
+  }
+
+  public string FormatQuantity()
   {
     return (
       quantity * (recipe?.product?.FirstOrDefault()?.amount ?? 1) / item.ComputeUIConversionRate()
     )
       .ToString()
       .Replace("-", "(-)");
+  }
+
+  public static void Crawl(RecipeSearchNode node, Action<RecipeSearchNode, int> visitor)
+  {
+    node.Crawl(0, (node, context) => node.children.With(context + 1), visitor);
   }
 }

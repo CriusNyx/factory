@@ -1,7 +1,7 @@
 using GenParse.Functional;
 
 [Serializable]
-public class Recipe
+public class Recipe : FactVal
 {
   public string className;
   public string displayName;

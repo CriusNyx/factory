@@ -14,14 +14,17 @@ public enum FactoryLexon
   comma,
   openParen,
   closeParen,
+  equalSign,
 
   // keywords
+  varKeyword,
   recipeKeyword,
   altKeyword,
   outKeyword,
   inKeyword,
   printKeyword,
   tallyKeyword,
+  inlineKeyword,
 
   // Literals
   numberLiteral,
@@ -48,14 +51,17 @@ internal static class FactoryLexonRules
     (FactoryLexon.comma, @"^,"),
     (FactoryLexon.openParen, @"^\("),
     (FactoryLexon.closeParen, @"^\)"),
+    (FactoryLexon.equalSign, @"^\="),
 
     // keywords
+    (FactoryLexon.varKeyword, @"^var"),
     (FactoryLexon.recipeKeyword, @"^recipe"),
     (FactoryLexon.altKeyword, @"^alt"),
     (FactoryLexon.outKeyword, @"^out"),
-    (FactoryLexon.inKeyword, @"^in"), 
     (FactoryLexon.printKeyword, @"^print"),
     (FactoryLexon.tallyKeyword, @"^tally"),
+    (FactoryLexon.inlineKeyword, @"^inline"),
+    (FactoryLexon.inKeyword, @"^in"), 
 
     // Literals
     (FactoryLexon.numberLiteral, @"^[+-]?([0-9]*[.])?[0-9]+"),

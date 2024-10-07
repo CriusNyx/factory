@@ -25,8 +25,26 @@ var source = GetProgramSourceCode();
 
 var lexons = FactoryLexer.LexFactory(source);
 
+if (options.lexons)
+{
+  var lexonsString = string.Join(
+    "\n",
+    lexons
+      .Filter(x => x.isSemantic)
+      .Map(x => $"{x.lexonType.ToString().PadRight(20)} {x.sourceCode}")
+  );
+  Console.WriteLine(lexonsString);
+  return;
+}
+
 var parser = FactoryParser.GenerateFactoryParser();
 var ast = parser.Parse("Program", lexons.Filter(x => x.isSemantic))!;
+
+if (options.ast)
+{
+  Console.WriteLine(ast.PrintProgram());
+  return;
+}
 
 var context = new ExecutionContext();
 var result = Executor.Evaluate(ast, ref context);

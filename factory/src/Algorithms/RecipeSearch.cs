@@ -6,32 +6,18 @@ public static class RecipeSearch
 
   public static RecipeSearchResult Search(RecipeSearchRequest request)
   {
-    var quantityArg = request.args.FindByType<
-      RecipeSearchRequestArg,
-      RecipeSearchRequestQuantityArg
-    >();
-
-    if (quantityArg == null)
-    {
-      throw new InvalidOperationException(
-        "You must provide a quantity argument to compute a recipe."
-      );
-    }
-
-    var rootItemIdentifier = request.recipe.outputs.First();
+    var rootItemIdentifier = request.recipe.arguments.ExtractSymbolsOfType(ValType.output).First();
     var rootItem = Docs.itemsByIdentifier.Safe(rootItemIdentifier)!;
 
-    var root = ResolveRecipe(
-      request.recipe,
-      quantityArg.quantity * rootItem.ComputeUIConversionRate()
-    );
+    var root = ResolveRecipe(request.recipe, request.quantity * rootItem.ComputeUIConversionRate());
 
     return new RecipeSearchResult(request, root!);
   }
 
   public static RecipeSearchNode? ResolveRecipe(RecipeValue recipeValue, decimal amount)
   {
-    return MakeResult(ResolveRecipe(recipeValue.outputs.First(), recipeValue, amount), recipeValue);
+    var output = recipeValue.arguments.ExtractSymbolsOfType(ValType.output).First();
+    return MakeResult(ResolveRecipe(output, recipeValue, amount), recipeValue);
   }
 
   public static RecipeSearchNode? MakeResult(
@@ -75,7 +61,10 @@ public static class RecipeSearch
     decimal amount
   )
   {
-    if (terminalSymbols.Contains(itemIdentifier) || context.inputs.Contains(itemIdentifier))
+    var inputs = context.arguments.ExtractSymbolsOfType(ValType.input);
+    var alts = context.arguments.ExtractSymbolsOfType(ValType.alt);
+
+    if (terminalSymbols.Contains(itemIdentifier) || inputs.Contains(itemIdentifier))
     {
       return (null, itemIdentifier, amount);
     }
@@ -84,7 +73,7 @@ public static class RecipeSearch
       x => !x.isAlternative && x.isMachineRecipe
     );
     var altRecipe = Docs.recipesByProductClass[itemClassName].FirstOrDefault(
-      x => context.alts.Contains(x.identifier) && x.isMachineRecipe
+      x => alts.Contains(x.identifier) && x.isMachineRecipe
     );
     return (altRecipe ?? defaultRecipe!, null, amount);
   }

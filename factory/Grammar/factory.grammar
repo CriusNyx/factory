@@ -2,6 +2,7 @@ Program = ProgramExp*;
 
 ProgramExp = Recipe;
 ProgramExp = PrintExp;
+ProgramExp = AssignExp;
 
 // Recipe
 Recipe = recipeKeyword symbol RecipeExp*;
@@ -9,19 +10,28 @@ Recipe = recipeKeyword symbol RecipeExp*;
 RecipeExp = OutExp;
 RecipeExp = InExp;
 RecipeExp = AltExp;
+RecipeExp = TallyExp;
 
 OutExp = outKeyword symbol*;
 InExp = inKeyword symbol*;
 AltExp = altKeyword symbol*;
 
+// Print
+
 PrintExp = printKeyword ValueExp*;
+
+// Assign Exp
+
+AssignExp = varKeyword symbol equalSign ValueExp;
+
+// Value Exp
 
 ValueExp = Invocation;
 ValueExp = Literal;
-ValueExp = TallyExp;
+ValueExp = RecipeExp;
 ValueExp = symbol;
 
-TallyExp = tallyKeyword symbol;
+TallyExp = tallyKeyword inlineKeyword? symbol*;
 
 Invocation = symbol openParen InvocationParamSet closeParen;
 
