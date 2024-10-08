@@ -18,8 +18,13 @@ public class InvocationContext(RecipeValue recipeValue, decimal quantity = 0)
     return new InvocationContext(recipeValue ?? this.recipeValue, quantity ?? this.quantity);
   }
 
-  public RecipeSearchResult Invoke(){
-    var searchRequest = new RecipeSearchRequest(recipeValue, quantity);
-    return RecipeSearch.Search(searchRequest);
+  public FactVal Invoke(){
+    if(quantity == 0){
+      return recipeValue;
+    }
+    else{
+      var searchRequest = new RecipeSearchRequest(recipeValue, quantity);
+      return RecipeSearch.Search(searchRequest);
+    }
   }
 }

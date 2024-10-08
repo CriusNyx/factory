@@ -54,7 +54,7 @@ public class RecipeSearchResult : FactVal
     builder.AppendLine(
       Formatting.PrintGrid(
         lines.ToArray(),
-        eol: "  |",
+        eol: inlineTallys.Length > 0 ? "  |" : "",
         alignRight: new bool[] { false }.Push(inlineTallys.Map(_ => true))
       )
     );

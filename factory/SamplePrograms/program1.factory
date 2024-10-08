@@ -2,9 +2,10 @@ recipe MyHeavyModularFrameRecipe
   out HeavyModularFrame
   in IronOre Coal Limestone
   alt CastScrew
-  tally inline IronOre Limestone
+  tally inline IronOre Limestone Coal
+  tally IronOre Limestone Coal
 
-var WithSteelPipe = MyHeavyModularFrameRecipe(10, tally inline Coal)
-var WithIronPipe = MyHeavyModularFrameRecipe(10, alt IronPipe EncasedIndustrialPipe)
+var WithSteelPipe = MyHeavyModularFrameRecipe
+var WithIronPipe = MyHeavyModularFrameRecipe(alt IronPipe EncasedIndustrialPipe)
 
 print WithSteelPipe WithIronPipe

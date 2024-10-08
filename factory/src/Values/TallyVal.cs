@@ -6,4 +6,14 @@ public class TallyVal : SymbolVal
   {
     this.inline = inline;
   }
+
+  public override bool Equals(object? obj)
+  {
+    return obj is TallyVal val && base.Equals(obj) && inline == val.inline;
+  }
+
+  public override int GetHashCode()
+  {
+    return HashCode.Combine(base.GetHashCode(), inline);
+  }
 }

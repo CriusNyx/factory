@@ -10,10 +10,26 @@ public class RecipeValue(string recipeName, ArrayVal? arguments = null) : FactVa
   public override string ToString()
   {
     var builder = new StringBuilder();
+
+    var inVals = arguments.FilterType(ValType.input);
+    var outVals = arguments.FilterType(ValType.output);
+    var altVals = arguments.FilterType(ValType.alt);
+    var tallyVals = arguments.FilterType(ValType.tally).array.Map(x => x as TypedFactVal).Map(x => x!.value as TallyVal).FilterDefined().NotNull();
+    var outlineTallyVals = tallyVals.Filter(x => !x.inline);
+    var inlineTallyVals = tallyVals.Filter(x => x.inline);
+
     builder.AppendLine($"recipe {recipeName}");
-    builder.AppendLine($"  in {string.Join(" ", arguments.FilterType(ValType.input))}");
-    builder.AppendLine($"  out {string.Join(" ", arguments.FilterType(ValType.output))}");
-    builder.AppendLine($"  alt {string.Join(" ", arguments.FilterType(ValType.alt))}");
+    builder.AppendLine($"  in {inVals}");
+    builder.AppendLine($"  out {outVals}");
+    if(altVals.array.Length > 0){
+      builder.AppendLine($"  alt {altVals}");
+    }
+    if(outlineTallyVals.Length > 0){
+      builder.AppendLine($"  tally {string.Join(" ", outlineTallyVals.Map(x => x.symbol))}");
+    }
+    if(inlineTallyVals.Length > 0){
+      builder.AppendLine($"  tally inline {string.Join(" ", inlineTallyVals.Map(x => x.symbol))}");
+    }
     return builder.ToString();
   }
 

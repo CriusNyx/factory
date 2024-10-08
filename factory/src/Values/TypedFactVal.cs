@@ -24,4 +24,9 @@ public class TypedFactVal(ValType type, FactVal value) : FactVal
     {
         return HashCode.Combine(type, value);
     }
+
+    public override string ToString()
+    {
+        return value.ToString()!;
+    }
 }

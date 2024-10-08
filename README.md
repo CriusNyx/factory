@@ -8,3 +8,7 @@
 - [x] Support for variables
 - [x] Support for anonymous recipes
 - [ ] Support for units
+- [ ] Support for limit keyword
+- [ ] Support for production lines using the -> operator
+- [ ] Fixing the equality operator by making parser less greedy
+- [ ] Remove var keyword
