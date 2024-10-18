@@ -1,8 +1,7 @@
 using System.Text;
 using GenParse.Functional;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-public class RecipeValue(string recipeName, ArrayVal? arguments = null) : FactVal
+public class RecipeValue(string recipeName, ArrayVal? arguments = null) : FactVal, ISpread
 {
   public readonly string recipeName = recipeName.NotNull();
   public readonly ArrayVal arguments = arguments?.Distinct() ?? new ArrayVal();
@@ -57,7 +56,8 @@ public class RecipeValue(string recipeName, ArrayVal? arguments = null) : FactVa
     ValType.input,
     ValType.output,
     ValType.alt,
-    ValType.tally
+    ValType.tally,
+    ValType.limit,
   };
 
   public static bool FactValModifiesRecipeVal(FactVal factVal)
@@ -70,5 +70,9 @@ public class RecipeValue(string recipeName, ArrayVal? arguments = null) : FactVa
       return arrayVal.array.All(FactValModifiesRecipeVal);
     }
     return false;
+  }
+
+  public ArrayVal Spread(){
+    return arguments;
   }
 }

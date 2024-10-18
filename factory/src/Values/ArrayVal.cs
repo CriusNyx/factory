@@ -13,4 +13,21 @@ public class ArrayVal : FactVal
   {
     return string.Join(" ", array.Map(x => x.ToString()));
   }
+
+  public ArrayVal UnfoldAll()
+  {
+    List<FactVal> newArr = new List<FactVal>();
+    foreach (var element in array)
+    {
+      if (element is IUnfold unfold)
+      {
+        newArr.AddRange(unfold.Unfold());
+      }
+      else
+      {
+        newArr.Add(element);
+      }
+    }
+    return new ArrayVal(newArr.ToArray());
+  }
 }

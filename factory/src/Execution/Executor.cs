@@ -27,6 +27,7 @@ public static class Executor
       case "ProgramExp*":
       case "ValueExp*":
       case "InvocationParam*":
+      case "LimitValueExp*":
         return EvaluateStar(astNode, context);
       case "OutExp":
         return EvaluateKeywordSymbolArray(astNode, context, "outKeyword", ValType.output);
@@ -34,6 +35,8 @@ public static class Executor
         return EvaluateKeywordSymbolArray(astNode, context, "inKeyword", ValType.input);
       case "AltExp":
         return EvaluateKeywordSymbolArray(astNode, context, "altKeyword", ValType.alt);
+      case "LimitExp":
+        return EvaluateLimitExp(astNode, context);
       case "Recipe":
         return EvaluateRecipeExp(astNode, context);
       case "RecipeExp":
@@ -55,6 +58,10 @@ public static class Executor
         return EvaluateTallyExp(astNode, context);
       case "AssignExp":
         return EvaluateAssignExp(astNode, context);
+      case "SpreadExp":
+        return EvaluateSpreadExp(astNode, context);
+      case "LimitValueExp":
+        return EvaluateLimitValueExp(astNode, context);
       default:
         throw new NotImplementedException($"Not implemented for astNode {astNode.name}");
     }
@@ -125,7 +132,7 @@ public static class Executor
   {
     var (_, nameNode, expressionsNodes) = astNode.Match(("recipeKeyword", "symbol", "RecipeExp*"));
     SymbolVal? name = Evaluate(nameNode!, ref context) as SymbolVal;
-    ArrayVal expressionValues = Evaluate(expressionsNodes!, ref context)!.AsArrayVal();
+    ArrayVal expressionValues = Evaluate(expressionsNodes!, ref context)!.AsArrayVal().UnfoldAll();
 
     var recipe = expressionValues.array.Reduce(
       new RecipeValue(name?.symbol ?? ""),
@@ -272,5 +279,54 @@ public static class Executor
       context.GlobalValues[symbol] = value;
     }
     return value.With(context);
+  }
+
+  public static (FactVal? value, ExecutionContext context) EvaluateSpreadExp(
+    ASTNode<FactoryLexon> astNode,
+    ExecutionContext context
+  )
+  {
+    var (_, symbolNode) = astNode.Match(("spread", "symbol"));
+    var symbolVal = Evaluate(symbolNode.NotNull(), ref context).NotNull().AsSymbolVal();
+    var spreadSourceValue = context.Resolve(symbolVal);
+    if (spreadSourceValue is ISpread spread)
+    {
+      return new SpreadVal(spread.Spread()).With(context);
+    }
+    throw new InvalidOperationException(
+      $"Cannot preform a spread on FactVal {spreadSourceValue.NotNull().GetType()}"
+    );
+  }
+
+  public static (FactVal? value, ExecutionContext context) EvaluateLimitExp(
+    ASTNode<FactoryLexon> astNode,
+    ExecutionContext context
+  )
+  {
+    var (_, limitValExp) = astNode.Match(("limitKeyword", "LimitValueExp*"));
+    return Evaluate(limitValExp.NotNull(), context);
+  }
+
+  public static (FactVal? value, ExecutionContext context) EvaluateLimitValueExp(
+    ASTNode<FactoryLexon> astNode,
+    ExecutionContext context
+  )
+  {
+    var (valueExp, symbolNode) = astNode.Match(("ValueExp", "symbol"));
+    var value = Evaluate(valueExp.NotNull(), ref context).NotNull();
+    if (value is NumVal numVal)
+    {
+      var itemIdentifier = symbolNode.NotNull().SourceCode();
+      return new TypedFactVal(
+        ValType.limit,
+        new PairVal(numVal, new SymbolVal(itemIdentifier))
+      ).With(context);
+    }
+    else
+    {
+      throw new InvalidOperationException(
+        $"Expected a number value but got a {value.GetType()} instead"
+      );
+    }
   }
 }

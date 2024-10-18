@@ -10,6 +10,7 @@ public class RecipeSearchNode
   public readonly RecipeSearchNode[] children;
 
   public RecipeSearchNode(Recipe recipe, decimal quantity, RecipeSearchNode[] children, Item item)
+    : this(quantity, null, recipe, item, children)
   {
     this.quantity = quantity;
     this.recipe = recipe;
@@ -18,11 +19,21 @@ public class RecipeSearchNode
   }
 
   public RecipeSearchNode(string nodeName, decimal quantity, Item item)
+    : this(quantity, nodeName, null!, item, new RecipeSearchNode[] { }) { }
+
+  public RecipeSearchNode(
+    decimal quantity,
+    string? nodeName,
+    Recipe? recipe,
+    Item? item,
+    RecipeSearchNode[] children
+  )
   {
     this.quantity = quantity;
-    this.nodeName = nodeName;
-    children = new RecipeSearchNode[] { };
-    this.item = item;
+    this.nodeName = nodeName!;
+    this.recipe = recipe!;
+    this.item = item!;
+    this.children = children;
   }
 
   public override string ToString()
@@ -40,12 +51,12 @@ public class RecipeSearchNode
     return (
       quantity * (recipe?.product?.FirstOrDefault()?.amount ?? 1) / item.ComputeUIConversionRate()
     )
-      .ToString()
+      .ToString("0.###")
       .Replace("-", "(-)");
   }
 
-  public static void Crawl(RecipeSearchNode node, Action<RecipeSearchNode, int> visitor)
+  public static void Crawl(RecipeSearchNode root, Action<RecipeSearchNode, int> visitor)
   {
-    node.Crawl(0, (node, context) => node.children.With(context + 1), visitor);
+    root.Crawl(0, (x, y) => (x.children, y + 1), visitor);
   }
 }

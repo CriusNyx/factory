@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace GenParse.Functional
@@ -248,6 +249,18 @@ namespace GenParse.Functional
         throw new NullReferenceException("Value should not be null");
       }
       return val;
+    }
+
+    public static List<T> ReplaceOrAdd<T>(this List<T> list, Func<T, bool> func, Func<T, T> replace){
+      for(int i = 0; i < list.Count; i++){
+        var element = list[i];
+        if(func(element)){
+          list[i] = replace(element);
+          return list;
+        }
+      }
+      list.Add(replace(default!));
+      return list;
     }
   }
 }

@@ -1,6 +1,7 @@
-public class InvocationContext(RecipeValue recipeValue, decimal quantity = 0)
+public class InvocationContext(RecipeValue recipeValue, decimal quantity = 1, bool hasQuantityValue = false)
 {
   public readonly RecipeValue recipeValue = recipeValue;
+  public readonly bool hasQuantityValue = hasQuantityValue;
   public readonly decimal quantity = quantity;
 
   public InvocationContext Amend(FactVal factVal)
@@ -19,12 +20,7 @@ public class InvocationContext(RecipeValue recipeValue, decimal quantity = 0)
   }
 
   public FactVal Invoke(){
-    if(quantity == 0){
-      return recipeValue;
-    }
-    else{
-      var searchRequest = new RecipeSearchRequest(recipeValue, quantity);
-      return RecipeSearch.Search(searchRequest);
-    }
+    var searchRequest = new RecipeSearchRequest(recipeValue, quantity);
+    return RecipeSearch.Search(searchRequest).Balance(hasQuantityValue);
   }
 }

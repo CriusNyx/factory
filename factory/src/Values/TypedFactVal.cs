@@ -5,7 +5,8 @@ public enum ValType
   input,
   output,
   alt,
-  tally
+  tally,
+  limit
 }
 
 public class TypedFactVal(ValType type, FactVal value) : FactVal

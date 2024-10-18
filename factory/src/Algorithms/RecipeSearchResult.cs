@@ -6,11 +6,13 @@ public class RecipeSearchResult : FactVal
 {
   public readonly RecipeSearchRequest request;
   public readonly RecipeSearchNode root;
+  public readonly RecipeBalance recipeBalance;
 
   public RecipeSearchResult(RecipeSearchRequest request, RecipeSearchNode root)
   {
     this.request = request;
     this.root = root;
+    recipeBalance = RecipeBalance.Create(root);
   }
 
   public override string ToString()
@@ -48,7 +50,9 @@ public class RecipeSearchResult : FactVal
 
     lines.Add(new string[] { "" }.Push(inlineTallys.Map(_ => "")));
     lines.Add(new string[] { "" }.Push(inlineTallys.Map(_ => "")));
-    lines.Add(new string[] { "Totals" }.Push(inlineTallys.Map(x => TotalTally(x).ToString())));
+    lines.Add(
+      new string[] { "Totals" }.Push(inlineTallys.Map(x => TotalTally(x).ToString("0.###")))
+    );
 
     StringBuilder builder = new StringBuilder();
     builder.AppendLine(
@@ -72,7 +76,7 @@ public class RecipeSearchResult : FactVal
     var ident = node.item.identifier ?? node.nodeName;
     if (ident == tallyVal.symbol)
     {
-      return node.quantity.ToString();
+      return node.quantity.ToString("0.###");
     }
     return "";
   }
@@ -95,6 +99,6 @@ public class RecipeSearchResult : FactVal
 
   private string ProcessTally(TallyVal tallyVal)
   {
-    return $"{tallyVal.symbol} {TotalTally(tallyVal)}";
+    return $"{tallyVal.symbol} {TotalTally(tallyVal):0.###}";
   }
 }

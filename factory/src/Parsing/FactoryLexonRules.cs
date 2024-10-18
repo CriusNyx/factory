@@ -15,6 +15,7 @@ public enum FactoryLexon
   openParen,
   closeParen,
   equalSign,
+  spread,
 
   // keywords
   varKeyword,
@@ -25,6 +26,7 @@ public enum FactoryLexon
   printKeyword,
   tallyKeyword,
   inlineKeyword,
+  limitKeyword,
 
   // Literals
   numberLiteral,
@@ -47,11 +49,15 @@ internal static class FactoryLexonRules
     (FactoryLexon.comment, @"^//.*\n"),
     (FactoryLexon.whitespace, @"^\s+"),
 
+    // Operators
+    
+
     // Language Symbols
     (FactoryLexon.comma, @"^,"),
     (FactoryLexon.openParen, @"^\("),
     (FactoryLexon.closeParen, @"^\)"),
     (FactoryLexon.equalSign, @"^\="),
+    (FactoryLexon.spread, @"^\.\.\."),
 
     // keywords
     (FactoryLexon.varKeyword, @"^var"),
@@ -62,6 +68,7 @@ internal static class FactoryLexonRules
     (FactoryLexon.tallyKeyword, @"^tally"),
     (FactoryLexon.inlineKeyword, @"^inline"),
     (FactoryLexon.inKeyword, @"^in"), 
+    (FactoryLexon.limitKeyword, @"^limit"),
 
     // Literals
     (FactoryLexon.numberLiteral, @"^[+-]?([0-9]*[.])?[0-9]+"),
