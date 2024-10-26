@@ -2,7 +2,21 @@ using GenParse.Functional;
 
 public static class RecipeSearch
 {
-  static string[] terminalSymbols = new string[] { "IronOre", "CopperOre", "Coal", "CrudeOil" };
+  static string[] resourceIdentifiers = new string[]
+  {
+    "Limestone",
+    "IronOre",
+    "CopperOre",
+    "CateriumOre",
+    "Coal",
+    "Sulfur",
+    "Bauxite",
+    "RawQuartz",
+    "Uranium",
+    "CrudeOil",
+    "SAM",
+    "Water"
+  };
 
   public static RecipeSearchResult Search(RecipeSearchRequest request)
   {
@@ -64,7 +78,7 @@ public static class RecipeSearch
     var inputs = context.arguments.ExtractSymbolsOfType(ValType.input);
     var alts = context.arguments.ExtractSymbolsOfType(ValType.alt);
 
-    if (terminalSymbols.Contains(itemIdentifier) || inputs.Contains(itemIdentifier))
+    if (resourceIdentifiers.Contains(itemIdentifier) || inputs.Contains(itemIdentifier))
     {
       return (null, itemIdentifier, amount);
     }
