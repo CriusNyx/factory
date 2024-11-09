@@ -4,6 +4,9 @@ using Newtonsoft.Json;
 [Serializable]
 public class Docs
 {
+  public Item[] Desc;
+  public Recipe[] Recipe;
+
   public readonly static Docs docs;
   public readonly static Dictionary<string, Item> itemsByClass;
   public readonly static Dictionary<string, Item> itemsByIdentifier;
@@ -34,32 +37,23 @@ public class Docs
       {
         continue;
       }
-      if (!_recipesByProductClass.ContainsKey(primaryProductClass))
-      {
-        _recipesByProductClass.Add(primaryProductClass, new List<Recipe>());
-      }
-      _recipesByProductClass[primaryProductClass].Add(recipe);
+
+      _recipesByProductClass.AddOrGet(primaryProductClass).Add(recipe);
 
       var productIdent = itemsByClass.Safe(primaryProductClass)?.identifier;
       if (productIdent == null)
       {
         continue;
       }
-      if (!_recipesByProductIdentifier.ContainsKey(productIdent))
-      {
-        _recipesByProductIdentifier.Add(productIdent, new List<Recipe>());
-      }
-      _recipesByProductIdentifier[productIdent].Add(recipe);
+      _recipesByProductIdentifier.AddOrGet(productIdent).Add(recipe);
     }
+
     recipesByProductClass = _recipesByProductClass.ToDictionary(x => x.Key, y => y.Value.ToArray());
     recipesByProductIdentifier = _recipesByProductIdentifier.ToDictionary(
       x => x.Key,
       y => y.Value.OrderBy(x => x.isMachineRecipe && !x.isAlternative ? 0 : 1).ToArray()
     );
   }
-
-  public Item[] Desc;
-  public Recipe[] Recipe;
 
   public static readonly string[] ProductionMachines = new string[]
   {

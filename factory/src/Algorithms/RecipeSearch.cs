@@ -44,13 +44,13 @@ public static class RecipeSearch
     {
       return new RecipeSearchNode(identifier!, amount, Docs.itemsByIdentifier!.Safe(identifier)!);
     }
-    decimal recipeQuantity = amount / recipe.product.First().amount;
+    decimal recipeQuantity = amount / recipe.product.First().Amount;
     return new RecipeSearchNode(
       recipe,
       recipeQuantity,
       recipe.ingredients
         .Map(
-          x => MakeResult(ResolveRecipe(x.identifier, context, recipeQuantity * x.amount), context)
+          x => MakeResult(ResolveRecipe(x.identifier, context, recipeQuantity * x.Amount), context)
         )
         .Push(MakeBiproducts(recipe, recipeQuantity))
         .Filter(x => x != null)!,
@@ -66,7 +66,7 @@ public static class RecipeSearch
     }
     return recipe.product
       .Spread(1)
-      .Map(x => new RecipeSearchNode(x.identifier, -quantity * x.amount, x.item!));
+      .Map(x => new RecipeSearchNode(x.identifier, -quantity * x.Amount, x.item!));
   }
 
   public static (Recipe? recipe, string? name, decimal quantity) ResolveRecipe(

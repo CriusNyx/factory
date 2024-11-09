@@ -191,6 +191,9 @@ namespace GenParse.Functional
       }
     }
 
+    public static List<U> AddOrGet<T, U>(this IDictionary<T, List<U>> dict, T key)
+     => AddOrGet(dict, key, () => new List<U>());
+
     public static (T, U) With<T, U>(this T value, U other){
       return (value, other);
     }

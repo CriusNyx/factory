@@ -1,23 +1,31 @@
 using GenParse.Functional;
+using Newtonsoft.Json;
 
 [Serializable]
 public class Quantity
 {
   public string itemClass;
-  public decimal amount;
+
+  private decimal internalAmount;
+  public decimal Amount => internalAmount / item?.ComputeUIConversionRate() ?? 1;
 
   public Item? item => Docs.itemsByClass.Safe(itemClass);
 
   public string identifier => item?.identifier ?? itemClass;
 
+  public Quantity(decimal amount)
+  {
+    this.internalAmount = amount;
+  }
+
   public override string ToString()
   {
-    return $"{amount / item?.ComputeUIConversionRate() ?? 1} {identifier}";
+    return $"{Amount} {identifier}";
   }
 
   public string ToString(decimal productionRate)
   {
-    return $"{amount / item?.ComputeUIConversionRate() * productionRate ?? 1} {identifier}";
+    return $"{Amount * productionRate} {identifier}";
   }
 
   public static string GetDisplayName(Quantity? quantity)

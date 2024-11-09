@@ -152,7 +152,6 @@ public static class Executor
     foreach (var element in values.array)
     {
       context.standardOut.WriteLine(element);
-      context.standardOut.WriteLine("");
     }
 
     return (null!, context);

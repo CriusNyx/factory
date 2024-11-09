@@ -48,9 +48,7 @@ public class RecipeSearchNode
 
   public string FormatQuantity()
   {
-    return (
-      quantity * (recipe?.product?.FirstOrDefault()?.amount ?? 1) / item.ComputeUIConversionRate()
-    )
+    return (quantity * (recipe?.product?.FirstOrDefault()?.Amount ?? 1))
       .ToString("0.###")
       .Replace("-", "(-)");
   }

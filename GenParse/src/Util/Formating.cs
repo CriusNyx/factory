@@ -86,6 +86,9 @@ namespace GenParse.Util
         builder.AppendLine($"{string.Join(columnSeparator, line)}{eol}");
       }
 
+      // Remove trailing space.
+      builder.Remove(builder.Length - 1, 1);
+
       return builder.ToString();
     }
 

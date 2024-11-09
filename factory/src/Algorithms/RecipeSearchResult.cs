@@ -32,9 +32,13 @@ public class RecipeSearchResult : FactVal
 
     List<string[]> lines = new List<string[]>();
 
+    // Recipe Name
     lines.Add(new string[] { request.recipe.recipeName }.Push(inlineTallys.Map(x => x.symbol)));
+
+    // Blank line
     lines.Add(new string[] { "" }.Push(inlineTallys.Map(_ => "")));
 
+    // Recursively process recipe
     RecipeSearchNode.Crawl(
       root,
       (node, depth) =>
@@ -48,11 +52,14 @@ public class RecipeSearchResult : FactVal
       }
     );
 
-    lines.Add(new string[] { "" }.Push(inlineTallys.Map(_ => "")));
-    lines.Add(new string[] { "" }.Push(inlineTallys.Map(_ => "")));
-    lines.Add(
-      new string[] { "Totals" }.Push(inlineTallys.Map(x => TotalTally(x).ToString("0.###")))
-    );
+    // Place inline tally at bottom.
+    if (inlineTallys.Length > 0)
+    {
+      lines.Add(new string[] { "" }.Push(inlineTallys.Map(_ => "")));
+      lines.Add(
+        new string[] { "Totals" }.Push(inlineTallys.Map(x => TotalTally(x).ToString("0.###")))
+      );
+    }
 
     StringBuilder builder = new StringBuilder();
     builder.AppendLine(
