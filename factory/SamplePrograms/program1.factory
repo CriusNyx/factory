@@ -1,4 +1,18 @@
-recipe Base
-  out Battery
+recipe RPlate
+  out ReinforcedIronPlate
+  in IronIngot
+  limit 60 IronIngot
+  tally IronIngot
 
-print Base(10) Base(10, tally Bauxite)
+recipe Rot
+  out Rotor
+  in IronIngot
+  limit 45 IronIngot
+  tally IronIngot
+
+recipe ModFrame
+  out ModularFrame
+  in IronIngot
+  tally IronIngot
+
+print RPlate() Rot() ModFrame(10)

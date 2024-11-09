@@ -83,7 +83,10 @@ namespace GenParse.Util
           return right ? element.PadLeft(w) : element.PadRight(w);
         }
         var line = lines[lineIndex].Map(GridString);
-        builder.AppendLine($"{string.Join(columnSeparator, line)}{eol}");
+        Func<string, StringBuilder> builderFunc =
+          lineIndex == height - 1 ? builder.Append : builder.AppendLine;
+
+        builderFunc($"{string.Join(columnSeparator, line)}{eol}");
       }
 
       // Remove trailing space.
