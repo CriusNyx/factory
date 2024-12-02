@@ -7,7 +7,7 @@ public class Item
   public string name;
   public string displayName;
 
-  public string identifier => displayName.Replace(" ", "");
+  public string identifier => displayName.Replace(" ", "").Replace("-", "");
   public string form;
 
   public decimal ComputeUIConversionRate()

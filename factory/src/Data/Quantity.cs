@@ -1,5 +1,4 @@
 using GenParse.Functional;
-using Newtonsoft.Json;
 
 [Serializable]
 public class Quantity

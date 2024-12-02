@@ -1,0 +1,14 @@
+// Program 1
+// HighSpeedConnector is in the in section but is printing in the output.
+
+recipe ADS
+  out AssemblyDirectorSystem
+  in Stator Cable HeavyModularFrame CircuitBoard Computer AILimiter HighSpeedConnector Plastic
+
+print ADS(500)
+
+// No default recipe for HeavyOilResidue or CompactedCoal or Turbofuel. You should do a search for other items that do not have default recipes.
+
+// No support for math or dereferencing items on the component. Should probably work on supporting the dot operator. Should have the ability to compute ratios also.
+
+// Add support for power.

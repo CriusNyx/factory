@@ -3,10 +3,18 @@ using GenParse.Functional;
 [Serializable]
 public class Recipe : FactVal
 {
+  private static string[] nonAlternateRecipes = new string[]
+  {
+    "Alternate: Compacted Coal",
+    "Alternate: Turbofuel",
+    "Alternate: Heavy Oil Residue"
+  };
+
   public string className;
   public string displayName;
   public string slug;
-  public bool isAlternative => displayName.StartsWith("Alternate: ");
+  public bool isAlternative =>
+    displayName.StartsWith("Alternate: ") && !nonAlternateRecipes.Contains(displayName);
   public bool machineCraftable;
   public Quantity[] ingredients;
   public Quantity[] product;
