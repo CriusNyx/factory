@@ -1,41 +1,26 @@
+using System.Reflection;
 using GenParse.Functional;
-using GenParse.Parsing;
 
-public class Transformer<LexonType, LanguageNode> where LanguageNode: class
+public static class Transformer
 {
+  private static Dictionary<string, List<Type>> classCache = new Dictionary<string, List<Type>>();
 
-  Dictionary<string, Func<Transformer<LexonType, LanguageNode>, ASTNode<LexonType>, LanguageNode>> rules
-    = new Dictionary<string, Func<Transformer<LexonType, LanguageNode>, ASTNode<LexonType>, LanguageNode>>();
-
-  public Transformer((string, Func<Transformer<LexonType, LanguageNode>, ASTNode<LexonType>, LanguageNode>)[] rules){
-    this.rules = rules.ToDictionary()!;
-  }
-
-
-  public LanguageNode? Transform(ASTNode<LexonType> astNode)
+  static Transformer()
   {
-    if (astNode == null)
+    foreach (var type in AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes()))
     {
-      return null;
+      if (type.GetCustomAttribute<ASTClass>() is ASTClass aSTClass)
+      {
+        classCache.AddOrGet(aSTClass.nodeName).Add(type);
+      }
     }
-    return rules.Safe(astNode.name)?.Invoke(this, astNode);
-  }
-
-  public LanguageNode[] TransformChildren(ASTNode<LexonType> astNode)
-  {
-    return astNode?.children.Map(Transform).FilterNull() ?? [];
-  }
-
-  public LanguageNode[] TransformAll(ASTNode<LexonType> astNode, string search) => TransformAll(astNode, [search]);
-
-  public LanguageNode[] TransformAll(ASTNode<LexonType> astNode, string[] search)
-  {
-    return astNode?.MatchAll(search).Map(Transform).FilterNull() ?? [];
-  }
-
-  public string GetSymbol(ASTNode<LexonType> astNode)
-  {
-    var node = astNode?.MatchAll("symbol").FirstNotNull();
-    return node?.lexons[0].sourceCode ?? "";
+    foreach (var (key, value) in classCache)
+    {
+      Console.WriteLine(key);
+      foreach (var type in value)
+      {
+        Console.WriteLine($"  {type}");
+      }
+    }
   }
 }
