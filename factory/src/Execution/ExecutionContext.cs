@@ -1,6 +1,6 @@
 using GenParse.Functional;
 
-public class ExecutionContext
+public class ExecutionContext : IDisposable
 {
   public readonly Dictionary<string, FactVal> GlobalValues = new Dictionary<string, FactVal>();
   public readonly TextReader standardIn;
@@ -24,5 +24,11 @@ public class ExecutionContext
   public void Assign(string identifier, FactVal val)
   {
     GlobalValues[identifier] = val;
+  }
+
+  public void Dispose()
+  {
+    standardIn.Dispose();
+    standardOut.Dispose();
   }
 }

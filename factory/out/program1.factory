@@ -1,0 +1,15 @@
+ModFrame                 
+                         
+1 ModularFrame           
+|-1.5 ReinforcedIronPlate
+| |-9 IronPlate          
+| | |-13.5 IronIngot     
+| | | |-13.5 IronOre     
+| |-18 Screw             
+| | |-4.5 IronRod        
+| | | |-4.5 IronIngot    
+| | | | |-4.5 IronOre    
+|-6 IronRod              
+| |-6 IronIngot          
+| | |-6 IronOre         
+

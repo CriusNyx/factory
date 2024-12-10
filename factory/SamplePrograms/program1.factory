@@ -1,9 +1,4 @@
-recipe Rep1
-  in IronIngot
-  limit 60 IronIngot
-  out ReinforcedIronPlate
+recipe ModFrame
+  out ModularFrame
 
-let Rep2 = Rep1.Amend(limit 80 IronIngot)
-let Rep2.Name = "Rep2"
-
-print Rep1 Rep2
+print ModFrame()
