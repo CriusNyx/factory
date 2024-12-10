@@ -16,16 +16,25 @@ public class ObjectRefVal(FactVal owner, string identifier) : RefVal
           if (member is FieldInfo field)
           {
             field.SetValue(owner, factVal.ConvertToType(field.FieldType));
+            return;
           }
           if (member is PropertyInfo property)
           {
             if (property.CanWrite)
             {
               property.SetValue(owner, factVal.ConvertToType(property.PropertyType));
+              return;
+            }
+            else
+            {
+              throw new Exception(
+                $"Property {identifier} can not be set on object {owner.GetType()} because it is readonly."
+              );
             }
           }
         }
       }
     }
+    throw new Exception($"Property {identifier} can not be set on object {owner.GetType()}.");
   }
 }

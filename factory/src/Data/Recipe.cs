@@ -1,7 +1,7 @@
 using GenParse.Functional;
 
 [Serializable]
-public class Recipe : FactVal
+public class Recipe : FactVal, IFunc
 {
   private static string[] nonAlternateRecipes = new string[]
   {
@@ -54,5 +54,10 @@ public class Recipe : FactVal
     }
     else
       return string.Join(" + ", quantity.Map(x => x.ToString(60 / manufactoringDuration)));
+  }
+
+  public FactVal Invoke(ArrayVal arguments)
+  {
+    return RecipeInvocation.InvokeRecipe(this, arguments);
   }
 }

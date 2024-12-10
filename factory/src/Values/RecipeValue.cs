@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Text;
 using GenParse.Functional;
 
-public class RecipeValue(string recipeName, ArrayVal? arguments = null) : FactVal, ISpread
+public class RecipeValue(string recipeName, ArrayVal? arguments = null) : FactVal, ISpread, IFunc
 {
   [ExposeMember("Name")]
   public string recipeName = recipeName.NotNull();
@@ -136,5 +136,10 @@ public class RecipeValue(string recipeName, ArrayVal? arguments = null) : FactVa
   public ArrayVal Spread()
   {
     return arguments;
+  }
+
+  public FactVal Invoke(ArrayVal arguments)
+  {
+    return RecipeInvocation.InvokeRecipe(this, arguments);
   }
 }

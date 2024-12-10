@@ -25,33 +25,7 @@ public class InvocationNode(ASTNode<FactoryLexon> astNode) : LanguageNode, Chain
     {
       return func.Invoke(invocationParams);
     }
-    if (GetRecipeForInvocation(target) is RecipeValue recipeVal)
-    {
-      var invocation = invocationParams.array.Reduce(
-        new InvocationContext(recipeVal),
-        (factVal, context) => context.Amend(factVal)
-      );
-      return invocation.Invoke();
-    }
     return null!;
-  }
-
-  static RecipeValue GetRecipeForInvocation(object o)
-  {
-    if (o is RecipeValue recipeValue)
-    {
-      return recipeValue;
-    }
-    else if (o is Recipe recipe)
-    {
-      return new RecipeValue(
-        recipe.identifier,
-        new ArrayVal(
-          new TypedFactVal(ValType.output, new SymbolVal(recipe.primaryProduct.identifier))
-        )
-      );
-    }
-    throw new InvalidOperationException($"Could not resolve invocation on object {o}");
   }
 
   public string GetIdentifier()
