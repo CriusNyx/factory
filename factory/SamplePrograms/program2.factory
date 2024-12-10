@@ -1,1 +1,1 @@
-print ReinforcedIronPlate()
+print ReinforcedIronPlate(5)

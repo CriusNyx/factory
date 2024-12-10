@@ -1,4 +1,1 @@
-recipe ModFrame
-  out ModularFrame
-
-print ModFrame()
+print ReinforcedIronPlate()

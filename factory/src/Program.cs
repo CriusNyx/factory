@@ -1,4 +1,5 @@
-﻿using Factory.Parsing;
+﻿using System.Net.Http.Headers;
+using Factory.Parsing;
 using GenParse.Functional;
 
 bool debug = false;
@@ -45,17 +46,21 @@ void EvaluateSourceCode(string sourceCode, string outFile = "")
     return;
   }
 
-  ExecutionContext CreateExecutionContext()
-  {
-    if (outFile != "")
-    {
-      return new ExecutionContext(Console.In, File.CreateText(outFile));
-    }
-    return new ExecutionContext();
-  }
+  using var textWriter = new StringWriter();
+  using var context = new ExecutionContext(Console.In, textWriter);
 
-  using var context = CreateExecutionContext();
   program!.Evaluate(context);
+
+  var result = textWriter.ToString().TrimEnd();
+
+  if (outFile == "")
+  {
+    Console.WriteLine(result);
+  }
+  else
+  {
+    File.WriteAllText(outFile, result + Environment.NewLine);
+  }
 }
 
 if (options.stream)
