@@ -11,7 +11,9 @@
 - [x] Support for limit keyword
 - [ ] Support for production lines using the -> operator???
   - Is this what I want? I don't think so? Consider doing a keyword based solution instead. Keywords are cool for DSL's.
-- [ ] Fixing the equality operator by making parser less greedy
-- [ ] Remove var keyword
+- [n/a] Fixing the equality operator by making parser less greedy
+- [n/a] Remove var keyword
+  - Rejected. Using a keyword based paradigm for the language grammar where each statement begins with a keyword.
 - [ ] Add a depth keyword
 - [ ] Improve command line experience
+- [x] Add more rich support for assign and invocation

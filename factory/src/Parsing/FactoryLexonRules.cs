@@ -31,6 +31,7 @@ public enum FactoryLexon
 
   // Literals
   numberLiteral,
+  stringLiteral,
 
   // Identifier Symbols
   symbol,
@@ -73,6 +74,7 @@ internal static class FactoryLexonRules
     (FactoryLexon.inKeyword, @"^in"),
     (FactoryLexon.limitKeyword, @"^limit"),
     // Literals
+    (FactoryLexon.stringLiteral, @"^"".*"""),
     (FactoryLexon.numberLiteral, @"^[+-]?([0-9]*[.])?[0-9]+"),
     // Identifier Symbols
     (FactoryLexon.symbol, @"^\p{L}\w*"),

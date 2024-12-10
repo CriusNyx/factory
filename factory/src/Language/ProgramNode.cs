@@ -20,7 +20,7 @@ public class ProgramNode : LanguageNode
 
   public string ToTree()
   {
-    return Formatting.PrintTree(this, x => x.ToString());
+    return Formatting.PrintTree(this, x => x.ToString()!);
   }
 }
 

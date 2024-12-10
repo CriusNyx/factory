@@ -1,9 +1,11 @@
+using System.Diagnostics;
 using System.Text;
 using GenParse.Functional;
 
 public class RecipeValue(string recipeName, ArrayVal? arguments = null) : FactVal, ISpread
 {
-  public readonly string recipeName = recipeName.NotNull();
+  [ExposeMember("Name")]
+  public string recipeName = recipeName.NotNull();
   public readonly ArrayVal arguments = arguments?.Distinct() ?? new ArrayVal();
 
   public override string ToString()
@@ -40,17 +42,68 @@ public class RecipeValue(string recipeName, ArrayVal? arguments = null) : FactVa
     return builder.ToString();
   }
 
+  [ExposeMember("Amend")]
+  public RecipeValue AmendInvocation(ArrayVal arrayVal)
+  {
+    return arrayVal.array.Reduce(this, (element, recipe) => recipe.Amend(element));
+  }
+
   public RecipeValue Amend(FactVal factVal)
   {
     if (factVal is ArrayVal arrayVal)
     {
-      return Clone(arguments: arguments.PushRange(arrayVal));
+      return Clone(
+        arguments: arrayVal.array.Reduce(
+          arguments,
+          (amendment, arguments) =>
+            arguments.PushOrReplace(amendment, (other) => CompareValType(amendment, other))
+        )
+      );
     }
     else if (factVal is TypedFactVal typedVal)
     {
       return Clone(arguments: arguments.Push(typedVal));
     }
     return this;
+  }
+
+#if DEBUG
+  [ExposeMember("Break")]
+  public void Break()
+  {
+    Debugger.Break();
+  }
+#endif
+
+  private bool CompareValType(FactVal o, FactVal other)
+  {
+    if (o is TypedFactVal typedVal)
+    {
+      var otherTypedVal = other as TypedFactVal;
+      if (otherTypedVal == null)
+      {
+        return false;
+      }
+      if (typedVal.type != otherTypedVal.type)
+      {
+        return false;
+      }
+      switch (typedVal.type)
+      {
+        case ValType.alt:
+        case ValType.output:
+        case ValType.input:
+        case ValType.tally:
+          return typedVal.value.Equals(otherTypedVal.value);
+        case ValType.limit:
+        {
+          var (_, a) = (typedVal.value as PairVal).NotNull();
+          var (_, b) = (typedVal.value as PairVal).NotNull();
+          return a.Equals(b);
+        }
+      }
+    }
+    throw new NotImplementedException();
   }
 
   public RecipeValue Clone(string? recipeName = null, ArrayVal? arguments = null)

@@ -26,9 +26,9 @@ LimitValueExp = ValueExp symbol;
 
 PrintExp = printKeyword ValueExp*;
 
-// Assign Exp
+// AssignExp
 
-AssignExp = letKeyword symbol equalSign ValueExp;
+AssignExp = letKeyword ExpChain equalSign ValueExp;
 
 // Value Exp
 
@@ -37,9 +37,6 @@ ValueExp = RecipeExp;
 ValueExp = ExpChain;
 
 // Exp Chain
-
-AssignExp = ExpChain equalSign ExpChain;
-
 ExpChain = symbol ChainContinue?;
 
 Chain = Deref;
@@ -61,6 +58,7 @@ FinalInvocationParam = ValueExp;
 
 // Literals
 Literal = numberLiteral;
+Literal = stringLiteral;
 
 // Spread
 SpreadExp = spread symbol;

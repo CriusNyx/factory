@@ -227,6 +227,22 @@ namespace GenParse.Functional
       return output;
     }
 
+    public static T[] PushOrReplace<T>(this T[] arr, T other, Func<T, bool> evaluate = null!)
+    {
+      evaluate = evaluate ?? ((T element) => element!.Equals(other));
+      for (int i = 0; i < arr.Length; i++)
+      {
+        var element = arr[i];
+        if (evaluate(element))
+        {
+          var output = arr.Clone() as T[];
+          output![i] = element;
+          return output;
+        }
+      }
+      return Push(arr, other);
+    }
+
     public static T[] ToTypedArray<T>(this object o)
     {
       var arr = (object[])o;

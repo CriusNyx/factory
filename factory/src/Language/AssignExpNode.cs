@@ -1,24 +1,27 @@
+using Factory.Parsing;
 using GenParse.Functional;
+using GenParse.Parsing;
 using GenParse.Util;
 
 [ASTClass("AssignExp")]
 public class AssignExpNode : ProgramExp, LanguageNode
 {
-  [ASTField("symbol")]
-  public SymbolNode symbol;
+  [ASTField("ExpChain")]
+  public ExpChainNode left;
 
   [ASTField("ValueExp")]
-  public ValueNode value;
+  public ValueNode right;
 
   public (FactVal? value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
-    var result = value.Evaluate(ref context);
-    context.GlobalValues[symbol.symbolName] = result!;
+    var reference = left.GetReference(context);
+    var result = right.Evaluate(ref context);
+    reference.Set(result);
     return result.With(context);
   }
 
   public IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
-    return new Formatting.ITree<LanguageNode>[] { symbol, value };
+    return new Formatting.ITree<LanguageNode>[] { left, right };
   }
 }

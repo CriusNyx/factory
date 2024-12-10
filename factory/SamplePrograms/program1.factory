@@ -1,25 +1,9 @@
-recipe RPlate
-  out ReinforcedIronPlate
+recipe Rep1
   in IronIngot
-  alt IronPipe
   limit 60 IronIngot
-  tally inline IronIngot
-  tally IronIngot
+  out ReinforcedIronPlate
 
-recipe Rot
-  out Rotor
-  in IronIngot
-  limit 45 IronIngot
-  tally IronIngot
+let Rep2 = Rep1.Amend(limit 80 IronIngot)
+let Rep2.Name = "Rep2"
 
-let RPlateSolution = RPlate()
-let RPlateTotal = RPlateSolution.Total
-
-recipe ModFrame
-  ...Rot
-  out ModularFrame
-  in IronIngot ReinforcedIronPlate
-  tally IronIngot
-
-print RPlate()
-print ModFrame()
+print Rep1 Rep2

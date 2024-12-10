@@ -85,6 +85,26 @@ public static class Transformer
           .GetConstructor(new Type[] { typeof(ASTNode<T>) })
           ?.Invoke(new object[] { node })
         ?? transformType.GetConstructor(new Type[] { })?.Invoke(new object[] { });
+
+      foreach (var member in transformType.GetMembers())
+      {
+        if (member.GetCustomAttribute<ASTAttribute>() != null)
+        {
+          if (member is FieldInfo field)
+          {
+            field.SetValue(value, node);
+          }
+          else if (member is PropertyInfo property)
+          {
+            property.SetValue(value, node);
+          }
+          else
+          {
+            throw new NotImplementedException();
+          }
+        }
+      }
+
       return value!;
     }
     return null;

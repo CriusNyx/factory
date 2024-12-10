@@ -54,12 +54,21 @@ public static class ValExtensions
 
   public static ArrayVal Push(this ArrayVal arrVal, FactVal factVal)
   {
-    return new ArrayVal(arrVal.array.Push(factVal));
+    return arrVal.array.Push(factVal).ToArrayVal();
   }
 
   public static ArrayVal PushRange(this ArrayVal arrVal, ArrayVal arrayVal)
   {
-    return new ArrayVal(arrVal.array.Push(arrayVal.array));
+    return arrVal.array.Push(arrayVal.array).ToArrayVal();
+  }
+
+  public static ArrayVal PushOrReplace(
+    this ArrayVal arrVal,
+    FactVal other,
+    Func<FactVal, bool> evaluate = null!
+  )
+  {
+    return arrVal.array.PushOrReplace(other, evaluate).ToArrayVal();
   }
 
   public static ArrayVal Distinct(this ArrayVal arrVal)

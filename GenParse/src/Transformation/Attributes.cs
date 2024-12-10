@@ -1,3 +1,6 @@
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+public class ASTAttribute : Attribute { }
+
 [AttributeUsage(AttributeTargets.Class)]
 public class ASTClassAttribute(string nodeName) : Attribute
 {

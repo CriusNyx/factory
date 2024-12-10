@@ -28,4 +28,28 @@ public static class FactValExtensions
       $"Cannot convert FactVal of type {factVal.GetType()} to LimitVal"
     );
   }
+
+  public static object ConvertToType(this FactVal factVal, Type type)
+  {
+    if (factVal.GetType() == type)
+    {
+      return factVal;
+    }
+    if (type == typeof(string) || type == typeof(String))
+    {
+      if (factVal is SymbolVal symbol)
+      {
+        return symbol.symbol;
+      }
+      if (factVal is NumVal numVal)
+      {
+        return numVal.value;
+      }
+      if (factVal is StringVal stringVal)
+      {
+        return stringVal.value;
+      }
+    }
+    throw new NotImplementedException();
+  }
 }

@@ -20,4 +20,9 @@ public class ExecutionContext
     return GlobalValues.Safe(identifier.symbol)
       ?? Docs.recipesByProductIdentifier.Safe(identifier.symbol)?.First();
   }
+
+  public void Assign(string identifier, FactVal val)
+  {
+    GlobalValues[identifier] = val;
+  }
 }

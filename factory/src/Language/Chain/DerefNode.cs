@@ -1,5 +1,4 @@
 using System.Reflection;
-using GenParse.Functional;
 using GenParse.Util;
 
 [ASTClass("Deref")]
@@ -10,8 +9,11 @@ public class DerefNode : LanguageNode, ChainNode
 
   public FactVal Evaluate(FactVal target, ExecutionContext context)
   {
-    var fieldName = derefSymbol.symbolName;
+    return EvaluateDereference(target, derefSymbol.symbolName);
+  }
 
+  public static FactVal EvaluateDereference(FactVal target, string fieldName)
+  {
     var targetType = target.GetType();
 
     foreach (var member in targetType.GetMembers())
@@ -30,6 +32,10 @@ public class DerefNode : LanguageNode, ChainNode
           {
             return property.GetValue(target)!.AsFactVal();
           }
+          if (member is MethodInfo method)
+          {
+            return new FuncVal((args) => FuncVal.InvokeCSharpMethod(target, method, args)!);
+          }
         }
       }
     }
@@ -40,5 +46,10 @@ public class DerefNode : LanguageNode, ChainNode
   public IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
     return [derefSymbol];
+  }
+
+  public string GetIdentifier()
+  {
+    return derefSymbol.symbolName;
   }
 }

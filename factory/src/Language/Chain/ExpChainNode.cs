@@ -1,4 +1,4 @@
-using System.Reflection;
+using System.Net.Mime;
 using Factory.Parsing;
 using GenParse.Functional;
 using GenParse.Parsing;
@@ -45,6 +45,37 @@ public class ExpChainNode : LanguageNode, ValueNode
     else
     {
       return chainContinue.Continue(value, context);
+    }
+  }
+
+  public RefVal GetReference(ExecutionContext context)
+  {
+    return _GetReference(context, null);
+  }
+
+  private RefVal _GetReference(ExecutionContext context, FactVal? owner)
+  {
+    if (chainContinue == null)
+    {
+      if (owner == null)
+      {
+        return new ScopeRefVal(context, initialSymbol.symbolName);
+      }
+      else
+      {
+        return new ObjectRefVal(owner, chain.GetIdentifier());
+      }
+    }
+    else
+    {
+      if (initialSymbol != null)
+      {
+        return chainContinue._GetReference(context, context.Resolve(initialSymbol.Evaluate())!);
+      }
+      else
+      {
+        return chainContinue._GetReference(context, chain.Evaluate(owner.NotNull(), context));
+      }
     }
   }
 

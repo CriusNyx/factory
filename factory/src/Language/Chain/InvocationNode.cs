@@ -21,6 +21,10 @@ public class InvocationNode(ASTNode<FactoryLexon> astNode) : LanguageNode, Chain
   {
     var invocationParams = parameters.Map(x => x.Evaluate(ref context)).ToArrayVal();
 
+    if (target is IFunc func)
+    {
+      return func.Invoke(invocationParams);
+    }
     if (GetRecipeForInvocation(target) is RecipeValue recipeVal)
     {
       var invocation = invocationParams.array.Reduce(
@@ -48,5 +52,10 @@ public class InvocationNode(ASTNode<FactoryLexon> astNode) : LanguageNode, Chain
       );
     }
     throw new InvalidOperationException($"Could not resolve invocation on object {o}");
+  }
+
+  public string GetIdentifier()
+  {
+    throw new Exception("Invocation nodes cannot be converted to identifiers.");
   }
 }
