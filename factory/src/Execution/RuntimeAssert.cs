@@ -3,7 +3,8 @@ using GenParse.Parsing;
 
 public class RuntimeAssertException : Exception
 {
-  public RuntimeAssertException(string message) : base(message) { }
+  public RuntimeAssertException(string message)
+    : base(message) { }
 }
 
 public static class RuntimeAssert

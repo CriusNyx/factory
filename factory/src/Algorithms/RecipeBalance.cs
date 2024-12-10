@@ -13,7 +13,7 @@ public class RecipeBalance
   {
     List<RecipeBalanceElement> elements = new List<RecipeBalanceElement>()
     {
-      new RecipeBalanceElement(root.item.identifier, root.quantity)
+      new RecipeBalanceElement(root.item.identifier, root.quantity),
     };
 
     foreach (var child in root.children)

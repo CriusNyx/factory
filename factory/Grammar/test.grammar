@@ -1,0 +1,13 @@
+AssignExp = ExpChain equalSign ExpChain;
+
+ExpChain = ChainStart ChainContinue?;
+
+ChainStart = symbol;
+
+Chain = Deref;
+Chain = Invocation;
+
+ChainContinue = dot ChainContinue;
+
+Deref = dot symbol;
+Invocation = openParen InvocationParamSet closeParen;

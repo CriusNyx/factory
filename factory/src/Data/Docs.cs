@@ -7,11 +7,11 @@ public class Docs
   public Item[] Desc;
   public Recipe[] Recipe;
 
-  public readonly static Docs docs;
-  public readonly static Dictionary<string, Item> itemsByClass;
-  public readonly static Dictionary<string, Item> itemsByIdentifier;
-  public readonly static Dictionary<string, Recipe[]> recipesByProductClass;
-  public readonly static Dictionary<string, Recipe[]> recipesByProductIdentifier;
+  public static readonly Docs docs;
+  public static readonly Dictionary<string, Item> itemsByClass;
+  public static readonly Dictionary<string, Item> itemsByIdentifier;
+  public static readonly Dictionary<string, Recipe[]> recipesByProductClass;
+  public static readonly Dictionary<string, Recipe[]> recipesByProductIdentifier;
 
   static Docs()
   {
@@ -21,8 +21,8 @@ public class Docs
 
     docs = JsonConvert.DeserializeObject<Docs>(docsJson)!;
     itemsByClass = docs.Desc.ToDictionary(x => x.className);
-    itemsByIdentifier = docs.Desc
-      .Filter(x => (x.identifier ?? "") != "")
+    itemsByIdentifier = docs
+      .Desc.Filter(x => (x.identifier ?? "") != "")
       .ToDictionary(x => x.identifier);
 
     Dictionary<string, List<Recipe>> _recipesByProductClass =
@@ -67,6 +67,6 @@ public class Docs
     "Build_OilRefinery_C",
     "Build_ManufacturerMk1_C",
     "Build_AssemblerMk1_C",
-    "Build_FoundryMk1_C"
+    "Build_FoundryMk1_C",
   };
 }

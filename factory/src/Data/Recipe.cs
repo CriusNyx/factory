@@ -7,7 +7,7 @@ public class Recipe : FactVal
   {
     "Alternate: Compacted Coal",
     "Alternate: Turbofuel",
-    "Alternate: Heavy Oil Residue"
+    "Alternate: Heavy Oil Residue",
   };
 
   public string className;

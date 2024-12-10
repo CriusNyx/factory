@@ -20,17 +20,22 @@ namespace GenParse.Functional
       return output;
     }
 
-    public static (U[] array, V context) MapReduce<T, U, V>(this T[] arr, V initialContext, Func<T, V, (U element, V context)> func){
+    public static (U[] array, V context) MapReduce<T, U, V>(
+      this T[] arr,
+      V initialContext,
+      Func<T, V, (U element, V context)> func
+    )
+    {
       U[] output = new U[arr.Length];
       var context = initialContext;
-      for(int i = 0; i < arr.Length; i++){
+      for (int i = 0; i < arr.Length; i++)
+      {
         U element;
         (element, context) = func(arr[i], context);
         output[i] = element;
       }
       return (output, context);
     }
-
 
     public static U[] FlatMap<T, U>(this T[] arr, Func<T, U[]> func)
     {
@@ -101,19 +106,25 @@ namespace GenParse.Functional
       return arr.Where(func).ToArray();
     }
 
-    public static U[] FilterByType<T, U>(this T[] arr){
+    public static U[] FilterByType<T, U>(this T[] arr)
+    {
       List<U> output = new List<U>();
-      foreach(var element in arr){
-        if(element is U u){
+      foreach (var element in arr)
+      {
+        if (element is U u)
+        {
           output.Add(u);
         }
       }
       return output.ToArray();
     }
 
-    public static U FindByType<T, U>(this T[] arr){
-      foreach(var element in arr){
-        if(element is U u){
+    public static U FindByType<T, U>(this T[] arr)
+    {
+      foreach (var element in arr)
+      {
+        if (element is U u)
+        {
           return u;
         }
       }
@@ -166,7 +177,8 @@ namespace GenParse.Functional
       return default;
     }
 
-    public static U? Safe<T, U>(this IReadOnlyDictionary<T, U> dict, T key) => SafeGet(dict!, key, default);
+    public static U? Safe<T, U>(this IReadOnlyDictionary<T, U> dict, T key) =>
+      SafeGet(dict!, key, default);
 
     public static U? SafeGet<T, U>(this IReadOnlyDictionary<T, U> dict, T key, U defaultValue)
     {
@@ -191,73 +203,113 @@ namespace GenParse.Functional
       }
     }
 
-    public static List<U> AddOrGet<T, U>(this IDictionary<T, List<U>> dict, T key)
-     => AddOrGet(dict, key, () => new List<U>());
+    public static List<U> AddOrGet<T, U>(this IDictionary<T, List<U>> dict, T key) =>
+      AddOrGet(dict, key, () => new List<U>());
 
-    public static (T, U) With<T, U>(this T value, U other){
+    public static (T, U) With<T, U>(this T value, U other)
+    {
       return (value, other);
     }
 
-    public static T[] Push<T>(this T[] arr, T[] other){
+    public static T[] Push<T>(this T[] arr, T[] other)
+    {
       T[] output = new T[arr.Length + other.Length];
       Array.Copy(arr, output, arr.Length);
       Array.Copy(other, 0, output, arr.Length, other.Length);
       return output;
     }
 
-    public static T[] Push<T>(this T[] arr, T other){
+    public static T[] Push<T>(this T[] arr, T other)
+    {
       T[] output = new T[arr.Length + 1];
       Array.Copy(arr, output, arr.Length);
       output[arr.Length] = other;
       return output;
     }
 
-    public static T[] ToTypedArray<T>(this object o){
+    public static T[] ToTypedArray<T>(this object o)
+    {
       var arr = (object[])o;
       return arr!.Map(x => (T)x);
     }
 
-    public static T[] Spread<T>(this T[] arr, int startIndex, int? endIndex = null){
+    public static object ToTypedArray<T>(this T[] arr, Type t)
+    {
+      var output = Array.CreateInstance(t, arr.Length);
+      arr.CopyTo(output, 0);
+      return output;
+    }
+
+    public static T[] Spread<T>(this T[] arr, int startIndex, int? endIndex = null)
+    {
       var end = endIndex ?? arr.Length;
       var len = end - startIndex;
-      if(len < 0){
-        return new T[]{};
+      if (len < 0)
+      {
+        return new T[] { };
       }
       var output = new T[len];
       Array.Copy(arr, startIndex, output, 0, len);
       return output;
     }
 
-    public static void Crawl<T>(this T root, Func<T, IEnumerable<T>> getChildren, Action<T> visit){
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="getChildren"></param>
+    /// <param name="visit"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <example>
+    /// <code>
+    /// root.Crawl(node => node.children, node => DoThing(node));
+    /// </code>
+    /// /// </example>
+    public static void Crawl<T>(this T root, Func<T, IEnumerable<T>> getChildren, Action<T> visit)
+    {
       visit(root);
-      foreach(var child in getChildren(root)){
+      foreach (var child in getChildren(root))
+      {
         Crawl(child, getChildren, visit);
       }
     }
 
-    public static void Crawl<T, U>(this T root, U initialContext, Func<T, U, (IEnumerable<T>, U)> traversalFunc, Action<T, U> visitorFunc){
+    public static void Crawl<T, U>(
+      this T root,
+      U initialContext,
+      Func<T, U, (IEnumerable<T>, U)> traversalFunc,
+      Action<T, U> visitorFunc
+    )
+    {
       visitorFunc(root, initialContext);
       var (children, newContext) = traversalFunc(root, initialContext);
-      foreach(var child in children){
+      foreach (var child in children)
+      {
         Crawl(child, newContext, traversalFunc, visitorFunc);
       }
     }
 
-    public static T[] FilterDefined<T>(this T?[] arr){
+    public static T[] FilterDefined<T>(this T?[] arr)
+    {
       return arr.Filter(x => x != null)!;
     }
 
-    public static T NotNull<T>(this T? val){
-      if(val == null){
+    public static T NotNull<T>(this T? val)
+    {
+      if (val == null)
+      {
         throw new NullReferenceException("Value should not be null");
       }
       return val;
     }
 
-    public static List<T> ReplaceOrAdd<T>(this List<T> list, Func<T, bool> func, Func<T, T> replace){
-      for(int i = 0; i < list.Count; i++){
+    public static List<T> ReplaceOrAdd<T>(this List<T> list, Func<T, bool> func, Func<T, T> replace)
+    {
+      for (int i = 0; i < list.Count; i++)
+      {
         var element = list[i];
-        if(func(element)){
+        if (func(element))
+        {
           list[i] = replace(element);
           return list;
         }

@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using GenParse.Functional;
 
@@ -19,6 +20,11 @@ namespace GenParse.Util
       return indentString;
     }
 
+    public interface ITree<T>
+    {
+      public IEnumerable<ITree<T>> GetChildren();
+    }
+
     public static string PrintTree<T>(
       T root,
       Func<T, string> elementName,
@@ -28,6 +34,11 @@ namespace GenParse.Util
       var builder = new StringBuilder();
       PrintTree(root, elementName, getChildren, builder, 0);
       return builder.ToString();
+    }
+
+    public static string PrintTree<T>(ITree<T> root, Func<ITree<T>, string> elementName)
+    {
+      return PrintTree<ITree<T>>(root, elementName, (x) => x.GetChildren());
     }
 
     public static void PrintTree<T>(

@@ -13,3 +13,5 @@
   - Is this what I want? I don't think so? Consider doing a keyword based solution instead. Keywords are cool for DSL's.
 - [ ] Fixing the equality operator by making parser less greedy
 - [ ] Remove var keyword
+- [ ] Add a depth keyword
+- [ ] Improve command line experience

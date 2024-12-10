@@ -15,7 +15,7 @@ public static class RecipeSearch
     "Uranium",
     "CrudeOil",
     "SAM",
-    "Water"
+    "Water",
   };
 
   public static RecipeSearchResult Search(RecipeSearchRequest request)
@@ -48,12 +48,12 @@ public static class RecipeSearch
     return new RecipeSearchNode(
       recipe,
       recipeQuantity,
-      recipe.ingredients
-        .Map(
-          x => MakeResult(ResolveRecipe(x.identifier, context, recipeQuantity * x.Amount), context)
+      recipe
+        .ingredients.Map(x =>
+          MakeResult(ResolveRecipe(x.identifier, context, recipeQuantity * x.Amount), context)
         )
         .Push(MakeBiproducts(recipe, recipeQuantity))
-        .Filter(x => x != null)!,
+        .FilterDefined(),
       recipe.primaryProduct
     );
   }
@@ -64,8 +64,8 @@ public static class RecipeSearch
     {
       return new RecipeSearchNode[] { };
     }
-    return recipe.product
-      .Spread(1)
+    return recipe
+      .product.Spread(1)
       .Map(x => new RecipeSearchNode(x.identifier, -quantity * x.Amount, x.item!));
   }
 
@@ -83,12 +83,10 @@ public static class RecipeSearch
       return (null, itemIdentifier, amount);
     }
     var itemClassName = Docs.itemsByIdentifier[itemIdentifier].className;
-    var defaultRecipe = Docs.recipesByProductClass[itemClassName].FirstOrDefault(
-      x => !x.isAlternative && x.isMachineRecipe
-    );
-    var altRecipe = Docs.recipesByProductClass[itemClassName].FirstOrDefault(
-      x => alts.Contains(x.identifier) && x.isMachineRecipe
-    );
+    var defaultRecipe = Docs.recipesByProductClass[itemClassName]
+      .FirstOrDefault(x => !x.isAlternative && x.isMachineRecipe);
+    var altRecipe = Docs.recipesByProductClass[itemClassName]
+      .FirstOrDefault(x => alts.Contains(x.identifier) && x.isMachineRecipe);
     return (altRecipe ?? defaultRecipe!, null, amount);
   }
 }

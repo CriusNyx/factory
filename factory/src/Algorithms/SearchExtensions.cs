@@ -4,8 +4,8 @@ public static class SearchExtensions
 {
   public static RecipeSearchResult Balance(this RecipeSearchResult result, bool hasInitialQuantity)
   {
-    var limitArguments = result.request.recipe.arguments
-      .Filter(x => x.IsLimitVal())
+    var limitArguments = result
+      .request.recipe.arguments.Filter(x => x.IsLimitVal())
       .array.ToTypedArray<TypedFactVal>();
 
     if (limitArguments.Length == 0)

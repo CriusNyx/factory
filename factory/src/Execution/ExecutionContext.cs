@@ -12,7 +12,8 @@ public class ExecutionContext
     this.standardOut = standardOut;
   }
 
-  public ExecutionContext() : this(Console.In, Console.Out) { }
+  public ExecutionContext()
+    : this(Console.In, Console.Out) { }
 
   public FactVal? Resolve(SymbolVal identifier)
   {

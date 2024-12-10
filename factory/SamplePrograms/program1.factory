@@ -1,7 +1,9 @@
 recipe RPlate
   out ReinforcedIronPlate
   in IronIngot
+  alt IronPipe
   limit 60 IronIngot
+  tally inline IronIngot
   tally IronIngot
 
 recipe Rot
@@ -11,8 +13,11 @@ recipe Rot
   tally IronIngot
 
 recipe ModFrame
+  ...Rot
   out ModularFrame
   in IronIngot
   tally IronIngot
 
-print RPlate() Rot() ModFrame(10)
+print RPlate() Rot(tally inline IronIngot) ModFrame(10)
+
+var idk = 3

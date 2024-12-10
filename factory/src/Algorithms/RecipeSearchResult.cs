@@ -17,12 +17,9 @@ public class RecipeSearchResult : FactVal
 
   public override string ToString()
   {
-    var tallyArgs = request.recipe.arguments
-      .Map(
-        x =>
-          x is TypedFactVal typedFactVal && typedFactVal.value is TallyVal tallyVal
-            ? tallyVal
-            : null!
+    var tallyArgs = request
+      .recipe.arguments.Map(x =>
+        x is TypedFactVal typedFactVal && typedFactVal.value is TallyVal tallyVal ? tallyVal : null!
       )
       .array.FilterDefined()
       .ToTypedArray<TallyVal>();

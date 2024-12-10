@@ -1,6 +1,6 @@
-﻿using GenParse.Functional;
+﻿using System.CommandLine;
 using Factory.Parsing;
-using System.CommandLine;
+using GenParse.Functional;
 
 var options = CommandLineOptions.Create(args);
 
@@ -46,5 +46,7 @@ if (options.ast)
   return;
 }
 
+var program = Transformer.Transform(ast) as ProgramNode;
+
 var context = new ExecutionContext();
-var result = Executor.Evaluate(ast, ref context);
+program!.Evaluate(context);

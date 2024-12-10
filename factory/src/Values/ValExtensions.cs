@@ -71,11 +71,10 @@ public static class ValExtensions
   {
     return arrVal
       .FilterType(type)
-      .array.Map(
-        x =>
-          x is TypedFactVal typedVal && typedVal.value is SymbolVal symbolVal
-            ? symbolVal.symbol
-            : null
+      .array.Map(x =>
+        x is TypedFactVal typedVal && typedVal.value is SymbolVal symbolVal
+          ? symbolVal.symbol
+          : null
       )
       .FilterDefined();
   }
