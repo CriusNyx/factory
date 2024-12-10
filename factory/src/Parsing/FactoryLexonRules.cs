@@ -19,7 +19,7 @@ public enum FactoryLexon
   spread,
 
   // keywords
-  varKeyword,
+  letKeyword,
   recipeKeyword,
   altKeyword,
   outKeyword,
@@ -63,7 +63,7 @@ internal static class FactoryLexonRules
     (FactoryLexon.closeParen, @"^\)"),
     (FactoryLexon.equalSign, @"^\="),
     // keywords
-    (FactoryLexon.varKeyword, @"^var"),
+    (FactoryLexon.letKeyword, @"^let"),
     (FactoryLexon.recipeKeyword, @"^recipe"),
     (FactoryLexon.altKeyword, @"^alt"),
     (FactoryLexon.outKeyword, @"^out"),

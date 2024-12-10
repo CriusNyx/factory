@@ -8,6 +8,12 @@ public class RecipeSearchResult : FactVal
   public readonly RecipeSearchNode root;
   public readonly RecipeBalance recipeBalance;
 
+  [ExposeMember("Recipe")]
+  public RecipeValue Recipe => request.recipe;
+
+  [ExposeMember("Total")]
+  public NumVal Total => new NumVal(root.quantity);
+
   public RecipeSearchResult(RecipeSearchRequest request, RecipeSearchNode root)
   {
     this.request = request;

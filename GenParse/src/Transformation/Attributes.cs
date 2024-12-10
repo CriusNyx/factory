@@ -5,14 +5,17 @@ public class ASTClassAttribute(string nodeName) : Attribute
 }
 
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-public class ASTFieldAttribute : Attribute {
+public class ASTFieldAttribute : Attribute
+{
   public readonly string grammarElementName;
 
-  public ASTFieldAttribute(string grammarElementName){
+  public ASTFieldAttribute(string grammarElementName)
+  {
     this.grammarElementName = grammarElementName;
   }
 }
 
-public interface ASTTransformer{
+public interface ASTTransformer
+{
   object Transform();
 }

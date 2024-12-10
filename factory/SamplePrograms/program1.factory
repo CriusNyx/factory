@@ -12,12 +12,14 @@ recipe Rot
   limit 45 IronIngot
   tally IronIngot
 
+let RPlateSolution = RPlate()
+let RPlateTotal = RPlateSolution.Total
+
 recipe ModFrame
   ...Rot
   out ModularFrame
-  in IronIngot
+  in IronIngot ReinforcedIronPlate
   tally IronIngot
 
-print RPlate() Rot(tally inline IronIngot) ModFrame(10)
-
-var idk = 3
+print RPlate()
+print ModFrame()

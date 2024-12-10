@@ -1,6 +1,6 @@
+using System.Text.RegularExpressions;
 using GenParse.Functional;
 using GenParse.Util;
-using System.Text.RegularExpressions;
 
 namespace GenParse.Lexing;
 

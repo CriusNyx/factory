@@ -48,5 +48,11 @@ if (options.ast)
 
 var program = Transformer.Transform(ast) as ProgramNode;
 
+if (options.transform)
+{
+  Console.WriteLine(program!.ToTree());
+  return;
+}
+
 var context = new ExecutionContext();
 program!.Evaluate(context);

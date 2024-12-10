@@ -28,16 +28,30 @@ PrintExp = printKeyword ValueExp*;
 
 // Assign Exp
 
-AssignExp = varKeyword symbol equalSign ValueExp;
+AssignExp = letKeyword symbol equalSign ValueExp;
 
 // Value Exp
 
-ValueExp = Invocation;
 ValueExp = Literal;
 ValueExp = RecipeExp;
-ValueExp = symbol;
+ValueExp = ExpChain;
 
-Invocation = symbol openParen InvocationParamSet closeParen;
+// Exp Chain
+
+AssignExp = ExpChain equalSign ExpChain;
+
+ExpChain = symbol ChainContinue?;
+
+Chain = Deref;
+Chain = Invocation;
+
+ChainContinue = Chain ChainContinue?;
+
+Deref = dot symbol;
+
+// Invocation
+
+Invocation = openParen InvocationParamSet closeParen;
 
 InvocationParamSet = InvocationParam* FinalInvocationParam;
 InvocationParamSet = ;
@@ -45,6 +59,8 @@ InvocationParamSet = ;
 InvocationParam = ValueExp comma;
 FinalInvocationParam = ValueExp;
 
+// Literals
 Literal = numberLiteral;
 
+// Spread
 SpreadExp = spread symbol;

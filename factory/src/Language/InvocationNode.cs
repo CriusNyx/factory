@@ -4,13 +4,10 @@ using GenParse.Parsing;
 using GenParse.Util;
 
 [ASTClass("Invocation")]
-public class InvocationNode(ASTNode<FactoryLexon> astNode) : LanguageNode, ValueNode
+public class InvocationNode(ASTNode<FactoryLexon> astNode) : LanguageNode, ChainNode
 {
   private ASTNode<FactoryLexon> _astNode = astNode;
   public ASTNode<FactoryLexon> astNode => _astNode;
-
-  [ASTField("symbol")]
-  public SymbolNode invocationTarget;
 
   [ASTField("InvocationParamSet")]
   public ValueNode[] parameters;
@@ -20,21 +17,19 @@ public class InvocationNode(ASTNode<FactoryLexon> astNode) : LanguageNode, Value
     return parameters;
   }
 
-  public (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
+  public FactVal Evaluate(FactVal target, ExecutionContext context)
   {
-    var name = invocationTarget.Evaluate();
-    var functionDefinition = context.Resolve(name).NotNull();
     var invocationParams = parameters.Map(x => x.Evaluate(ref context)).ToArrayVal();
 
-    if (GetRecipeForInvocation(functionDefinition) is RecipeValue recipeVal)
+    if (GetRecipeForInvocation(target) is RecipeValue recipeVal)
     {
       var invocation = invocationParams.array.Reduce(
         new InvocationContext(recipeVal),
         (factVal, context) => context.Amend(factVal)
       );
-      return invocation.Invoke().With(context);
+      return invocation.Invoke();
     }
-    return (null!, context);
+    return null!;
   }
 
   static RecipeValue GetRecipeForInvocation(object o)

@@ -1,4 +1,5 @@
 using GenParse.Functional;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 public static class ValExtensions
 {
@@ -30,6 +31,15 @@ public static class ValExtensions
     }
     else
       throw new InvalidCastException($"Cannot convert {factVal.GetType()} to ArrayVal");
+  }
+
+  public static FactVal AsFactVal(this object value)
+  {
+    if (value is FactVal factVal)
+    {
+      return factVal;
+    }
+    throw new InvalidCastException($"Cannot convert {value.GetType()} to FactVal");
   }
 
   public static ArrayVal ToArrayVal(this FactVal[] factVal)

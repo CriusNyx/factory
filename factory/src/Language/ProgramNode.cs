@@ -17,6 +17,11 @@ public class ProgramNode : LanguageNode
       (_, executionContext) = expression.Evaluate(executionContext);
     }
   }
+
+  public string ToTree()
+  {
+    return Formatting.PrintTree(this, x => x.ToString());
+  }
 }
 
 public interface ProgramExp

@@ -6,8 +6,9 @@ public class CommandLineOptions
   public readonly bool ast;
   public readonly bool test;
   public readonly bool lexons;
+  public readonly bool transform;
 
-  public CommandLineOptions(bool stream, bool test, bool ast, bool lexons)
+  public CommandLineOptions(bool stream, bool test, bool ast, bool lexons, bool transform)
   {
     this.stream = stream;
 #if DEBUG
@@ -17,6 +18,7 @@ public class CommandLineOptions
 #endif
     this.ast = ast;
     this.lexons = lexons;
+    this.transform = transform;
   }
 
   public static CommandLineOptions Create(params string[] args)
@@ -25,21 +27,30 @@ public class CommandLineOptions
     var testOption = new Option<bool>("--test");
     var astOption = new Option<bool>("--ast");
     var lexonOption = new Option<bool>("--lexons");
+    var transformOption = new Option<bool>("--transform");
 
     var rootCommand = new RootCommand()
       .Option(streamOption)
       .Option(testOption)
       .Option(astOption)
-      .Option(lexonOption);
+      .Option(lexonOption)
+      .Option(transformOption);
 
     CommandLineOptions output = null!;
 
-    void Construct(bool stream, bool test, bool ast, bool lexons)
+    void Construct(bool stream, bool test, bool ast, bool lexons, bool transform)
     {
-      output = new CommandLineOptions(stream, test, ast, lexons);
+      output = new CommandLineOptions(stream, test, ast, lexons, transform);
     }
 
-    rootCommand.SetHandler(Construct, streamOption, testOption, astOption, lexonOption);
+    rootCommand.SetHandler(
+      Construct,
+      streamOption,
+      testOption,
+      astOption,
+      lexonOption,
+      transformOption
+    );
 
     rootCommand.Invoke(args);
 
