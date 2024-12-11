@@ -1,6 +1,3 @@
-using System.Security.Cryptography;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-
 namespace GenParse.Functional
 {
   public static class FunctionalExtensions

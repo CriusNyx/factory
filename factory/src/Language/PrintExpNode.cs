@@ -17,6 +17,7 @@ public class PrintExpNode : ProgramExp, LanguageNode
     var values = this.values.Map(x => x.Evaluate(ref context));
     foreach (var element in values)
     {
+      var elementString = element.ToString();
       context.standardOut.WriteLine(element);
     }
 

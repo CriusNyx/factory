@@ -78,7 +78,7 @@ ReinforcedIronPlate
 | |-45 IronIngot     
 |-60 Screw           
 | |-15 IronRod       
-| | |-15 IronIngot  
+| | |-15 IronIngot
 
 IronIngot 60
 ```
@@ -99,12 +99,13 @@ ReinforcedIronPlate    | IronIngot  |
 | |-15 IronRod         |            |
 | | |-15 IronIngot     |        15  |
                        |            |
-Totals                 |        60
+Totals                 |        60  |
 ```
 
 ## Example 5
 
-The `limit` parameter can be used to specify how many resources are available for a particular recipe.
+The `limit` parameter can be used to specify how many resources are available for a particular
+recipe.
 
 ```factory factory --stream
 print ReinforcedIronPlate(limit 480 IronOre)
@@ -177,7 +178,7 @@ HeavyModularFrame           | IronIngot  | SteelIngot  | Concrete  |
 |-384 CastScrew             |            |             |           |
 | |-96 IronIngot            |        96  |             |           |
                             |            |             |           |
-Totals                      |       480  |        288  |       96  
+Totals                      |       480  |        288  |       96  |
 
 IronIngot 480
 SteelIngot 288
@@ -217,7 +218,7 @@ HeavyModularFrame
 | | | |-125.217 Coal          
 | |-62.609 Concrete           
 |-250.435 CastScrew           
-| |-62.609 IronIngot         
+| |-62.609 IronIngot
 
 IronIngot 480
 Concrete 62.609
@@ -228,7 +229,8 @@ Concrete 62.609
 The code above is a bit cumbersome. We can rewrite it in a more readable format using the recipe 
 syntax.
 
-<span style="color:red">**NOTE:**</span> The recipe name must be different from the name of the item.
+<span style="color:red">**NOTE:**</span> The recipe name must be different from the name of the 
+item.
 
 ```factory factory --stream
 recipe MyPlateRecipe
@@ -285,7 +287,7 @@ MyHeavyFrameRecipe
 | |-60 Concrete           
 | | |-180 Limestone       
 |-240 CastScrew           
-| |-60 IronIngot         
+| |-60 IronIngot
 
 IronIngot 300
 SteelIngot 180
@@ -309,7 +311,7 @@ MyHeavyFrameRecipe
 | |-50 Concrete           
 | | |-150 Limestone       
 |-240 CastScrew           
-| |-60 IronIngot         
+| |-60 IronIngot
 
 IronIngot 700
 SteelIngot 0
@@ -337,3 +339,59 @@ recipe MyHeavyFrameRecipe
   alt CastScrew
   tally IronIngot SteelIngot
 ```
+
+# Variables and methods
+
+Variables can be declared or assigned by using a `let` statement.
+
+```factory factory --stream
+let RecipeSolution = IronPlate(2400)
+
+print RecipeSolution
+```
+
+```#output factory --stream
+IronPlate       
+                
+2400 IronPlate  
+|-3600 IronIngot
+| |-3600 IronOre
+```
+
+Unlike most languages the `let` keyword does not declare a variable, but is instead used to being an
+assignment statement. For example, the following will not work.
+
+```factory
+RecipeSolution = IronPlate(2400)
+
+print RecipeSolution
+```
+
+The following will also not work.
+
+```factory
+let RecipeSolution = IronPlate(2400)
+RecipeSolution = IronPlate(1200)
+
+print RecipeSolution
+```
+
+But the following will work
+
+```factory factory --stream
+let RecipeSolution = IronPlate(2400)
+let RecipeSolution = IronPlate(2400)
+
+print RecipeSolution
+```
+
+```#output factory --stream
+IronPlate       
+                
+2400 IronPlate  
+|-3600 IronIngot
+| |-3600 IronOre
+```
+
+**NOTE:** The use of the let keyword is a current limitation of the language parser. If you have a 
+solution for this problem feel free to open up an issue on the repo.

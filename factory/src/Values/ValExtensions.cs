@@ -1,5 +1,4 @@
 using GenParse.Functional;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 public static class ValExtensions
 {

@@ -47,6 +47,126 @@ HMF
 | | |-360 SteelIngot      
 | |-180 Concrete          
 |-720 CastScrew           
+| |-180 IronIngot
+
+IronIngot 900
+SteelIngot 540
+Concrete 180
+```output factory --stream
+HMF                       
+                          
+6 HeavyModularFrame       
+|-30 ModularFrame         
+| |-45 ReinforcedIronPlate
+| | |-270 IronPlate       
+| | | |-405 IronIngot     
+| | |-540 CastScrew       
+| | | |-135 IronIngot     
+| |-180 IronRod           
+| | |-180 IronIngot       
+|-120 SteelPipe           
+| |-180 SteelIngot        
+|-30 EncasedIndustrialBeam
+| |-90 SteelBeam          
+| | |-360 SteelIngot      
+| |-180 Concrete          
+|-720 CastScrew           
+| |-180 IronIngot
+
+IronIngot 900
+SteelIngot 540
+Concrete 180
+```output factory --stream
+HMF                       
+                          
+6 HeavyModularFrame       
+|-30 ModularFrame         
+| |-45 ReinforcedIronPlate
+| | |-270 IronPlate       
+| | | |-405 IronIngot     
+| | |-540 CastScrew       
+| | | |-135 IronIngot     
+| |-180 IronRod           
+| | |-180 IronIngot       
+|-120 SteelPipe           
+| |-180 SteelIngot        
+|-30 EncasedIndustrialBeam
+| |-90 SteelBeam          
+| | |-360 SteelIngot      
+| |-180 Concrete          
+|-720 CastScrew           
+| |-180 IronIngot
+
+IronIngot 900
+SteelIngot 540
+Concrete 180
+```output factory --stream
+HMF                       
+                          
+6 HeavyModularFrame       
+|-30 ModularFrame         
+| |-45 ReinforcedIronPlate
+| | |-270 IronPlate       
+| | | |-405 IronIngot     
+| | |-540 CastScrew       
+| | | |-135 IronIngot     
+| |-180 IronRod           
+| | |-180 IronIngot       
+|-120 SteelPipe           
+| |-180 SteelIngot        
+|-30 EncasedIndustrialBeam
+| |-90 SteelBeam          
+| | |-360 SteelIngot      
+| |-180 Concrete          
+|-720 CastScrew           
+| |-180 IronIngot        
+
+IronIngot 900
+SteelIngot 540
+Concrete 180
+```output factory --stream
+HMF                       
+                          
+6 HeavyModularFrame       
+|-30 ModularFrame         
+| |-45 ReinforcedIronPlate
+| | |-270 IronPlate       
+| | | |-405 IronIngot     
+| | |-540 CastScrew       
+| | | |-135 IronIngot     
+| |-180 IronRod           
+| | |-180 IronIngot       
+|-120 SteelPipe           
+| |-180 SteelIngot        
+|-30 EncasedIndustrialBeam
+| |-90 SteelBeam          
+| | |-360 SteelIngot      
+| |-180 Concrete          
+|-720 CastScrew           
+| |-180 IronIngot        
+
+IronIngot 900
+SteelIngot 540
+Concrete 180
+```output factory --stream
+HMF                       
+                          
+6 HeavyModularFrame       
+|-30 ModularFrame         
+| |-45 ReinforcedIronPlate
+| | |-270 IronPlate       
+| | | |-405 IronIngot     
+| | |-540 CastScrew       
+| | | |-135 IronIngot     
+| |-180 IronRod           
+| | |-180 IronIngot       
+|-120 SteelPipe           
+| |-180 SteelIngot        
+|-30 EncasedIndustrialBeam
+| |-90 SteelBeam          
+| | |-360 SteelIngot      
+| |-180 Concrete          
+|-720 CastScrew           
 | |-180 IronIngot        
 
 IronIngot 900

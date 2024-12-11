@@ -179,6 +179,14 @@ public class Parser<LexonType>
     }
     else
     {
+      if (context.customParsers.TryGetValue(symbol.name, out var customParser))
+      {
+        var result = customParser.Parse(context, lexons, index);
+        if (result != null)
+        {
+          return result;
+        }
+      }
       var productionSet = context.productionSets.Safe(symbol.name);
       if (productionSet != null)
       {

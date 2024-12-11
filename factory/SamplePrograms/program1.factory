@@ -1,1 +1,15 @@
-print ReinforcedIronPlate()
+recipe ModFrames
+  out ModularFrame
+  in IronIngot
+  limit 480 IronIngot
+  tally IronIngot
+
+let ModFrameSol = ModFrames()
+
+recipe HFrame
+  out HeavyModularFrame
+  in ModularFrame IronIngot
+  limit ModFrameSol.Total ModularFrame
+  tally IronIngot
+
+print ModFrameSol HFrame()

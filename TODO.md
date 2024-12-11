@@ -15,6 +15,7 @@
 - [n/a] Remove var keyword
   - Rejected. Using a keyword based paradigm for the language grammar where each statement begins with a keyword.
 - [ ] Add a depth keyword
-- [ ] Improve command line experience
+- [x] Improve command line experience
 - [x] Add more rich support for assign and invocation
 - [ ] Add error handling to parser. It should fail if it does not consume all lexons.
+- [ ] Add math expressions.

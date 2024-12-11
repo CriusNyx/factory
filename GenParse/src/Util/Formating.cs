@@ -101,9 +101,7 @@ namespace GenParse.Util
       }
 
       // Remove trailing space.
-      builder.Remove(builder.Length - 1, 1);
-
-      return builder.ToString();
+      return builder.ToString().TrimEnd();
     }
 
     internal static string ToLiteral(string valueTextForCompiler)

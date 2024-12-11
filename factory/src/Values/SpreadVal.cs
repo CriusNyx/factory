@@ -1,5 +1,3 @@
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-
 public class SpreadVal(ArrayVal arr) : FactVal, IUnfold
 {
   public readonly ArrayVal arr = arr;
