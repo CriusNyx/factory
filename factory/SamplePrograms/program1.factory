@@ -13,3 +13,5 @@ recipe HFrame
   tally IronIngot
 
 print ModFrameSol HFrame()
+
+let

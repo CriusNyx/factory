@@ -9,11 +9,12 @@ public class FactoryLexer
     return Lexer.Lex(
       code,
       FactoryLexonRules.Rules,
-      (lexonType, source) =>
+      (lexonType, source, index) =>
         new Lexon<FactoryLexon>(
           lexonType,
           source,
-          !FactoryLexonRules.nonSemanticLexon.Contains(lexonType)
+          !FactoryLexonRules.nonSemanticLexon.Contains(lexonType),
+          index
         )
     );
   }
