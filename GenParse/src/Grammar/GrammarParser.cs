@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using GenParse.Functional;
 using GenParse.Lexing;
@@ -17,7 +18,8 @@ public enum GrammarLexonType
 
 public class GrammarParser
 {
-  public static readonly (GrammarLexonType lexonType, string rule)[] RulesDef = [
+  public static readonly (GrammarLexonType lexonType, string rule)[] RulesDef =
+  [
     (GrammarLexonType.comment, @"^//.*\n"),
     (GrammarLexonType.whitespace, @"^\s+"),
     (GrammarLexonType.name, @"^\w+"),
@@ -26,42 +28,63 @@ public class GrammarParser
     (GrammarLexonType.modifierCharacter, @"[*|?]"),
   ];
 
-  private static readonly (GrammarLexonType lexonType, Regex regex)[] Rules = RulesDef.Map((rule) => (rule.lexonType, new Regex(rule.rule)));
+  private static readonly (GrammarLexonType lexonType, Regex regex)[] Rules = RulesDef.Map(
+    (rule) => (rule.lexonType, new Regex(rule.rule))
+  );
 
-  public static ParseContext<LanguageLexonType> ParseGrammar<LanguageLexonType>(string[] sourceFiles, Func<string, LanguageLexonType> stringToLexon)
+  public static ProductionSet<LanguageLexonType>[] ParseGrammar<LanguageLexonType>(
+    string[] sourceFiles,
+    Func<string, LanguageLexonType> stringToLexon
+  )
   {
     var rules = sourceFiles.FlatMap((x) => Parse(x, stringToLexon));
-    Dictionary<string, List<ProductionRule<LanguageLexonType>>> dict = new Dictionary<string, List<ProductionRule<LanguageLexonType>>>();
+    Dictionary<string, List<ProductionRule<LanguageLexonType>>> dict =
+      new Dictionary<string, List<ProductionRule<LanguageLexonType>>>();
 
     foreach (var rule in rules)
     {
       dict.AddOrGet(rule.name, () => new List<ProductionRule<LanguageLexonType>>()).Add(rule);
     }
 
-    return new ParseContext<LanguageLexonType>(dict.Map((list) => new ProductionSet<LanguageLexonType>(list.ToArray())));
+    return dict.Select(
+        (pair) => new ProductionSet<LanguageLexonType>(pair.Key, pair.Value.ToArray())
+      )
+      .ToArray();
   }
 
-  internal static ProductionRule<LanguageLexonType>[] Parse<LanguageLexonType>(string code, Func<string, LanguageLexonType> stringToLexon)
+  internal static ProductionRule<LanguageLexonType>[] Parse<LanguageLexonType>(
+    string code,
+    Func<string, LanguageLexonType> stringToLexon
+  )
   {
-    var lexons = Lexer.Lex(code, Rules, (lexonType, code) => new GrammarLexon(lexonType, code)).Filter(lexon => lexon.IsSemantic);
+    var lexons = Lexer
+      .Lex(code, Rules, (lexonType, code, index) => new GrammarLexon(lexonType, code))
+      .Filter(lexon => lexon.IsSemantic);
     var queue = new Queue<GrammarLexon>(lexons);
 
     return GenerateRuleParser<LanguageLexonType>(queue, stringToLexon).UntilNull().ToArray();
   }
 
-  static Func<ProductionRule<LanguageLexonType>> GenerateRuleParser<LanguageLexonType>(Queue<GrammarLexon> queue, Func<string, LanguageLexonType> stringToLexon)
+  static Func<ProductionRule<LanguageLexonType>> GenerateRuleParser<LanguageLexonType>(
+    Queue<GrammarLexon> queue,
+    Func<string, LanguageLexonType> stringToLexon
+  )
   {
     return () => ParseRule<LanguageLexonType>(ref queue, stringToLexon);
   }
 
-  static ProductionRule<LanguageLexonType> ParseRule<LanguageLexonType>(ref Queue<GrammarLexon> queue, Func<string, LanguageLexonType> stringToLexon)
+  static ProductionRule<LanguageLexonType> ParseRule<LanguageLexonType>(
+    ref Queue<GrammarLexon> queue,
+    Func<string, LanguageLexonType> stringToLexon
+  )
   {
     string? name = null;
     bool rulesSection = false;
     string? ruleSymbol = null;
     char? modifier = null;
 
-    List<ProductionSymbol<LanguageLexonType>> symbols = new List<ProductionSymbol<LanguageLexonType>>();
+    List<ProductionSymbol<LanguageLexonType>> symbols =
+      new List<ProductionSymbol<LanguageLexonType>>();
 
     while (queue.TryDequeue(out var value))
     {
@@ -76,7 +99,13 @@ public class GrammarParser
           {
             if (ruleSymbol != null)
             {
-              symbols.Add(new ProductionSymbol<LanguageLexonType>(ruleSymbol, stringToLexon(ruleSymbol), modifier));
+              symbols.Add(
+                new ProductionSymbol<LanguageLexonType>(
+                  ruleSymbol,
+                  stringToLexon(ruleSymbol),
+                  modifier
+                )
+              );
               modifier = null;
             }
             ruleSymbol = value.code;
@@ -107,7 +136,13 @@ public class GrammarParser
           }
           if (ruleSymbol != null)
           {
-            symbols.Add(new ProductionSymbol<LanguageLexonType>(ruleSymbol, stringToLexon(ruleSymbol), modifier));
+            symbols.Add(
+              new ProductionSymbol<LanguageLexonType>(
+                ruleSymbol,
+                stringToLexon(ruleSymbol),
+                modifier
+              )
+            );
           }
           return new ProductionRule<LanguageLexonType>(name!, symbols.ToArray());
       }
@@ -121,7 +156,8 @@ class GrammarLexon
   public readonly GrammarLexonType lexonType;
   public readonly string code;
 
-  public bool IsSemantic => lexonType != GrammarLexonType.comment && lexonType != GrammarLexonType.whitespace;
+  public bool IsSemantic =>
+    lexonType != GrammarLexonType.comment && lexonType != GrammarLexonType.whitespace;
 
   public GrammarLexon(GrammarLexonType lexonType, string code)
   {

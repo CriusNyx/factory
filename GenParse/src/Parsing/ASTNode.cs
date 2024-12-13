@@ -1,4 +1,3 @@
-
 using GenParse.Functional;
 using GenParse.Lexing;
 
@@ -11,7 +10,12 @@ public class ASTNode<LexonType>
   public readonly ASTNode<LexonType>[] children;
   public readonly Lexon<LexonType>[] lexons;
 
-  public ASTNode(string name, ProductionRule<LexonType>? productionRule, ASTNode<LexonType>[] children, Lexon<LexonType>[] lexons)
+  public ASTNode(
+    string name,
+    ProductionRule<LexonType>? productionRule,
+    ASTNode<LexonType>[] children,
+    Lexon<LexonType>[] lexons
+  )
   {
     this.name = name;
     this.productionRule = productionRule;
@@ -24,19 +28,28 @@ public class ASTNode<LexonType>
     var lines = PrintProgramPrivate();
     var leftLen = lines.Max((line) => line.treeString.Length);
     var padLen = leftLen + 3;
-    return string.Join("\n", lines.Map((line) => $"{line.treeString.PadRight(padLen)} {line.sourceString}"));
+    return string.Join(
+      "\n",
+      lines.Map((line) => $"{line.treeString.PadRight(padLen)} {line.sourceString}")
+    );
   }
 
   private (string treeString, string sourceString)[] PrintProgramPrivate(int indentLength = 0)
   {
     string indent = "";
-    for(int i = 0; i < indentLength - 1;i++){
+    for (int i = 0; i < indentLength - 1; i++)
+    {
       indent += "| ";
     }
-    if(indentLength > 0){
+    if (indentLength > 0)
+    {
       indent += "|-";
     }
-    return [(indent + name, Lexer.LexonsToSource(lexons, " ")), .. children.FlatMap((child) => child.PrintProgramPrivate(indentLength + 1))];
+    return
+    [
+      (indent + name, Lexer.LexonsToSource(lexons, " ")),
+      .. children.FlatMap((child) => child.PrintProgramPrivate(indentLength + 1)),
+    ];
   }
 
   public override string ToString()

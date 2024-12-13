@@ -15,44 +15,52 @@ public class Docs
 
   static Docs()
   {
-    var baseDir = AppDomain.CurrentDomain.BaseDirectory;
-
-    var docsJson = File.ReadAllText(Path.Join(baseDir, "Docs.json"));
-
-    docs = JsonConvert.DeserializeObject<Docs>(docsJson)!;
-    itemsByClass = docs.Desc.ToDictionary(x => x.className);
-    itemsByIdentifier = docs
-      .Desc.Filter(x => (x.identifier ?? "") != "")
-      .ToDictionary(x => x.identifier);
-
-    Dictionary<string, List<Recipe>> _recipesByProductClass =
-      new Dictionary<string, List<Recipe>>();
-    Dictionary<string, List<Recipe>> _recipesByProductIdentifier =
-      new Dictionary<string, List<Recipe>>();
-
-    foreach (var recipe in docs.Recipe)
+    try
     {
-      var primaryProductClass = recipe.primaryProductClass;
-      if (primaryProductClass == null)
+      var docsJson = File.ReadAllText(Resources.GetPathForResource("docs.json"));
+
+      docs = JsonConvert.DeserializeObject<Docs>(docsJson)!;
+      itemsByClass = docs.Desc.ToDictionary(x => x.className);
+      itemsByIdentifier = docs
+        .Desc.Filter(x => (x.identifier ?? "") != "")
+        .ToDictionary(x => x.identifier);
+
+      Dictionary<string, List<Recipe>> _recipesByProductClass =
+        new Dictionary<string, List<Recipe>>();
+      Dictionary<string, List<Recipe>> _recipesByProductIdentifier =
+        new Dictionary<string, List<Recipe>>();
+
+      foreach (var recipe in docs.Recipe)
       {
-        continue;
+        var primaryProductClass = recipe.primaryProductClass;
+        if (primaryProductClass == null)
+        {
+          continue;
+        }
+
+        _recipesByProductClass.AddOrGet(primaryProductClass).Add(recipe);
+
+        var productIdent = itemsByClass.Safe(primaryProductClass)?.identifier;
+        if (productIdent == null)
+        {
+          continue;
+        }
+        _recipesByProductIdentifier.AddOrGet(productIdent).Add(recipe);
       }
 
-      _recipesByProductClass.AddOrGet(primaryProductClass).Add(recipe);
-
-      var productIdent = itemsByClass.Safe(primaryProductClass)?.identifier;
-      if (productIdent == null)
-      {
-        continue;
-      }
-      _recipesByProductIdentifier.AddOrGet(productIdent).Add(recipe);
+      recipesByProductClass = _recipesByProductClass.ToDictionary(
+        x => x.Key,
+        y => y.Value.ToArray()
+      );
+      recipesByProductIdentifier = _recipesByProductIdentifier.ToDictionary(
+        x => x.Key,
+        y => y.Value.OrderBy(x => x.isMachineRecipe && !x.isAlternative ? 0 : 1).ToArray()
+      );
     }
-
-    recipesByProductClass = _recipesByProductClass.ToDictionary(x => x.Key, y => y.Value.ToArray());
-    recipesByProductIdentifier = _recipesByProductIdentifier.ToDictionary(
-      x => x.Key,
-      y => y.Value.OrderBy(x => x.isMachineRecipe && !x.isAlternative ? 0 : 1).ToArray()
-    );
+    catch (Exception e)
+    {
+      Console.WriteLine(e);
+    }
   }
 
   public static readonly string[] ProductionMachines = new string[]

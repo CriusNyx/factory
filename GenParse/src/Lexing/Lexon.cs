@@ -9,8 +9,10 @@ public class Lexon<LexonType>
   public readonly LexonType lexonType;
   public readonly string sourceCode;
   public readonly bool isSemantic;
+  public readonly int index;
+  public int length => sourceCode.Length;
 
-  public Lexon(LexonType lexonType, string sourceCode, bool isSemantic)
+  public Lexon(LexonType lexonType, string sourceCode, bool isSemantic, int index)
   {
     if (lexonType == null)
     {
@@ -19,10 +21,11 @@ public class Lexon<LexonType>
     this.lexonType = lexonType;
     this.sourceCode = sourceCode;
     this.isSemantic = isSemantic;
+    this.index = index;
   }
 
   public override string ToString()
   {
-    return $"{lexonType} \"{Formatting.ToLiteral(sourceCode)}\"";
+    return $"{lexonType} \"{sourceCode}\"";
   }
 }

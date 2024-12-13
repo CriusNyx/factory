@@ -1,7 +1,17 @@
 namespace GenParse.Functional
 {
-  public static class FunctionalExtensions
+  public static class Functional
   {
+    public static int[] Range(int value)
+    {
+      int[] output = new int[value];
+      for (int i = 0; i < output.Length; i++)
+      {
+        output[i] = i;
+      }
+      return output;
+    }
+
     public static U[] Map<T, U>(this T[] arr, Func<T, U> func)
     {
       return Map(arr, (t, _) => func(t));
@@ -329,6 +339,11 @@ namespace GenParse.Functional
       }
       list.Add(replace(default!));
       return list;
+    }
+
+    public static string ReplaceAt(this string source, int index, int len, string newString)
+    {
+      return source.Remove(index, len).Insert(index, newString);
     }
   }
 }

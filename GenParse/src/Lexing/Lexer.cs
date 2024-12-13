@@ -9,13 +9,15 @@ public static class Lexer
   public static TLexon[] Lex<TLexon, TLexonType>(
     string code,
     (TLexonType ruleType, Regex regex)[] rules,
-    Func<TLexonType, string, TLexon> lexonConstructor
+    Func<TLexonType, string, int, TLexon> lexonConstructor
   )
   {
+    int index = 0;
     List<TLexon> lexons = new List<TLexon>();
     while (Lex(code, out var lexonType, out var lexicalString, out code!, rules))
     {
-      lexons.Add(lexonConstructor(lexonType!, lexicalString!));
+      lexons.Add(lexonConstructor(lexonType!, lexicalString!, index));
+      index += lexicalString!.Length;
     }
 
     return lexons.ToArray();
@@ -59,7 +61,7 @@ public static class Lexer
     string GenerateLexonStrings(Lexon<LexonType> lexons)
     {
       var lexonString = lexons.lexonType.ToString()!.PadRight(identLength);
-      var sourceString = Formatting.ToLiteral(lexons.sourceCode);
+      var sourceString = lexons.sourceCode;
       return $"{lexonString} \"{sourceString}\"";
     }
 

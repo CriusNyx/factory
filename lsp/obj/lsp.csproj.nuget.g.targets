@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)microsoft.codeanalysis.analyzers\3.3.4\buildTransitive\Microsoft.CodeAnalysis.Analyzers.targets" Condition="Exists('$(NuGetPackageRoot)microsoft.codeanalysis.analyzers\3.3.4\buildTransitive\Microsoft.CodeAnalysis.Analyzers.targets')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.javascript.nodeapi.generator\0.8.16\build\Microsoft.JavaScript.NodeApi.Generator.targets" Condition="Exists('$(NuGetPackageRoot)microsoft.javascript.nodeapi.generator\0.8.16\build\Microsoft.JavaScript.NodeApi.Generator.targets')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.javascript.nodeapi\0.8.16\build\Microsoft.JavaScript.NodeApi.targets" Condition="Exists('$(NuGetPackageRoot)microsoft.javascript.nodeapi\0.8.16\build\Microsoft.JavaScript.NodeApi.targets')" />
+  </ImportGroup>
+</Project>

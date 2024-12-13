@@ -16,8 +16,5 @@ public class InExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode, LanguageN
     return EvaluateKeywordSymbolArray(symbols, context, ValType.input);
   }
 
-  public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
-  {
-    return new Formatting.ITree<LanguageNode>[] { };
-  }
+  public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren() => symbols;
 }

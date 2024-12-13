@@ -9,6 +9,18 @@
       "type": "dotnet",
       "request": "launch",
       "projectPath": "${workspaceFolder}/factory/factory.csproj"
+    },
+    {
+      "type": "extensionHost",
+      "request": "launch",
+      "name": "Launch Client",
+      "runtimeExecutable": "${execPath}",
+      "args": ["--extensionDevelopmentPath=${workspaceRoot}"],
+      "outFiles": [
+        "${workspaceRoot}/client/out/**/*.js",
+        "${workspaceRoot}/server/out/**/*.js"
+      ],
+      "autoAttachChildProcesses": true
     }
   ]
 }

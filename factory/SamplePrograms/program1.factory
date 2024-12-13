@@ -1,17 +1,18 @@
-recipe ModFrames
-  out ModularFrame
-  in IronIngot
-  limit 480 IronIngot
-  tally IronIngot
+recipe SingCell
+  out SingularityCell
+  in NuclearPasta DarkMatterCrystal IronPlate Concrete
 
-let ModFrameSol = ModFrames()
+recipe DMC
+  out DarkMatterCrystal
 
-recipe HFrame
-  out HeavyModularFrame
-  in ModularFrame IronIngot
-  limit ModFrameSol.Total ModularFrame
-  tally IronIngot
+recipe Pasta
+  out NuclearPasta
+  in CopperIngot PressureConversionCube
 
-print ModFrameSol HFrame()
+recipe PressureCube
+  out PressureConversionCube
+  in HeavyModularFrame AluminumCasing NitrogenGas RadioControlUnit
 
-let
+let 1 = 3
+
+print SingCell(2) DMC(4) Pasta(0.2) PressureCube(0.2)

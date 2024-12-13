@@ -51,10 +51,9 @@ internal static class FactoryLexonRules
   private static readonly (FactoryLexon lexonType, string expression)[] rules =
   [
     // non semantic
-    (FactoryLexon.comment, @"^//.*\n"),
+    (FactoryLexon.comment, @"^//.*(\n|$)"),
     (FactoryLexon.whitespace, @"^\s+"),
     // Operators
-
 
     // Language Symbols
     (FactoryLexon.spread, @"^\.\.\."),

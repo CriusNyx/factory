@@ -1,126 +1,53 @@
-using System.CommandLine;
+using CommandLine;
 
 public class CommandLineOptions
 {
-  public readonly string file;
-  public readonly string outOption;
-  public readonly string dirOption;
-  public readonly string outDirOption;
-  public readonly bool stream;
-  public readonly bool ast;
-  public readonly bool test;
-  public readonly bool lexons;
-  public readonly bool transform;
+  [Value(0, Default = "", HelpText = "The file to parse")]
+  public string file { get; set; }
 
-  public CommandLineOptions(
-    string file,
-    string outOption,
-    string dirOption,
-    string outDirOption,
-    bool stream,
-    bool ast,
-    bool lexons,
-    bool transform
-  )
-  {
-    this.file = file;
-    this.outOption = outOption;
-    this.dirOption = dirOption;
-    this.outDirOption = outDirOption;
-    this.stream = stream;
-    this.ast = ast;
-    this.lexons = lexons;
-    this.transform = transform;
-  }
+  [Option('o', "outDir", Default = "", HelpText = "File to write output to.")]
+  public string outFile { get; set; }
+
+  [Option('d', "dir", Default = "", HelpText = "Directory to read input from.")]
+  public string dir { get; set; }
+
+  [Option("outdir", Default = "", HelpText = "Directory to write output to.")]
+  public string outDir { get; set; }
+
+  [Option('s', "stream", HelpText = "Stream input from stdio")]
+  public bool stream { get; set; }
+
+  [Option('a', "ast", HelpText = "Print the abstract syntax tree")]
+  public bool ast { get; set; }
+
+  [Option("test", HelpText = "Test the program using the test source code")]
+  public bool test { get; set; }
+
+  [Option('l', "lexons", HelpText = "Print the lexons")]
+  public bool lexons { get; set; }
+
+  [Option('t', "transform", HelpText = "Print the AST after transformation")]
+  public bool transform { get; set; }
+
+  [Option('g', "debug-grammar", HelpText = "Print debug information for program grammar")]
+  public bool debugGrammar { get; set; }
 
   public static CommandLineOptions Create(params string[] args)
   {
-    var fileArg = new Argument<string>("file");
-    fileArg.SetDefaultValue("");
-
-    var outOption = new Option<string>("--out");
-    outOption.SetDefaultValue("");
-
-    var dirOption = new Option<string>("--dir");
-    dirOption.SetDefaultValue("");
-
-    var outDirOption = new Option<string>("--outdir");
-    outDirOption.SetDefaultValue("");
-
-    var streamOption = new Option<bool>("--stream");
-    var astOption = new Option<bool>("--ast");
-    var lexonOption = new Option<bool>("--lexons");
-    var transformOption = new Option<bool>("--transform");
-
-    var rootCommand = new RootCommand()
-      .Argument(fileArg)
-      .Option(outOption)
-      .Option(dirOption)
-      .Option(outDirOption)
-      .Option(streamOption)
-      .Option(astOption)
-      .Option(lexonOption)
-      .Option(transformOption);
-
     CommandLineOptions output = null!;
-
-    void Construct(
-      string fileArgument,
-      string outOption,
-      string dirOption,
-      string outDirOption,
-      bool stream,
-      bool ast,
-      bool lexons,
-      bool transform
-    )
-    {
-      output = new CommandLineOptions(
-        fileArgument,
-        outOption,
-        dirOption,
-        outDirOption,
-        stream,
-        ast,
-        lexons,
-        transform
+    CommandLine
+      .Parser.Default.ParseArguments<CommandLineOptions>(args)
+      .WithParsed(
+        (options) =>
+        {
+          output = options;
+        }
       );
-    }
-
-    rootCommand.SetHandler(
-      Construct,
-      fileArg,
-      outOption,
-      dirOption,
-      outDirOption,
-      streamOption,
-      astOption,
-      lexonOption,
-      transformOption
-    );
-
-    rootCommand.Invoke(args);
-
     return output;
   }
 
   public override string ToString()
   {
     return $"stream = {stream}";
-  }
-}
-
-public static class CommandLineExtensions
-{
-  public static RootCommand Option(this RootCommand rootCommand, Option option)
-  {
-    rootCommand.AddOption(option);
-    return rootCommand;
-  }
-
-  public static RootCommand Argument(this RootCommand rootCommand, Argument argument)
-  {
-    rootCommand.AddArgument(argument);
-    return rootCommand;
   }
 }

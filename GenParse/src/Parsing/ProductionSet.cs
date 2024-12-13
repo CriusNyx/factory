@@ -4,10 +4,12 @@ namespace GenParse.Parsing;
 
 public class ProductionSet<LexonType>
 {
+  public string name;
   public readonly ProductionRule<LexonType>[] rules;
 
-  public ProductionSet(ProductionRule<LexonType>[] rules)
+  public ProductionSet(string name, ProductionRule<LexonType>[] rules)
   {
+    this.name = name;
     this.rules = rules;
   }
 

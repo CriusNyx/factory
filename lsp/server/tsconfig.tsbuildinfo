@@ -1,0 +1,1 @@
+{"root":["./src/server.ts","./src/bin/commandline.d.ts","./src/bin/genparse.d.ts","./src/bin/newtonsoft.json.d.ts","./src/bin/system.commandline.d.ts","./src/bin/system.console.d.ts","./src/bin/system.reflection.metadataloadcontext.d.ts","./src/bin/system.runtime.d.ts","./src/bin/factory.d.ts"],"version":"5.7.2"}

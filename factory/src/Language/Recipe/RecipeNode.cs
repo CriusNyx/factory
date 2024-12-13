@@ -22,5 +22,5 @@ public class RecipeNode : LanguageNode, ProgramExp
     return recipe.With(context);
   }
 
-  public IEnumerable<Formatting.ITree<LanguageNode>> GetChildren() => expressions;
+  public IEnumerable<Formatting.ITree<LanguageNode>> GetChildren() => [name, .. expressions];
 }

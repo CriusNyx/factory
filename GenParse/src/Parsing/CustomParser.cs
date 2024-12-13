@@ -3,8 +3,9 @@ using GenParse.Parsing;
 
 public interface CustomParser<LexonType>
 {
+  public string name { get; }
   public ParseResult<LexonType>? Parse(
-    ParseContext<LexonType> context,
+    Parser<LexonType> parser,
     Lexon<LexonType>[] lexons,
     int index
   );

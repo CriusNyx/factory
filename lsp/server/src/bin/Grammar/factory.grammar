@@ -1,0 +1,64 @@
+Program = ProgramExp*;
+
+ProgramExp = AssignExp;
+ProgramExp = Recipe;
+ProgramExp = PrintExp;
+
+// Recipe
+Recipe = recipeKeyword symbol RecipeExp*;
+
+RecipeExp = OutExp;
+RecipeExp = InExp;
+RecipeExp = AltExp;
+RecipeExp = TallyExp;
+RecipeExp = LimitExp;
+RecipeExp = SpreadExp;
+
+OutExp = outKeyword symbol*;
+InExp = inKeyword symbol*;
+AltExp = altKeyword symbol*;
+TallyExp = tallyKeyword inlineKeyword? symbol*;
+LimitExp = limitKeyword LimitValueExp*;
+
+LimitValueExp = ValueExp symbol;
+
+// Print
+
+PrintExp = printKeyword ValueExp*;
+
+// AssignExp
+
+AssignExp = letKeyword ExpChain equalSign ValueExp;
+
+// Value Exp
+
+ValueExp = Literal;
+ValueExp = RecipeExp;
+ValueExp = ExpChain;
+
+// Exp Chain
+ExpChain = symbol ChainContinue?;
+
+Chain = Deref;
+Chain = Invocation;
+
+ChainContinue = Chain ChainContinue?;
+
+Deref = dot symbol;
+
+// Invocation
+
+Invocation = openParen InvocationParamSet closeParen;
+
+InvocationParamSet = InvocationParam* FinalInvocationParam;
+InvocationParamSet = ;
+
+InvocationParam = ValueExp comma;
+FinalInvocationParam = ValueExp;
+
+// Literals
+Literal = numberLiteral;
+Literal = stringLiteral;
+
+// Spread
+SpreadExp = spread symbol;

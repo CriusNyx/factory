@@ -11,8 +11,6 @@ try
 {
   var options = CommandLineOptions.Create(args);
 
-  var parser = FactoryParser.GenerateFactoryParser();
-
   void EvaluateSourceCode(string sourceLocation, string sourceCode, string outFile = "")
   {
     try
@@ -31,7 +29,7 @@ try
         return;
       }
 
-      var ast = parser.Parse("Program", lexons.Filter(x => x.isSemantic))!;
+      var ast = FactoryParser.Parse(lexons)!;
 
       if (options.ast)
       {
@@ -72,43 +70,56 @@ try
     }
   }
 
-  if (options.stream)
+  if (options.debugGrammar)
+  {
+    var parser = FactoryParser.parser;
+    foreach (var (setName, setValue) in parser.productionSets)
+    {
+      var name = setName;
+      Console.WriteLine(name);
+      foreach (var element in parser.ComputeHead(name))
+      {
+        Console.WriteLine($"  {element}");
+      }
+    }
+  }
+  else if (options.stream)
   {
     EvaluateSourceCode("stream", Console.In.ReadToEnd());
   }
   else if (options.file != "")
   {
-    EvaluateSourceCode(File.ReadAllText(options.file), options.outOption);
+    EvaluateSourceCode(options.file, File.ReadAllText(options.file), options.outFile);
   }
-  else if (options.dirOption != "" || options.outDirOption != "")
+  else if (options.dir != "" || options.outDir != "")
   {
-    if (options.dirOption == "")
+    if (options.dir == "")
     {
       throw new OutDirException();
     }
-    var dir = options.dirOption;
+    var dir = options.dir;
     foreach (var file in Directory.GetFiles(dir))
     {
       var extension = Path.GetExtension(file);
 
       if (extension == ".factory" || extension == ".fact" || extension == ".fac")
       {
-        if (options.outDirOption == "")
+        if (options.outDir == "")
         {
           EvaluateSourceCode(file, File.ReadAllText(file));
         }
         else
         {
-          if (!Directory.Exists(options.outDirOption))
+          if (!Directory.Exists(options.outDir))
           {
-            Directory.CreateDirectory(options.outDirOption);
+            Directory.CreateDirectory(options.outDir);
           }
 
           var outFile = Path.Combine(
-            options.outDirOption,
+            options.outDir,
             Path.GetFileNameWithoutExtension(file) + ".txt"
           );
-          EvaluateSourceCode(File.ReadAllText(file), outFile);
+          EvaluateSourceCode(file, File.ReadAllText(file), outFile);
         }
       }
     }

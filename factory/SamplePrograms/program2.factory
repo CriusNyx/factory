@@ -1,1 +1,1 @@
-let a.GetThing().Value = b.DoWhatever().Calculate()
+print "Hi Mom"

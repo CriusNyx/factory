@@ -1,11 +1,20 @@
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using GenParse.Functional;
 
 namespace GenParse.Util
 {
+  public enum CColor
+  {
+    Red,
+  }
+
   public static class Formatting
   {
+    private static IReadOnlyDictionary<CColor, string> colorMap = new Dictionary<CColor, string>()
+    {
+      { CColor.Red, "31" },
+    };
+
     public static string TreeIndent(int indent)
     {
       string indentString = "";
@@ -104,9 +113,9 @@ namespace GenParse.Util
       return builder.ToString().TrimEnd();
     }
 
-    internal static string ToLiteral(string valueTextForCompiler)
+    public static string Colorize(this string source, CColor color)
     {
-      return Microsoft.CodeAnalysis.CSharp.SymbolDisplay.FormatLiteral(valueTextForCompiler, false);
+      return $"\x1b[{colorMap[color]}m{source}\x1b[0m";
     }
   }
 }
