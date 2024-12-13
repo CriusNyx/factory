@@ -1,0 +1,7 @@
+ReinforcedIronPlate  
+                     
+1 ReinforcedIronPlate
+|-6 IronPlate        
+| |-9 IronIngot      
+|-12 CastScrew       
+| |-3 IronIngot

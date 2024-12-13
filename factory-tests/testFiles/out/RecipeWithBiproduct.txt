@@ -1,0 +1,5 @@
+Plastic                
+                       
+60 Plastic             
+|-90 CrudeOil          
+|-(-)30 HeavyOilResidue

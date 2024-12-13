@@ -1,9 +1,7 @@
 recipe A
   out ReinforcedIronPlate
-	in IronIngot
 
-recipe B
-  ...A
-	alt CastScrew
+let B = A.Amend(in IronIngot)
+let B.Name = "B"
 
 print A B A() B()

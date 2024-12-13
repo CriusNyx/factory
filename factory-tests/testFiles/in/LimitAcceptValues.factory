@@ -1,0 +1,13 @@
+recipe RPlate
+  out ReinforcedIronPlate
+	in IronIngot
+	limit 60 IronIngot
+
+let RPlateSol = RPlate()
+
+recipe ModFrame
+  out ModularFrame
+	in ReinforcedIronPlate
+	limit RPlateSol.Total ReinforcedIronPlate
+
+print RPlateSol ModFrame()

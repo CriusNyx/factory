@@ -1,0 +1,6 @@
+recipe ReinforcedIronPlate
+  out ReinforcedIronPlate
+	in IronIngot
+	limit 60 IronIngot
+
+print ReinforcedIronPlate()

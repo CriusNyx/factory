@@ -1,9 +1,6 @@
-recipe A
+recipe ReinforcedIronPlate
   out ReinforcedIronPlate
 	in IronIngot
-
-recipe B
-  ...A
 	alt CastScrew
 
-print A B A() B()
+print ReinforcedIronPlate()

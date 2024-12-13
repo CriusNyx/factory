@@ -1,0 +1,16 @@
+RPlate               
+                     
+5 ReinforcedIronPlate
+|-30 IronPlate       
+| |-45 IronIngot     
+|-60 Screw           
+| |-15 IronRod       
+| | |-15 IronIngot
+
+ModFrame               
+                       
+3.333 ModularFrame     
+|-5 ReinforcedIronPlate
+|-20 IronRod           
+| |-20 IronIngot       
+| | |-20 IronOre

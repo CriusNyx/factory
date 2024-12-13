@@ -5,7 +5,7 @@ public class CommandLineOptions
   [Value(0, Default = "", HelpText = "The file to parse")]
   public string file { get; set; }
 
-  [Option('o', "outDir", Default = "", HelpText = "File to write output to.")]
+  [Option('o', "out", Default = "", HelpText = "File to write output to.")]
   public string outFile { get; set; }
 
   [Option('d', "dir", Default = "", HelpText = "Directory to read input from.")]

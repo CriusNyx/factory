@@ -1,0 +1,8 @@
+recipe A
+  out ReinforcedIronPlate
+
+let B = A
+
+let B.Name = "B"
+
+print B

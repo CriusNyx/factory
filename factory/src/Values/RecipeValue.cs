@@ -60,6 +60,18 @@ public class RecipeValue(string recipeName, ArrayVal? arguments = null) : FactVa
         )
       );
     }
+    else if (factVal is IUnfold unfold)
+    {
+      return Clone(
+        arguments: unfold
+          .Unfold()
+          .Reduce(
+            arguments,
+            (amendment, arguments) =>
+              arguments.PushOrReplace(amendment, (other) => CompareValType(amendment, other))
+          )
+      );
+    }
     else if (factVal is TypedFactVal typedVal)
     {
       return Clone(arguments: arguments.Push(typedVal));

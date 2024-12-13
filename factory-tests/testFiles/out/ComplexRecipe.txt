@@ -1,0 +1,46 @@
+FusedModularFrame            
+                             
+1 FusedModularFrame          
+|-1 HeavyModularFrame        
+| |-5 ModularFrame           
+| | |-7.5 ReinforcedIronPlate
+| | | |-45 IronPlate         
+| | | | |-67.5 IronIngot     
+| | | | | |-67.5 IronOre     
+| | | |-90 Screw             
+| | | | |-22.5 IronRod       
+| | | | | |-22.5 IronIngot   
+| | | | | | |-22.5 IronOre   
+| | |-30 IronRod             
+| | | |-30 IronIngot         
+| | | | |-30 IronOre         
+| |-20 SteelPipe             
+| | |-30 SteelIngot          
+| | | |-30 IronOre           
+| | | |-30 Coal              
+| |-5 EncasedIndustrialBeam  
+| | |-15 SteelBeam           
+| | | |-60 SteelIngot        
+| | | | |-60 IronOre         
+| | | | |-60 Coal            
+| | |-30 Concrete            
+| | | |-90 Limestone         
+| |-120 Screw                
+| | |-30 IronRod             
+| | | |-30 IronIngot         
+| | | | |-30 IronOre         
+|-50 AluminumCasing          
+| |-75 AluminumIngot         
+| | |-112.5 AluminumScrap    
+| | | |-75 AluminaSolution   
+| | | | |-75 Bauxite         
+| | | | |-112.5 Water        
+| | | | |-(-)31.25 Silica    
+| | | |-37.5 Coal            
+| | | |-(-)37.5 Water        
+| | |-93.75 Silica           
+| | | |-56.25 RawQuartz      
+|-25 NitrogenGasBauxite      
+| |-2.083 ReanimatedSAM      
+| | |-8.333 SAM              
+| |-20.833 Bauxite

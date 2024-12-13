@@ -1,0 +1,6 @@
+recipe MyRecipe
+  out ReinforcedIronPlate
+
+let MyValue = MyRecipe()
+
+print MyValue

@@ -1,0 +1,3 @@
+recipe B
+  in 
+  out ReinforcedIronPlate

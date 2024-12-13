@@ -24,6 +24,6 @@ public class SpreadExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode, Langu
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
-    return new Formatting.ITree<LanguageNode>[] { };
+    return new Formatting.ITree<LanguageNode>[] { symbol };
   }
 }

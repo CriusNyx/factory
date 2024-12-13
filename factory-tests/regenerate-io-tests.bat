@@ -1,0 +1,1 @@
+factory -d testFiles/in --outdir testFiles/out

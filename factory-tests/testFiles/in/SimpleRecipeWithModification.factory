@@ -1,0 +1,4 @@
+recipe MyRecipe
+  out ReinforcedIronPlate
+
+print MyRecipe(in IronIngot)

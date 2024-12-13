@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "factory", "factory\factory.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenParse", "GenParse\GenParse.csproj", "{0D4D1E00-9AD8-4302-9430-374D6083A4A9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "factory-tests", "factory-tests\factory-tests.csproj", "{DBFC0A5A-A5B6-43C3-8C78-365AA0BF36D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,10 +23,10 @@ Global
 		{0D4D1E00-9AD8-4302-9430-374D6083A4A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D4D1E00-9AD8-4302-9430-374D6083A4A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D4D1E00-9AD8-4302-9430-374D6083A4A9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{764940B4-378D-4905-A895-542384DA40D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{764940B4-378D-4905-A895-542384DA40D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{764940B4-378D-4905-A895-542384DA40D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{764940B4-378D-4905-A895-542384DA40D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBFC0A5A-A5B6-43C3-8C78-365AA0BF36D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBFC0A5A-A5B6-43C3-8C78-365AA0BF36D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBFC0A5A-A5B6-43C3-8C78-365AA0BF36D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBFC0A5A-A5B6-43C3-8C78-365AA0BF36D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

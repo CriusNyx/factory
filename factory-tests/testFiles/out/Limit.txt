@@ -1,0 +1,8 @@
+ReinforcedIronPlate  
+                     
+5 ReinforcedIronPlate
+|-30 IronPlate       
+| |-45 IronIngot     
+|-60 Screw           
+| |-15 IronRod       
+| | |-15 IronIngot

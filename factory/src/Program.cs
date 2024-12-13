@@ -61,7 +61,7 @@ try
       }
       else
       {
-        File.WriteAllText(outFile, result + Environment.NewLine);
+        File.WriteAllText(outFile, result);
       }
     }
     catch (ParseException<FactoryLexon> e)

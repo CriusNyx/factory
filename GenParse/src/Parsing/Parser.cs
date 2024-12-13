@@ -1,3 +1,4 @@
+using System.Data;
 using GenParse.Functional;
 using GenParse.Lexing;
 
@@ -5,9 +6,9 @@ namespace GenParse.Parsing;
 
 public class Parser<LexonType>
 {
-  public readonly Dictionary<string, ProductionSet<LexonType>> productionSets =
+  public readonly IReadOnlyDictionary<string, ProductionSet<LexonType>> productionSets =
     new Dictionary<string, ProductionSet<LexonType>>();
-  public readonly Dictionary<string, CustomParser<LexonType>> customParsers =
+  public readonly IReadOnlyDictionary<string, CustomParser<LexonType>> customParsers =
     new Dictionary<string, CustomParser<LexonType>>();
 
   private static Dictionary<string, LexonType[]> headCache = new Dictionary<string, LexonType[]>();
@@ -18,14 +19,9 @@ public class Parser<LexonType>
   )
   {
     customParsers = customParsers ?? [];
-    foreach (var productionSet in productionSets)
-    {
-      this.productionSets[productionSet.name] = productionSet;
-    }
-    foreach (var parser in customParsers)
-    {
-      this.customParsers[parser.name] = parser;
-    }
+
+    this.productionSets = productionSets.ToDictionary(x => x.name);
+    this.customParsers = customParsers.ToDictionary(x => x.name);
   }
 
   public ASTNode<LexonType>? Parse(
@@ -79,7 +75,7 @@ public class Parser<LexonType>
     return productionSet?.rules.FirstNotNull((rule) => ParseProductionRule(rule, lexons, index));
   }
 
-  ParseResult<LexonType>? ParseProductionRule(
+  ParseResult<LexonType> ParseProductionRule(
     ProductionRule<LexonType> productionRule,
     Lexon<LexonType>[] lexons,
     int index

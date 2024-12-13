@@ -1,0 +1,10 @@
+ReinforcedIronPlate    | IronIngot  |
+                       |            |
+1 ReinforcedIronPlate  |            |
+|-6 IronPlate          |            |
+| |-9 IronIngot        |         9  |
+|-12 Screw             |            |
+| |-3 IronRod          |            |
+| | |-3 IronIngot      |         3  |
+                       |            |
+Totals                 |        12  |
