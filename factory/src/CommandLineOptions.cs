@@ -1,4 +1,5 @@
 using CommandLine;
+using Parser = CommandLine.Parser;
 
 namespace Factory;
 
@@ -37,8 +38,8 @@ public class CommandLineOptions
   public static CommandLineOptions Create(params string[] args)
   {
     CommandLineOptions output = null!;
-    CommandLine
-      .Parser.Default.ParseArguments<CommandLineOptions>(args)
+    Parser
+      .Default.ParseArguments<CommandLineOptions>(args)
       .WithParsed(
         (options) =>
         {
