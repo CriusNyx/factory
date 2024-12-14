@@ -1,9 +1,8 @@
 recipe A
   out ReinforcedIronPlate
-	in IronIngot
 
-recipe B
-  ...A
-	alt CastScrew
+;;
 
-print A B A() B()
+let b = print
+
+print

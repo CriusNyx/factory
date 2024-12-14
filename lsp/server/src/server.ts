@@ -14,6 +14,7 @@ import {
 	InitializeParams,
 	InitializeResult,
 	ProposedFeatures,
+	Range,
 	TextDocumentPositionParams,
 	TextDocuments,
 	TextDocumentSyncKind,
@@ -28,24 +29,17 @@ dotnet.load(__dirname + "/bin/factory.dll");
 const FactorySemanticType = Factory.Parsing.FactorySemanticType;
 type FactorySemanticType = Factory.Parsing.FactorySemanticType;
 
-const FactoryAnalytics = Factory.FactoryAnalytics;
+const FactoryErrorType = Factory.FactoryErrorType;
+type FactoryErrorType = Factory.FactoryErrorType;
 
-const FactoryParser = Factory.Parsing.FactoryParser;
-
-const FactoryLexon = Factory.Parsing.FactoryLexon;
-type FactoryLexon = Factory.Parsing.FactoryLexon;
-
-console.log({
-	programHeads: FactoryParser.ProgramLexonHeads.map((x) => FactoryLexon[x]),
-	recipeHeads: FactoryParser.RecipeExpLexonHeads.map((x) => FactoryLexon[x]),
-});
+const FactoryLanguage = Factory.FactoryLanguage;
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
 const connection = createConnection(ProposedFeatures.all);
 
-const tokenTypes = FactoryAnalytics.GetSemanticTypes();
-const tokenModifiers = FactoryAnalytics.GetSemanticModifiers();
+const tokenTypes = FactoryLanguage.GetSemanticTypes();
+const tokenModifiers = FactoryLanguage.GetSemanticModifiers();
 
 // Create a simple text document manager.
 const documents = new TextDocuments(TextDocument);
@@ -167,7 +161,7 @@ documents.onDidClose((e) => {
 
 connection.languages.diagnostics.on(async (params) => {
 	const document = documents.get(params.textDocument.uri);
-	if (document !== undefined) {
+	if (document) {
 		return {
 			kind: DocumentDiagnosticReportKind.Full,
 			items: await validateTextDocument(document),
@@ -191,8 +185,34 @@ documents.onDidChangeContent((change) => {
 async function validateTextDocument(
 	textDocument: TextDocument,
 ): Promise<Diagnostic[]> {
-	// Put error checking code here.
-	return [];
+	const docText = textDocument.getText();
+	const errors = FactoryLanguage.AnalyzeErrors(docText);
+
+	const output = errors.map((error) => {
+		const { lexonPosition, lexonLength, errorType, errorMessage } = error;
+
+		const range = Range.create(
+			textDocument.positionAt(lexonPosition),
+			textDocument.positionAt(lexonPosition + lexonLength),
+		);
+
+		let diagnosticsticSevarity: DiagnosticSeverity;
+
+		switch (errorType) {
+			case FactoryErrorType.error:
+				diagnosticsticSevarity = DiagnosticSeverity.Error;
+				break;
+			case FactoryErrorType.warning:
+				diagnosticsticSevarity = DiagnosticSeverity.Warning;
+				break;
+			case FactoryErrorType.info:
+				diagnosticsticSevarity = DiagnosticSeverity.Information;
+				break;
+		}
+		return Diagnostic.create(range, errorMessage, diagnosticsticSevarity);
+	});
+
+	return output;
 }
 
 connection.onDidChangeWatchedFiles((_change) => {
@@ -233,7 +253,7 @@ connection.languages.semanticTokens.on((params) => {
 
 	const docText = doc.getText();
 
-	const sourceTokens = FactoryAnalytics.AnalyzeSemanticTokens(docText)
+	const sourceTokens = FactoryLanguage.AnalyzeSemanticTokens(docText)
 		.map((x) => ({
 			position: x.position,
 			length: x.length,

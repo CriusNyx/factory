@@ -1,18 +1,13 @@
-using GenParse.Lexing;
+using GenParse.Functional;
 using GenParse.Parsing;
 
-public class ParseException<LexonType> : Exception
+public class ParseException<LexonType>(FailedParseResult<LexonType> failedParseResult)
+  : Exception(GenerateMessage(failedParseResult))
 {
-  public readonly Lexon<LexonType> lexon;
+  public readonly FailedParseResult<LexonType> failedParseResult = failedParseResult;
 
-  public ParseException(Lexon<LexonType> lexon)
-    : base(GenerateMessage(lexon))
+  private static string GenerateMessage(FailedParseResult<LexonType> failedParseResult)
   {
-    this.lexon = lexon;
-  }
-
-  private static string GenerateMessage(Lexon<LexonType> lexon)
-  {
-    return $"Unexpected symbol {lexon.sourceCode}";
+    return $"Unexpected symbol {failedParseResult.offendingLexon?.sourceCode ?? "eof"}. Expected {string.Join(", ", failedParseResult.expectedLexons.Map(x => x!.ToString()))}";
   }
 }

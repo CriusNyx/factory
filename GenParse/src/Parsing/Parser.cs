@@ -30,24 +30,32 @@ public class Parser<LexonType>
     bool forgiving = false
   )
   {
-    var parseResult = ParseStatic(rootSymbol, lexons);
-    if (parseResult is SuccessParseResult<LexonType> succ)
+    var result = TryParse(rootSymbol, lexons);
+    if (result is SuccessParseResult<LexonType> succ)
     {
-      if (succ.lexonsConsumed != lexons.Length && !forgiving)
-      {
-        throw new ParseException<LexonType>(lexons[succ.lexonsConsumed]);
-      }
       return succ.astNode;
     }
-    else
+    else if (result is FailedParseResult<LexonType> failed)
     {
-      if (lexons.Length > 0)
-      {
-        throw new ParseException<LexonType>(lexons[0]);
-      }
-      else
-        throw new EmptyProgramException();
+      throw new ParseException<LexonType>(failed);
     }
+    else
+      throw new NotImplementedException();
+  }
+
+  public ParseResult<LexonType> TryParse(string rootSymbol, Lexon<LexonType>[] lexons)
+  {
+    var parseResult = _Parse(rootSymbol, lexons);
+
+    if (parseResult is SuccessParseResult<LexonType> succ)
+    {
+      if (succ.lexonsConsumed != lexons.Length)
+      {
+        return succ.hangingNode!;
+      }
+      return succ;
+    }
+    return parseResult;
   }
 
   public override string ToString()
@@ -55,7 +63,7 @@ public class Parser<LexonType>
     return string.Join("\n", productionSets.Values.Select(x => x.ToString()));
   }
 
-  ParseResult<LexonType>? ParseStatic(string rootSymbol, Lexon<LexonType>[] lexons)
+  private ParseResult<LexonType> _Parse(string rootSymbol, Lexon<LexonType>[] lexons)
   {
     var productionSet = productionSets.Safe(rootSymbol);
     if (productionSet != null)
@@ -63,16 +71,32 @@ public class Parser<LexonType>
       var result = ParseProductionSet(productionSet, lexons, 0);
       return result;
     }
-    return null;
+    throw new NotImplementedException($"Could not find root symbol {rootSymbol}");
   }
 
-  ParseResult<LexonType>? ParseProductionSet(
+  ParseResult<LexonType> ParseProductionSet(
     ProductionSet<LexonType>? productionSet,
     Lexon<LexonType>[] lexons,
     int index
   )
   {
-    return productionSet?.rules.FirstNotNull((rule) => ParseProductionRule(rule, lexons, index));
+    if (productionSet == null)
+    {
+      throw new Exception("WTF? I don't think this should be possible.");
+    }
+    List<ParseResult<LexonType>> results = new List<ParseResult<LexonType>>();
+    foreach (var rule in productionSet.rules)
+    {
+      var result = ParseProductionRule(rule, lexons, index);
+      if (result is SuccessParseResult<LexonType>)
+      {
+        return result;
+      }
+      results.Add(result);
+    }
+    return FailedParseResult<LexonType>.Aggregate(
+      results.ToArray().Map(x => x as FailedParseResult<LexonType>).FilterDefined()
+    );
   }
 
   ParseResult<LexonType> ParseProductionRule(
@@ -83,31 +107,38 @@ public class Parser<LexonType>
   {
     int offset = 0;
     List<ASTNode<LexonType>> nodes = new List<ASTNode<LexonType>>();
+    ParseResult<LexonType> result = null!;
     foreach (var symbol in productionRule.symbols)
     {
-      var lexon = lexons.SafeGet(index + offset);
-      if (TryParseProductionSymbol(symbol, lexons, index + offset, out var result))
+      result = ParseProductionSymbol(symbol, lexons, index + offset);
+      if (result is SuccessParseResult<LexonType> succ)
       {
-        nodes.Add(result!.astNode);
-        offset += result.lexonsConsumed;
+        nodes.Add(succ.astNode);
+        offset += succ.lexonsConsumed;
       }
       else
       {
-        return null;
+        return result;
       }
+    }
+
+    ParseResult<LexonType>? hangingNode = null;
+    if (result is SuccessParseResult<LexonType> succ2)
+    {
+      hangingNode = succ2.hangingNode!;
     }
 
     return new SuccessParseResult<LexonType>(
       new ASTNode<LexonType>(productionRule.name, productionRule, nodes.ToArray(), []),
-      offset
+      offset,
+      hangingNode
     );
   }
 
-  bool TryParseProductionSymbol(
+  ParseResult<LexonType> ParseProductionSymbol(
     ProductionSymbol<LexonType> symbol,
     Lexon<LexonType>[] lexons,
-    int index,
-    out SuccessParseResult<LexonType> result
+    int index
   )
   {
     if (symbol.modifier != null)
@@ -117,14 +148,11 @@ public class Parser<LexonType>
         case '*':
         {
           //result = symbol.ParseStar(context, lexons, index);
-          result = (ParseStar(symbol, lexons, index) as SuccessParseResult<LexonType>)!;
-          return true;
+          return ParseStar(symbol, lexons, index);
         }
         case '?':
         {
-          //result = symbol.ParseQuestion(context, lexons, index);
-          result = (ParseQuestion(symbol, lexons, index) as SuccessParseResult<LexonType>)!;
-          return true;
+          return ParseQuestion(symbol, lexons, index);
         }
         default:
           throw new NotImplementedException();
@@ -132,18 +160,11 @@ public class Parser<LexonType>
     }
     else
     {
-      var single = ParseSingle(symbol, lexons, index);
-      if (single is SuccessParseResult<LexonType> succ)
-      {
-        result = succ;
-        return true;
-      }
-      result = null!;
-      return false;
+      return ParseSingle(symbol, lexons, index);
     }
   }
 
-  ParseResult<LexonType> ParseStar(
+  SuccessParseResult<LexonType> ParseStar(
     ProductionSymbol<LexonType> symbol,
     Lexon<LexonType>[] lexons,
     int index
@@ -160,32 +181,35 @@ public class Parser<LexonType>
         offset += succ.lexonsConsumed;
         output.Add(succ.astNode);
       }
-    } while (node != null);
+    } while (node is SuccessParseResult<LexonType>);
     return new SuccessParseResult<LexonType>(
       new ASTNode<LexonType>($"{symbol.name}{symbol.modifier}", null, output.ToArray(), []),
-      offset
+      offset,
+      node
     );
   }
 
-  ParseResult<LexonType>? ParseQuestion(
+  SuccessParseResult<LexonType> ParseQuestion(
     ProductionSymbol<LexonType> symbol,
     Lexon<LexonType>[] lexons,
     int index
   )
   {
-    var result = ParseSingle(symbol, lexons, index) as SuccessParseResult<LexonType>;
+    var result = ParseSingle(symbol, lexons, index);
+    var succ = result as SuccessParseResult<LexonType>;
     ASTNode<LexonType>[] children = [];
-    if (result != null)
+    if (succ != null)
     {
-      children = [result.astNode];
+      children = [succ.astNode];
     }
     return new SuccessParseResult<LexonType>(
       new ASTNode<LexonType>(symbol.NameWithMod, null, children, []),
-      result?.lexonsConsumed ?? 0
+      succ?.lexonsConsumed ?? 0,
+      succ == null ? result : null
     );
   }
 
-  ParseResult<LexonType>? ParseSingle(
+  ParseResult<LexonType> ParseSingle(
     ProductionSymbol<LexonType> symbol,
     Lexon<LexonType>[] lexons,
     int index
@@ -199,10 +223,16 @@ public class Parser<LexonType>
         {
           return new SuccessParseResult<LexonType>(
             new ASTNode<LexonType>(symbol.name, null, [], lexons[index..(index + 1)]),
-            1
+            1,
+            null
           );
         }
+        else
+        {
+          return new FailedParseResult<LexonType>(lexon, [symbol.lexonType]);
+        }
       }
+      return new FailedParseResult<LexonType>(null, [symbol.lexonType]);
     }
     else
     {
@@ -219,8 +249,11 @@ public class Parser<LexonType>
       {
         return ParseProductionSet(productionSet, lexons, index);
       }
+      else
+      {
+        throw new Exception("Should this be possible?");
+      }
     }
-    return null;
   }
 
   public LexonType[] ComputeHead(string grammarElementName)

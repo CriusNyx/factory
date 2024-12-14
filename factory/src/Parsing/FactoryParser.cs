@@ -27,6 +27,16 @@ public static class FactoryParser
     return new Parser<FactoryLexon>(grammar);
   }
 
+  public static ParseResult<FactoryLexon> TryParse(string sourceCode)
+  {
+    return TryParse(FactoryLexer.LexFactory(sourceCode).Filter(x => x.isSemantic));
+  }
+
+  public static ParseResult<FactoryLexon> TryParse(Lexon<FactoryLexon>[] lexons)
+  {
+    return parser.TryParse("Program", lexons.Filter(x => x.isSemantic))!;
+  }
+
   public static ASTNode<FactoryLexon>? Parse(string sourceCode, bool recover = false)
   {
     var lexons = FactoryLexer.LexFactory(sourceCode);

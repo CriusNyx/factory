@@ -1,6 +1,5 @@
 using System.Text.RegularExpressions;
 using GenParse.Functional;
-using GenParse.Util;
 
 namespace GenParse.Lexing;
 
@@ -9,10 +8,15 @@ public static class Lexer
   public static TLexon[] Lex<TLexon, TLexonType>(
     string code,
     (TLexonType ruleType, Regex regex)[] rules,
-    Func<TLexonType, string, int, TLexon> lexonConstructor
+    Func<TLexonType, string, int, TLexon> lexonConstructor,
+    int startIndex = 0
   )
   {
-    int index = 0;
+    int index = startIndex;
+    if (index != 0)
+    {
+      code = code.Substring(index);
+    }
     List<TLexon> lexons = new List<TLexon>();
     while (Lex(code, out var lexonType, out var lexicalString, out code!, rules))
     {

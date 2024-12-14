@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using GenParse.Util;
 
 namespace GenParse.Lexing;
 
@@ -11,6 +10,7 @@ public class Lexon<LexonType>
   public readonly bool isSemantic;
   public readonly int index;
   public int length => sourceCode.Length;
+  public int end => index + length;
 
   public Lexon(LexonType lexonType, string sourceCode, bool isSemantic, int index)
   {

@@ -1,3 +1,4 @@
+using Factory;
 using GenParse.Functional;
 
 namespace factory_tests

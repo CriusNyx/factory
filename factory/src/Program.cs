@@ -1,4 +1,5 @@
-﻿using Factory.Parsing;
+﻿using System.Diagnostics.Tracing;
+using Factory.Parsing;
 using GenParse.Functional;
 using GenParse.Util;
 
@@ -66,7 +67,7 @@ try
     }
     catch (ParseException<FactoryLexon> e)
     {
-      throw new FactoryParseException(sourceLocation, sourceCode, e.lexon);
+      throw new FactoryParseException(sourceLocation, sourceCode, e.failedParseResult);
     }
   }
 
@@ -138,15 +139,15 @@ catch (Exception e)
 {
   if (e is FactoryParseException parseException)
   {
-    var lexon = parseException.lexon;
+    var lexon = parseException.failedParseResult.offendingLexon;
     var source =
-      $"Unexpected symbol {parseException.lexon.sourceCode}\n\n".Colorize(CColor.Red)
+      $"{parseException.Message}\n\n".Colorize(CColor.Red)
       + $"Failed to parse program from {parseException.sourceLocation}\n\n".Colorize(CColor.Red)
       + "---------------------------\n\n"
       + parseException.sourceCode.ReplaceAt(
-        lexon.index,
-        lexon.length,
-        lexon.sourceCode.Colorize(CColor.Red)
+        lexon?.index ?? 0,
+        lexon?.length ?? 0,
+        lexon?.sourceCode.Colorize(CColor.Red) ?? ""
       );
     Console.Error.WriteLine(source);
   }
