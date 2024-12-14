@@ -4,7 +4,6 @@
  * ------------------------------------------------------------------------------------------ */
 import {
 	CompletionItem,
-	CompletionItemKind,
 	createConnection,
 	Diagnostic,
 	DiagnosticSeverity,
@@ -19,20 +18,15 @@ import {
 	TextDocuments,
 	TextDocumentSyncKind,
 } from "vscode-languageserver/node";
-
 import { Position, TextDocument } from "vscode-languageserver-textdocument";
 import * as dotnet from "node-api-dotnet";
 import { Factory } from "node-api-dotnet";
 
+// Load the dotnet assembly to initialize the Factory namespace.
 dotnet.load(__dirname + "/bin/factory.dll");
 
-const FactorySemanticType = Factory.Parsing.FactorySemanticType;
-type FactorySemanticType = Factory.Parsing.FactorySemanticType;
-
-const FactoryErrorType = Factory.FactoryErrorType;
-type FactoryErrorType = Factory.FactoryErrorType;
-
-const FactoryLanguage = Factory.FactoryLanguage;
+type FactorySemanticType = Factory.FactorySemanticType;
+const { FactorySemanticType, FactoryErrorType, FactoryLanguage } = Factory;
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -196,20 +190,20 @@ async function validateTextDocument(
 			textDocument.positionAt(lexonPosition + lexonLength),
 		);
 
-		let diagnosticsticSevarity: DiagnosticSeverity;
+		let diagnosticsSeverity: DiagnosticSeverity;
 
 		switch (errorType) {
 			case FactoryErrorType.error:
-				diagnosticsticSevarity = DiagnosticSeverity.Error;
+				diagnosticsSeverity = DiagnosticSeverity.Error;
 				break;
 			case FactoryErrorType.warning:
-				diagnosticsticSevarity = DiagnosticSeverity.Warning;
+				diagnosticsSeverity = DiagnosticSeverity.Warning;
 				break;
 			case FactoryErrorType.info:
-				diagnosticsticSevarity = DiagnosticSeverity.Information;
+				diagnosticsSeverity = DiagnosticSeverity.Information;
 				break;
 		}
-		return Diagnostic.create(range, errorMessage, diagnosticsticSevarity);
+		return Diagnostic.create(range, errorMessage, diagnosticsSeverity);
 	});
 
 	return output;
