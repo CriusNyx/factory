@@ -1,8 +1,0 @@
-recipe A
-  out ReinforcedIronPlate
-
-;;
-
-let b = print
-
-print
