@@ -1,5 +1,7 @@
 using GenParse.Functional;
 
+namespace Factory;
+
 public class RecipeBalance
 {
   public readonly RecipeBalanceElement[] elements;

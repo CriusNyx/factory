@@ -1,3 +1,5 @@
+namespace Factory;
+
 public class PairVal(FactVal item1, FactVal item2) : FactVal
 {
   public readonly FactVal item1 = item1;

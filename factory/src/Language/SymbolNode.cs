@@ -1,7 +1,8 @@
-using Factory.Parsing;
 using GenParse.Functional;
 using GenParse.Parsing;
 using GenParse.Util;
+
+namespace Factory;
 
 [ASTClass("symbol")]
 public class SymbolNode(ASTNode<FactoryLexon> astNode) : LanguageNode, ValueNode

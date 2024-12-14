@@ -1,3 +1,5 @@
+namespace Factory;
+
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Method)]
 public class ExposeMemberAttribute(string name) : Attribute
 {

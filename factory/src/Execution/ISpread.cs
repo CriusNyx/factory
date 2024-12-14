@@ -1,3 +1,5 @@
+namespace Factory;
+
 public interface ISpread
 {
   public ArrayVal Spread();

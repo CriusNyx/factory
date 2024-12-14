@@ -1,7 +1,7 @@
-using Factory.Parsing;
 using GenParse.Functional;
-using GenParse.Parsing;
 using GenParse.Util;
+
+namespace Factory;
 
 [ASTClass("AssignExp")]
 public class AssignExpNode : ProgramExp, LanguageNode

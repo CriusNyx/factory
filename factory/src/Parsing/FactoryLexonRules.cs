@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 using GenParse.Functional;
 using GenParse.Util;
 
-namespace Factory.Parsing;
+namespace Factory;
 
 public enum FactoryLexon
 {

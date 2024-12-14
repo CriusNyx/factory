@@ -1,5 +1,7 @@
 using System.Reflection;
 
+namespace Factory;
+
 public class ObjectRefVal(FactVal owner, string identifier) : RefVal
 {
   public readonly FactVal owner = owner;

@@ -1,5 +1,7 @@
 using GenParse.Functional;
 
+namespace Factory;
+
 /// <summary>
 /// Base class for all factory values.
 /// This class has no implementation and is for organizational purposes.

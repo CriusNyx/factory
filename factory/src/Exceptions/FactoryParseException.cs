@@ -1,6 +1,6 @@
-using Factory.Parsing;
-using GenParse.Lexing;
 using GenParse.Parsing;
+
+namespace Factory;
 
 public class FactoryParseException(
   string sourceLocation,

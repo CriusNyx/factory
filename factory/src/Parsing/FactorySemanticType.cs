@@ -1,4 +1,4 @@
-namespace Factory.Parsing;
+namespace Factory;
 
 public enum FactorySemanticType
 {

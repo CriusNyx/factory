@@ -1,5 +1,7 @@
 using GenParse.Functional;
 
+namespace Factory;
+
 public static class SearchExtensions
 {
   public static RecipeSearchResult Balance(this RecipeSearchResult result, bool hasInitialQuantity)

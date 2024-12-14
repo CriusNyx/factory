@@ -1,7 +1,8 @@
-using Factory.Parsing;
 using GenParse.Functional;
 using GenParse.Parsing;
 using GenParse.Util;
+
+namespace Factory;
 
 [ASTClass("SpreadExp")]
 public class SpreadExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode, LanguageNode

@@ -1,3 +1,5 @@
+namespace Factory;
+
 public class ScopeRefVal(ExecutionContext context, string identifier) : RefVal
 {
   public readonly ExecutionContext context = context;

@@ -1,5 +1,7 @@
 using System.Reflection;
 
+namespace Factory;
+
 public class FuncVal(Func<ArrayVal, FactVal> func) : FactVal, IFunc
 {
   public readonly Func<ArrayVal, FactVal> func = func;

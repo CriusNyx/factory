@@ -1,3 +1,5 @@
+namespace Factory;
+
 public class RecipeSearchRequest
 {
   public readonly RecipeValue recipe;

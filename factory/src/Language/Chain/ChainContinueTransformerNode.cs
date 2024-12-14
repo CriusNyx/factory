@@ -1,3 +1,5 @@
+namespace Factory;
+
 [ASTClass("ChainContinue")]
 public class ChainContinueTransformerNode : ASTTransformer
 {

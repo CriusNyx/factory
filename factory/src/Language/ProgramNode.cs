@@ -1,6 +1,8 @@
 using GenParse.Functional;
 using GenParse.Util;
 
+namespace Factory;
+
 [ASTClass("Program")]
 public class ProgramNode : LanguageNode
 {

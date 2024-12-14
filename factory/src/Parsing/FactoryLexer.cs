@@ -1,6 +1,6 @@
 using GenParse.Lexing;
 
-namespace Factory.Parsing;
+namespace Factory;
 
 public class FactoryLexer
 {

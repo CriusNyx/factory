@@ -1,5 +1,3 @@
-using Factory.Parsing;
-
 namespace Factory;
 
 public class FactorySemanticToken(

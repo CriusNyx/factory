@@ -1,3 +1,5 @@
+namespace Factory;
+
 [Flags]
 public enum FactorySemanticModifier
 {

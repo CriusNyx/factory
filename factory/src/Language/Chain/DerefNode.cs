@@ -1,6 +1,8 @@
 using System.Reflection;
 using GenParse.Util;
 
+namespace Factory;
+
 [ASTClass("Deref")]
 public class DerefNode : LanguageNode, ChainNode
 {

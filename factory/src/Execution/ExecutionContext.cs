@@ -1,5 +1,7 @@
 using GenParse.Functional;
 
+namespace Factory;
+
 public class ExecutionContext : IDisposable
 {
   public readonly Dictionary<string, FactVal> GlobalValues = new Dictionary<string, FactVal>();

@@ -1,3 +1,5 @@
+namespace Factory;
+
 public class SpreadVal(ArrayVal arr) : FactVal, IUnfold
 {
   public readonly ArrayVal arr = arr;

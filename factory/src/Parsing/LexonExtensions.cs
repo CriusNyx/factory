@@ -1,5 +1,6 @@
-using Factory.Parsing;
 using GenParse.Lexing;
+
+namespace Factory;
 
 public static class LexonExtensions
 {

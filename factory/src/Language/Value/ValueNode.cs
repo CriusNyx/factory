@@ -1,5 +1,6 @@
-using Factory.Parsing;
 using GenParse.Parsing;
+
+namespace Factory;
 
 public interface ValueNode : LanguageNode
 {

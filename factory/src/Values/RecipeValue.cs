@@ -2,6 +2,8 @@ using System.Diagnostics;
 using System.Text;
 using GenParse.Functional;
 
+namespace Factory;
+
 public class RecipeValue(string recipeName, ArrayVal? arguments = null) : FactVal, ISpread, IFunc
 {
   [ExposeMember("Name")]

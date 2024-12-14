@@ -1,5 +1,7 @@
 using GenParse.Functional;
 
+namespace Factory;
+
 public static class RecipeSearch
 {
   static string[] resourceIdentifiers = new string[]

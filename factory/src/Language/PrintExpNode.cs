@@ -1,6 +1,8 @@
 using GenParse.Functional;
 using GenParse.Util;
 
+namespace Factory;
+
 [ASTClass("PrintExp")]
 public class PrintExpNode : ProgramExp, LanguageNode
 {

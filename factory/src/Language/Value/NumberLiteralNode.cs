@@ -1,7 +1,8 @@
-using Factory.Parsing;
 using GenParse.Functional;
 using GenParse.Parsing;
 using GenParse.Util;
+
+namespace Factory;
 
 [ASTClass("numberLiteral")]
 public class NumberLiteralNode(ASTNode<FactoryLexon> astNode) : LiteralNode

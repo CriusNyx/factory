@@ -1,3 +1,5 @@
+namespace Factory;
+
 public class SymbolVal(string symbol) : FactVal
 {
   public readonly string symbol = symbol;

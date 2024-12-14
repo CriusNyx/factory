@@ -1,3 +1,5 @@
+namespace Factory;
+
 public class NumVal(decimal value) : FactVal
 {
   public readonly decimal value = value;

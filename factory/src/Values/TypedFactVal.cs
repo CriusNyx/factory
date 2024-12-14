@@ -1,3 +1,5 @@
+namespace Factory;
+
 public enum ValType
 {
   input,

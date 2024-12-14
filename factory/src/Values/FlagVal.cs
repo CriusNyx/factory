@@ -1,3 +1,5 @@
+namespace Factory;
+
 public class BoolVal(bool value) : FactVal
 {
   public readonly bool value = value;

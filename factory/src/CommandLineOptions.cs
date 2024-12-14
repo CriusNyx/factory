@@ -1,5 +1,7 @@
 using CommandLine;
 
+namespace Factory;
+
 public class CommandLineOptions
 {
   [Value(0, Default = "", HelpText = "The file to parse")]

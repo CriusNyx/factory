@@ -2,6 +2,8 @@ using System.Text;
 using GenParse.Functional;
 using GenParse.Util;
 
+namespace Factory;
+
 public class RecipeSearchResult : FactVal
 {
   public readonly RecipeSearchRequest request;

@@ -1,5 +1,7 @@
 using GenParse.Functional;
 
+namespace Factory;
+
 public class ArrayVal : FactVal
 {
   public readonly FactVal[] array;

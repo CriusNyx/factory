@@ -1,7 +1,8 @@
-using Factory.Parsing;
 using GenParse.Functional;
 using GenParse.Parsing;
 using GenParse.Util;
+
+namespace Factory;
 
 [ASTClass("Invocation")]
 public class InvocationNode(ASTNode<FactoryLexon> astNode) : LanguageNode, ChainNode

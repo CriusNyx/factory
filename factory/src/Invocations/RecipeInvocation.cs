@@ -1,5 +1,7 @@
 using GenParse.Functional;
 
+namespace Factory;
+
 public class RecipeInvocation(
   RecipeValue recipeValue,
   decimal quantity = 1,

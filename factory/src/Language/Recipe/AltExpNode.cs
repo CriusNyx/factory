@@ -1,6 +1,7 @@
-using Factory.Parsing;
 using GenParse.Parsing;
 using GenParse.Util;
+
+namespace Factory;
 
 [ASTClass("AltExp")]
 public class AltExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode, LanguageNode

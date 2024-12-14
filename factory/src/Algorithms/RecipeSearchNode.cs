@@ -1,6 +1,8 @@
 using GenParse.Functional;
 using GenParse.Util;
 
+namespace Factory;
+
 public class RecipeSearchNode
 {
   public readonly decimal quantity;

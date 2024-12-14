@@ -1,5 +1,7 @@
 using GenParse.Functional;
 
+namespace Factory;
+
 [ASTClass("InvocationParamSet")]
 public class InvocationParamSetTransformerNode : ASTTransformer
 {

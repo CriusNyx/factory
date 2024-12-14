@@ -1,5 +1,7 @@
 using GenParse.Functional;
 
+namespace Factory;
+
 public static class ValExtensions
 {
   public static SymbolVal ToSymbolVal(this string str)

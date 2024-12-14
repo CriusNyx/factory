@@ -1,5 +1,7 @@
 using GenParse.Functional;
 
+namespace Factory;
+
 [Serializable]
 public class Quantity
 {

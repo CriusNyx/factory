@@ -1,6 +1,8 @@
 using GenParse.Functional;
 using Newtonsoft.Json;
 
+namespace Factory;
+
 [Serializable]
 public class Docs
 {

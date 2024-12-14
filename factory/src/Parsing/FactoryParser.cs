@@ -3,7 +3,7 @@ using GenParse.Grammar;
 using GenParse.Lexing;
 using GenParse.Parsing;
 
-namespace Factory.Parsing;
+namespace Factory;
 
 public static class FactoryParser
 {

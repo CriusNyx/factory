@@ -1,3 +1,5 @@
+namespace Factory;
+
 public class TallyVal : SymbolVal
 {
   public bool inline;

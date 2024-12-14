@@ -1,8 +1,8 @@
-using System.Net.Mime;
-using Factory.Parsing;
 using GenParse.Functional;
 using GenParse.Parsing;
 using GenParse.Util;
+
+namespace Factory;
 
 [ASTClass("ExpChain")]
 public class ExpChainNode : LanguageNode, ValueNode
