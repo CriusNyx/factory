@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using GenParse.Functional;
 using GenParse.Parsing;
 using GenParse.Util;
@@ -5,10 +6,10 @@ using GenParse.Util;
 namespace Factory;
 
 [ASTClass("symbol")]
-public class SymbolNode(ASTNode<FactoryLexon> astNode) : LanguageNode, ValueNode
+public class SymbolNode : LanguageNode, ValueNode
 {
-  private ASTNode<FactoryLexon> _astNode = astNode;
-  public ASTNode<FactoryLexon> astNode => _astNode;
+  [AST]
+  public ASTNode<FactoryLexon> astNode { get; set; }
   public string symbolName => astNode.SourceCode();
 
   public IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
@@ -27,4 +28,9 @@ public class SymbolNode(ASTNode<FactoryLexon> astNode) : LanguageNode, ValueNode
   }
 
   public override string ToString() => $"Symbol {astNode.SourceCode()}";
+
+  public FactoryType CalculateType(TypeContext context)
+  {
+    return context.GetType(symbolName);
+  }
 }

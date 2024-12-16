@@ -24,11 +24,7 @@ public class Parser<LexonType>
     this.customParsers = customParsers.ToDictionary(x => x.name);
   }
 
-  public ASTNode<LexonType>? Parse(
-    string rootSymbol,
-    Lexon<LexonType>[] lexons,
-    bool forgiving = false
-  )
+  public ASTNode<LexonType>? Parse(string rootSymbol, Lexon<LexonType>[] lexons)
   {
     var result = TryParse(rootSymbol, lexons);
     if (result is SuccessParseResult<LexonType> succ)

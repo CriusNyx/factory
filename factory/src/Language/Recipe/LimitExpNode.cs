@@ -22,4 +22,13 @@ public class LimitExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode, Langua
   {
     return new ArrayVal(expressions.Map(x => x.Evaluate(ref context))).With(context);
   }
+
+  public override FactoryType CalculateType(TypeContext context)
+  {
+    foreach (var exp in expressions)
+    {
+      exp.CalculateType(context);
+    }
+    return FactoryType.LimitType;
+  }
 }

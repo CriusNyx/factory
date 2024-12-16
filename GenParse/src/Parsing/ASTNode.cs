@@ -56,4 +56,23 @@ public class ASTNode<LexonType>
   {
     return $"ASTNode {name}";
   }
+
+  public (int start, int length) CalculatePosition()
+  {
+    if (lexons.Length > 0)
+    {
+      var start = lexons.First().index;
+      var end = lexons.Last().end;
+      return (start, end - start);
+    }
+    else if (children.Length > 0)
+    {
+      var start = children.First().CalculatePosition().start;
+      var endPos = children.Map(x => x.CalculatePosition()).MaxBy(x => x.start + x.length);
+      var end = endPos.start + endPos.length;
+      return (start, end - start);
+    }
+    else
+      return (0, 0);
+  }
 }

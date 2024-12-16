@@ -1,3 +1,5 @@
+using System.Formats.Tar;
+using System.Reflection;
 using GenParse.Functional;
 using GenParse.Parsing;
 using GenParse.Util;
@@ -5,10 +7,10 @@ using GenParse.Util;
 namespace Factory;
 
 [ASTClass("Invocation")]
-public class InvocationNode(ASTNode<FactoryLexon> astNode) : LanguageNode, ChainNode
+public class InvocationNode : LanguageNode, ChainNode
 {
-  private ASTNode<FactoryLexon> _astNode = astNode;
-  public ASTNode<FactoryLexon> astNode => _astNode;
+  [AST]
+  public ASTNode<FactoryLexon> ast;
 
   [ASTField("InvocationParamSet")]
   public ValueNode[] parameters;
@@ -32,5 +34,31 @@ public class InvocationNode(ASTNode<FactoryLexon> astNode) : LanguageNode, Chain
   public string GetIdentifier()
   {
     throw new Exception("Invocation nodes cannot be converted to identifiers.");
+  }
+
+  public FactoryType CalculateType(TypeContext context)
+  {
+    var current = context.Peek().Resolve(context);
+    if (current is CSharpType cSharpType)
+    {
+      var type = cSharpType.type;
+      if (type.IsAssignableTo(typeof(IFunc)))
+      {
+        var methodInfo = type.GetMethod("Invoke");
+        var resultInfo = methodInfo?.GetCustomAttribute<InvocationTypeAttribute>();
+        if (resultInfo?.outType != null)
+        {
+          return FactoryType.FromCSharpType(resultInfo.outType);
+        }
+      }
+    }
+    if (current is MethodType methodType)
+    {
+      var type = methodType.outType;
+      return FactoryType.FromCSharpType(type);
+    }
+    var pos = ast.CalculatePosition();
+    context.AddError(pos.start, pos.length, $"Cannot invoke on type {current}");
+    return FactoryType.VoidType;
   }
 }

@@ -24,9 +24,18 @@ public class ProgramNode : LanguageNode
   {
     return Formatting.PrintTree(this, x => x.ToString()!);
   }
+
+  public FactoryType CalculateType(TypeContext context)
+  {
+    foreach (var expression in expressions)
+    {
+      expression.CalculateType(context);
+    }
+    return new FactoryPrimitiveType(FactoryPrimitiveTypeType.Void);
+  }
 }
 
-public interface ProgramExp
+public interface ProgramExp : LanguageNode
 {
   (FactVal? value, ExecutionContext context) Evaluate(ExecutionContext context);
 }

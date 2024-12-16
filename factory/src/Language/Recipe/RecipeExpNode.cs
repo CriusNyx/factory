@@ -26,4 +26,6 @@ public abstract class RecipeExpNode : LanguageNode, ValueNode
       )
       .With(context);
   }
+
+  public abstract FactoryType CalculateType(TypeContext context);
 }

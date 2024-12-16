@@ -12,6 +12,16 @@ public class RecipeNode : LanguageNode, ProgramExp
   [ASTField("RecipeExp*")]
   public RecipeExpNode[] expressions;
 
+  public FactoryType CalculateType(TypeContext context)
+  {
+    foreach (var expression in expressions)
+    {
+      expression.CalculateType(context);
+    }
+    context.SetType(name.symbolName, new CSharpType(typeof(RecipeValue)));
+    return new FactoryPrimitiveType(FactoryPrimitiveTypeType.Void);
+  }
+
   public (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
     var expressionValues = expressions.Map(x => x.Evaluate(ref context));

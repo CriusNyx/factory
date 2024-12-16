@@ -27,4 +27,9 @@ public class SpreadExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode, Langu
   {
     return new Formatting.ITree<LanguageNode>[] { symbol };
   }
+
+  public override FactoryType CalculateType(TypeContext context)
+  {
+    return new FactoryPrimitiveType(FactoryPrimitiveTypeType.Complex);
+  }
 }

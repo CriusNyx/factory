@@ -25,4 +25,9 @@ public class PrintExpNode : ProgramExp, LanguageNode
 
     return (null!, context);
   }
+
+  public FactoryType CalculateType(TypeContext context)
+  {
+    return new FactoryPrimitiveType(FactoryPrimitiveTypeType.Void);
+  }
 }

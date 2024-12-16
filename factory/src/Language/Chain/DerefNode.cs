@@ -1,4 +1,7 @@
+using System.Formats.Tar;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using GenParse.Parsing;
 using GenParse.Util;
 
 namespace Factory;
@@ -6,6 +9,9 @@ namespace Factory;
 [ASTClass("Deref")]
 public class DerefNode : LanguageNode, ChainNode
 {
+  [AST]
+  public ASTNode<FactoryLexon> ast;
+
   [ASTField("symbol")]
   public SymbolNode derefSymbol;
 
@@ -53,5 +59,24 @@ public class DerefNode : LanguageNode, ChainNode
   public string GetIdentifier()
   {
     return derefSymbol.symbolName;
+  }
+
+  public FactoryType CalculateType(TypeContext context)
+  {
+    var value = context.Peek().Resolve(context);
+    if (value is CSharpType cSharpType)
+    {
+      foreach (var member in cSharpType.type.GetMembers())
+      {
+        var exposeAttr = member.GetCustomAttribute<ExposeMemberAttribute>();
+        if (exposeAttr?.name == derefSymbol.symbolName)
+        {
+          return FactoryType.FromCSharpMember(member);
+        }
+      }
+    }
+    var pos = ast.CalculatePosition();
+    context.AddError(pos.start, pos.length, $"{value} has no member {derefSymbol.symbolName}");
+    return FactoryType.VoidType;
   }
 }

@@ -14,7 +14,8 @@ public class ExpChainNode : LanguageNode, ValueNode
   [ASTField("ChainContinue?")]
   public ExpChainNode chainContinue;
 
-  public ASTNode<FactoryLexon> astNode => throw new NotImplementedException();
+  [AST]
+  public ASTNode<FactoryLexon> astNode { get; set; }
 
   public (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
@@ -87,5 +88,38 @@ public class ExpChainNode : LanguageNode, ValueNode
       chain,
       chainContinue,
     }.FilterDefined();
+  }
+
+  public FactoryType ComputeRef(TypeContext context)
+  {
+    if (initialSymbol != null)
+    {
+      var symType = new ReferenceType(initialSymbol.symbolName);
+      if (chainContinue != null)
+      {
+        context.Push(symType);
+        var result = chainContinue.CalculateType(context);
+        context.Pop();
+        return result;
+      }
+      return symType;
+    }
+    else
+    {
+      var chainType = chain.CalculateType(context);
+      if (chainContinue != null)
+      {
+        context.Push(chainType);
+        var result = chainContinue.CalculateType(context);
+        context.Pop();
+        return result;
+      }
+      return chainType;
+    }
+  }
+
+  public FactoryType CalculateType(TypeContext context)
+  {
+    return ComputeRef(context).Resolve(context);
   }
 }

@@ -18,4 +18,9 @@ public class OutExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode, Language
   }
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren() => symbols;
+
+  public override FactoryType CalculateType(TypeContext context)
+  {
+    return FactoryType.OutType;
+  }
 }

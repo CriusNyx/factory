@@ -87,6 +87,23 @@ public static class FactoryLanguage
 
         errors.Add(new FactoryLanguageError(position, length, FactoryErrorType.error, message));
       }
+      else if (result is SuccessParseResult<FactoryLexon> succ)
+      {
+        var typeContext = new TypeContext();
+        var program = Transformer.Transform(succ.astNode) as ProgramNode;
+        program?.CalculateType(typeContext);
+        foreach (var error in typeContext.Errors)
+        {
+          errors.Add(
+            new FactoryLanguageError(
+              error.position,
+              error.length,
+              FactoryErrorType.error,
+              error.message
+            )
+          );
+        }
+      }
     }
     catch (Exception e)
     {
@@ -102,9 +119,25 @@ public static class FactoryLanguage
     var program = Transformer.Transform(ast) as ProgramNode;
     using var textWriter = new StringWriter();
     using var context = new ExecutionContext(Console.In, textWriter);
+    var typeContext = new TypeContext();
+    program!.CalculateType(typeContext);
 
-    program!.Evaluate(context);
+    if (typeContext.Errors.Count() != 0)
+    {
+      foreach (var error in typeContext.Errors)
+      {
+        textWriter.WriteLine(error);
+      }
+      return textWriter.ToString();
+    }
+
+    program.Evaluate(context);
 
     return textWriter.ToString().TrimEnd();
+  }
+
+  public static object? ResolveGlobal(string symbol)
+  {
+    return Docs.itemsByIdentifier.Safe(symbol);
   }
 }

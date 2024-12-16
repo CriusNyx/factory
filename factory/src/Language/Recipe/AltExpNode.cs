@@ -21,4 +21,9 @@ public class AltExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode, Language
   {
     return new Formatting.ITree<LanguageNode>[] { };
   }
+
+  public override FactoryType CalculateType(TypeContext context)
+  {
+    return FactoryType.AltType;
+  }
 }

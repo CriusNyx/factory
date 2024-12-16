@@ -21,4 +21,9 @@ public class StringLiteralNode : LanguageNode, ValueNode
     var stringSegment = sourceCode.Substring(1, sourceCode.Length - 2);
     return new StringVal(stringSegment).With(context);
   }
+
+  public FactoryType CalculateType(TypeContext context)
+  {
+    return new FactoryPrimitiveType(FactoryPrimitiveTypeType.String);
+  }
 }

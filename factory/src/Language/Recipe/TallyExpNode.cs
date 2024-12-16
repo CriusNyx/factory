@@ -34,4 +34,9 @@ public class TallyExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode, Langua
   {
     return symbols;
   }
+
+  public override FactoryType CalculateType(TypeContext context)
+  {
+    return FactoryType.TallyType;
+  }
 }

@@ -6,15 +6,21 @@ using ExecutionContext = Factory.ExecutionContext;
 bool debug = false;
 #if DEBUG
 debug = true;
+
+
 #endif
 
+#if !DEBUG
 try
+#endif
 {
   var options = CommandLineOptions.Create(args);
 
   void EvaluateSourceCode(string sourceLocation, string sourceCode, string outFile = "")
   {
+#if !DEBUG
     try
+#endif
     {
       var lexons = FactoryLexer.LexFactory(sourceCode);
 
@@ -49,6 +55,24 @@ try
         return;
       }
 
+      if (program == null)
+      {
+        throw new InvalidOperationException();
+      }
+
+      // Preform type validation.
+      var typeContext = new TypeContext();
+      program.CalculateType(typeContext);
+
+      if (typeContext.Errors.Count() != 0)
+      {
+        foreach (var (position, length, message) in typeContext.Errors)
+        {
+          Console.WriteLine($"({position}, {length}): {message}".Colorize(CColor.Red));
+        }
+        return;
+      }
+
       using var textWriter = new StringWriter();
       using var context = new ExecutionContext(Console.In, textWriter);
 
@@ -65,10 +89,12 @@ try
         File.WriteAllText(outFile, result);
       }
     }
+#if !DEBUG
     catch (ParseException<FactoryLexon> e)
     {
       throw new FactoryParseException(sourceLocation, sourceCode, e.failedParseResult);
     }
+#endif
   }
 
   if (options.debugGrammar)
@@ -135,6 +161,7 @@ try
     throw new NoSourceFileException();
   }
 }
+#if !DEBUG
 catch (Exception e)
 {
   if (e is FactoryParseException parseException)
@@ -156,3 +183,4 @@ catch (Exception e)
     Console.Error.WriteLine(e.Message.Colorize(CColor.Red));
   }
 }
+#endif

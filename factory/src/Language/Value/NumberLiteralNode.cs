@@ -11,6 +11,11 @@ public class NumberLiteralNode(ASTNode<FactoryLexon> astNode) : LiteralNode
 
   public ASTNode<FactoryLexon> astNode => _astNode;
 
+  public FactoryType CalculateType(TypeContext context)
+  {
+    return new FactoryPrimitiveType(FactoryPrimitiveTypeType.Number);
+  }
+
   public (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
     return decimal.Parse(astNode.SourceCode()).ToNumVal().With(context);

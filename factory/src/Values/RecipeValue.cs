@@ -152,6 +152,7 @@ public class RecipeValue(string recipeName, ArrayVal? arguments = null) : FactVa
     return arguments;
   }
 
+  [InvocationType(typeof(RecipeSearchResult))]
   public FactVal Invoke(ArrayVal arguments)
   {
     return RecipeInvocation.InvokeRecipe(this, arguments);
