@@ -28,6 +28,10 @@ public class PrintExpNode : ProgramExp, LanguageNode
 
   public FactoryType CalculateType(TypeContext context)
   {
+    foreach (var value in values)
+    {
+      value.CalculateType(context);
+    }
     return new FactoryPrimitiveType(FactoryPrimitiveTypeType.Void);
   }
 }
