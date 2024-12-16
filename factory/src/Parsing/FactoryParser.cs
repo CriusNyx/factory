@@ -21,7 +21,7 @@ public static class FactoryParser
     parser = GenerateFactoryParser();
   }
 
-  public static Parser<FactoryLexon> GenerateFactoryParser()
+  private static Parser<FactoryLexon> GenerateFactoryParser()
   {
     var grammar = GrammarParser.ParseGrammar([GrammarSource], FactoryLexonRules.lexonFromName);
     return new Parser<FactoryLexon>(grammar);
@@ -37,14 +37,12 @@ public static class FactoryParser
     return parser.TryParse("Program", lexons.Filter(x => x.isSemantic))!;
   }
 
-  public static ASTNode<FactoryLexon>? Parse(string sourceCode, bool recover = false)
+  public static ASTNode<FactoryLexon>? Parse(string sourceCode)
   {
     var lexons = FactoryLexer.LexFactory(sourceCode);
-    return parser.Parse("Program", lexons.Filter(x => x.isSemantic), recover);
+    return parser.Parse("Program", lexons.Filter(x => x.isSemantic));
   }
 
-  public static ASTNode<FactoryLexon>? Parse(
-    Lexon<FactoryLexon>[] lexons,
-    bool forgiving = false
-  ) => parser.Parse("Program", lexons.Filter(x => x.isSemantic), forgiving);
+  public static ASTNode<FactoryLexon>? Parse(Lexon<FactoryLexon>[] lexons) =>
+    parser.Parse("Program", lexons.Filter(x => x.isSemantic));
 }

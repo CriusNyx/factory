@@ -125,14 +125,14 @@ public class RecipeValue(string recipeName, ArrayVal? arguments = null) : FactVa
     return new RecipeValue(recipeName ?? this.recipeName, arguments ?? this.arguments);
   }
 
-  private static ValType[] valTypesThatModifyRecipeVal = new ValType[]
-  {
+  private static ValType[] valTypesThatModifyRecipeVal =
+  [
     ValType.input,
     ValType.output,
     ValType.alt,
     ValType.tally,
     ValType.limit,
-  };
+  ];
 
   public static bool FactValModifiesRecipeVal(FactVal factVal)
   {

@@ -49,6 +49,8 @@ public class CommandLineOptions
     return output;
   }
 
+  public static CommandLineOptions Default => Create([]);
+
   public override string ToString()
   {
     return $"stream = {stream}";

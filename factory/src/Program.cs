@@ -22,71 +22,20 @@ try
     try
 #endif
     {
-      var lexons = FactoryLexer.LexFactory(sourceCode);
-
-      if (options.lexons)
+      if (FactoryLanguage.TryExecute(sourceCode, out var result, options: options))
       {
-        var lexonsString = string.Join(
-          "\n",
-          lexons
-            .Filter(x => x.isSemantic)
-            .Map(x => $"{x.lexonType.ToString().PadRight(20)} {x.sourceCode}")
-        );
-        Console.WriteLine(lexonsString);
-        return;
-      }
-
-      var ast = FactoryParser.Parse(lexons)!;
-
-      if (options.ast)
-      {
-        Console.WriteLine(ast.PrintProgram());
-      }
-
-      var program = Transformer.Transform(ast) as ProgramNode;
-
-      if (options.transform)
-      {
-        Console.WriteLine(program!.ToTree());
-      }
-
-      if (options.ast || options.transform)
-      {
-        return;
-      }
-
-      if (program == null)
-      {
-        throw new InvalidOperationException();
-      }
-
-      // Preform type validation.
-      var typeContext = new TypeContext();
-      program.CalculateType(typeContext);
-
-      if (typeContext.Errors.Count() != 0)
-      {
-        foreach (var (position, length, message) in typeContext.Errors)
+        if (outFile != "")
         {
-          Console.WriteLine($"({position}, {length}): {message}".Colorize(CColor.Red));
+          File.WriteAllText(outFile, result);
         }
-        return;
-      }
-
-      using var textWriter = new StringWriter();
-      using var context = new ExecutionContext(Console.In, textWriter);
-
-      program!.Evaluate(context);
-
-      var result = textWriter.ToString().TrimEnd();
-
-      if (outFile == "")
-      {
-        Console.WriteLine(result);
+        else
+        {
+          Console.WriteLine(result);
+        }
       }
       else
       {
-        File.WriteAllText(outFile, result);
+        Console.WriteLine(result);
       }
     }
 #if !DEBUG
@@ -153,7 +102,7 @@ try
   }
   else if (debug)
   {
-    string debugFile = "./SamplePrograms/program1.factory";
+    string debugFile = "./SamplePrograms/debugProgram.factory";
     EvaluateSourceCode(debugFile, File.ReadAllText(debugFile));
   }
   else

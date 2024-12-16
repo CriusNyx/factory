@@ -25,7 +25,7 @@ namespace factory_tests
 
       string sourceCode = File.ReadAllText(inFile);
       string expectedOutput = File.ReadAllText(outFile).ReplaceLineEndings("\n");
-      string actualOutput = FactoryLanguage.Run(sourceCode).ReplaceLineEndings("\n");
+      string actualOutput = FactoryLanguage.Execute(sourceCode).ReplaceLineEndings("\n");
 
       Assert.Equal(expectedOutput, actualOutput);
     }

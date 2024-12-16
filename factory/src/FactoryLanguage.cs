@@ -1,5 +1,10 @@
+using System.Data;
+using System.Text;
 using GenParse.Functional;
+using GenParse.Lexing;
 using GenParse.Parsing;
+using GenParse.Util;
+using Microsoft.VisualBasic;
 
 namespace Factory;
 
@@ -112,32 +117,130 @@ public static class FactoryLanguage
     return errors.ToArray();
   }
 
-  public static string Run(string sourceCode)
-  {
-    var lexons = FactoryLexer.LexFactory(sourceCode);
-    var ast = FactoryParser.Parse(lexons)!;
-    var program = Transformer.Transform(ast) as ProgramNode;
-    using var textWriter = new StringWriter();
-    using var context = new ExecutionContext(Console.In, textWriter);
-    var typeContext = new TypeContext();
-    program!.CalculateType(typeContext);
-
-    if (typeContext.Errors.Count() != 0)
-    {
-      foreach (var error in typeContext.Errors)
-      {
-        textWriter.WriteLine(error);
-      }
-      return textWriter.ToString();
-    }
-
-    program.Evaluate(context);
-
-    return textWriter.ToString().TrimEnd();
-  }
-
   public static object? ResolveGlobal(string symbol)
   {
     return Docs.itemsByIdentifier.Safe(symbol);
+  }
+
+  public static Lexon<FactoryLexon>[] Lex(string sourceCode, bool resumeAfterError = false)
+  {
+    return FactoryLexer.LexFactory(sourceCode, resumeAfterError).Filter(x => x.isSemantic);
+  }
+
+  public static ASTNode<FactoryLexon> Parse(Lexon<FactoryLexon>[] lexons)
+  {
+    return FactoryParser.Parse(lexons)!;
+  }
+
+  public static ASTNode<FactoryLexon> Parse(string sourceCode)
+  {
+    return Parse(Lex(sourceCode));
+  }
+
+  public static ProgramNode Transform(ASTNode<FactoryLexon> astNode)
+  {
+    var result = Transformer.Transform(astNode);
+    if (result is ProgramNode program)
+    {
+      return program;
+    }
+    throw new InvalidCastException();
+  }
+
+  public static ProgramNode Transform(string sourceCode)
+  {
+    return Transform(Parse(sourceCode));
+  }
+
+  public static (ProgramNode program, TypeContext typeContext) TypeCheck(ProgramNode program)
+  {
+    var typeContext = new TypeContext();
+    program.CalculateType(typeContext);
+    return (program, typeContext);
+  }
+
+  public static (ProgramNode program, TypeContext typeContext) TypeCheck(string sourceCode)
+  {
+    return TypeCheck(Transform(sourceCode));
+  }
+
+  public static ProgramNode Compile(string sourceCode)
+  {
+    return TypeCheck(sourceCode).program;
+  }
+
+  public static string Execute(string sourceCode, bool colorize = true)
+  {
+    if (TryExecute(sourceCode, out var result, colorize))
+    {
+      return result;
+    }
+    return "";
+  }
+
+  public static bool TryExecute(
+    string sourceCode,
+    out string result,
+    bool colorize = true,
+    TextReader? stdin = null,
+    CommandLineOptions? options = null
+  )
+  {
+    options = options ?? CommandLineOptions.Default;
+    var lexons = Lex(sourceCode);
+
+    if (options.lexons)
+    {
+      result = string.Join(
+        "\n",
+        lexons.Map(x => $"{x.lexonType.ToString().PadRight(20)} {x.sourceCode}")
+      );
+      return true;
+    }
+
+    var ast = Parse(lexons);
+
+    if (options.ast)
+    {
+      result = ast.PrintProgram();
+      return true;
+    }
+
+    var program = Transform(ast);
+
+    if (options.transform)
+    {
+      result = program!.ToTree();
+      return true;
+    }
+
+    var typeContext = new TypeContext();
+    program.CalculateType(typeContext);
+
+    if (typeContext.Errors.Count() != 0)
+    {
+      var stringBuilder = new StringBuilder();
+      foreach (var (position, length, message) in typeContext.Errors)
+      {
+        var errorMessage = $"({position}, {length}): {message}";
+        if (colorize)
+        {
+          stringBuilder.AppendLine(errorMessage.Colorize(CColor.Red));
+        }
+        else
+        {
+          stringBuilder.AppendLine(errorMessage);
+        }
+      }
+      result = stringBuilder.ToString();
+      return false;
+    }
+
+    using var textWriter = new StringWriter();
+    using var context = new ExecutionContext(stdin ?? TextReader.Null, textWriter);
+    program!.Evaluate(context);
+
+    result = textWriter.ToString().TrimEnd();
+    return true;
   }
 }

@@ -29,10 +29,7 @@
     <None Update="Grammar\test.grammar">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="SamplePrograms\program1.factory">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SamplePrograms\program2.factory">
+    <None Update="SamplePrograms\debugProgram.factory">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
