@@ -1,5 +1,4 @@
 using System.Reflection;
-using CommandLine;
 using GenParse.Functional;
 using GenParse.Parsing;
 using GenParse.Util;
@@ -22,7 +21,7 @@ public class InvocationNode : LanguageNode, ChainNode
 
   public FactVal Evaluate(FactVal target, ExecutionContext context)
   {
-    var invocationParams = parameters.Map(x => x.Evaluate(ref context)).ToArrayVal();
+    var invocationParams = parameters.Map(x => x.Evaluate(ref context));
 
     var invocationMethod = target.GetType().GetFactoryInvocationMethod();
     return (invocationMethod?.Invoke(target, [invocationParams]) as FactVal)!;
@@ -44,22 +43,11 @@ public class InvocationNode : LanguageNode, ChainNode
 
       var invocationMethod = type.GetFactoryInvocationMethod();
 
-      var typeEvaluator = invocationMethod
-        .GetCustomAttribute<ArgumentTypeEvaluatorAttribute>()
-        .NotNull();
-      CheckArgsForErrors(argTypes, typeEvaluator.CheckTypes, context);
-
-      if (invocationMethod.ReturnType != null)
-      {
-        return FactoryType.FromCSharpType(invocationMethod.ReturnType);
-      }
+      return MethodType.FromCSharpMethod(invocationMethod).returnType;
     }
     if (current is MethodType methodType)
     {
-      var type = methodType.outType;
-      CheckArgsForErrors(argTypes, methodType.typeEvaluator.CheckTypes, context);
-
-      return FactoryType.FromCSharpType(type);
+      return methodType.returnType;
     }
     var pos = ast.CalculatePosition();
     context.AddError(pos.start, pos.length, $"Cannot invoke on type {current}");

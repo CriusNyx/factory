@@ -1,28 +1,46 @@
-using CommandLine;
+using System.Reflection;
 using GenParse.Functional;
 
 namespace Factory;
 
-public class MethodType(Type outType, ArgumentTypeEvaluatorAttribute typeEvaluator) : FactoryType
+public class MethodType(FactoryType returnType, MethodArgumentType[] argumentTypes) : FactoryType
 {
-  public readonly Type outType = outType;
-  public readonly ArgumentTypeEvaluatorAttribute typeEvaluator = typeEvaluator;
+  public readonly FactoryType returnType = returnType;
+  public readonly MethodArgumentType[] argumentTypes = argumentTypes;
+
+  public static MethodType FromCSharpMethod(MethodInfo methodInfo)
+  {
+    return new MethodType(
+      FactoryType.FromCSharpType(methodInfo.ReturnType),
+      MethodArgumentType.FromCSharpMethod(methodInfo)
+    );
+  }
 
   public bool CanAcceptValue(FactoryType other)
   {
-    return other is MethodType methodType && methodType.outType == outType;
+    throw new NotImplementedException();
   }
 }
 
-[AttributeUsage(AttributeTargets.Method)]
-public class ArgumentTypeEvaluatorAttribute(Type typeOwner, string evaluationMethod) : Attribute
+public class MethodArgumentType(FactoryType argType, bool optional, bool paramsType)
 {
-  public readonly Type typeOwner = typeOwner;
-  public readonly string evaluationMethod = evaluationMethod;
+  public readonly FactoryType argType = argType;
+  public readonly bool optional = optional;
+  public readonly bool paramsType = paramsType;
 
-  public bool[] CheckTypes(FactoryType[] factoryTypes)
+  public static MethodArgumentType FromParamInfo(ParameterInfo parameterInfo)
   {
-    var method = typeOwner.GetMethod(evaluationMethod).NotNull();
-    return method.Invoke(null, [factoryTypes]).Cast<bool[]>();
+    bool optional = parameterInfo.IsOptional;
+    bool hasParamsType = parameterInfo.GetCustomAttribute<ParamsAttribute>() is ParamsAttribute;
+    var factType = FactoryType.FromCSharpType(parameterInfo.ParameterType);
+    return new MethodArgumentType(factType, hasParamsType, optional);
+  }
+
+  public static MethodArgumentType[] FromCSharpMethod(MethodInfo method)
+  {
+    return method.GetParameters().Map(x => FromParamInfo(x));
   }
 }
+
+[AttributeUsage(AttributeTargets.Parameter)]
+public class ParamsAttribute : Attribute { }

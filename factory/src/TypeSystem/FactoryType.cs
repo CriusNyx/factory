@@ -69,10 +69,7 @@ public interface FactoryType
     }
     else if (member is MethodInfo method)
     {
-      var typeEvaluatorAttribute = method
-        .GetCustomAttribute<ArgumentTypeEvaluatorAttribute>()
-        .NotNull();
-      return new MethodType(method.ReturnType, typeEvaluatorAttribute);
+      return MethodType.FromCSharpMethod(method);
     }
     else
     {

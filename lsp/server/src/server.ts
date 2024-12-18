@@ -61,7 +61,14 @@ connection.onInitialize((params: InitializeParams) => {
 
 	const result: InitializeResult = {
 		capabilities: {
-			textDocumentSync: TextDocumentSyncKind.Incremental,
+			notebookDocumentSync: {
+				notebookSelector: [
+					{
+						cells: [{ language: "factory" }],
+					},
+				],
+			},
+			textDocumentSync: TextDocumentSyncKind.Full,
 			// Tell the client that this server supports code completion.
 			completionProvider: {
 				resolveProvider: true,
@@ -133,24 +140,25 @@ connection.onDidChangeConfiguration((change) => {
 	connection.languages.diagnostics.refresh();
 });
 
-function getDocumentSettings(resource: string): Thenable<ExampleSettings> {
-	if (!hasConfigurationCapability) {
-		return Promise.resolve(globalSettings);
-	}
-	let result = documentSettings.get(resource);
-	if (!result) {
-		result = connection.workspace.getConfiguration({
-			scopeUri: resource,
-			section: "languageServerExample",
-		});
-		documentSettings.set(resource, result);
-	}
-	return result;
-}
+connection.onNotification((e, params) => {
+	console.log("notification", e, params);
+});
 
 // Only keep settings for open documents
 documents.onDidClose((e) => {
 	documentSettings.delete(e.document.uri);
+});
+
+documents.onDidOpen((e) => {
+	console.log(e);
+});
+
+connection.onDidOpenTextDocument((e) => {
+	console.log("onDidOpenTextDocument", e);
+});
+
+connection.onDidChangeTextDocument((e) => {
+	console.log("onDidChangeTextDocument", e);
 });
 
 connection.languages.diagnostics.on(async (params) => {
@@ -240,6 +248,7 @@ connection.onCompletionResolve(
 );
 
 connection.languages.semanticTokens.on((params) => {
+	console.log("Semantics requested", params.textDocument.uri);
 	const doc = documents.get(params.textDocument.uri);
 	if (!doc) {
 		return { data: [] };

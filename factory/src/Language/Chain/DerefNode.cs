@@ -43,10 +43,7 @@ public class DerefNode : LanguageNode, ChainNode
           }
           if (member is MethodInfo method)
           {
-            return new FuncVal(
-              (args) => FuncVal.InvokeCSharpMethod(target, method, args).NotNull(),
-              method.GetCustomAttribute<ArgumentTypeEvaluatorAttribute>().NotNull().CheckTypes
-            );
+            return new FuncVal(target, method, MethodType.FromCSharpMethod(method));
           }
         }
       }

@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as path from "path";
-import { ExtensionContext, workspace } from "vscode";
+import { ExtensionContext, languages, workspace } from "vscode";
 
 import {
 	LanguageClient,
@@ -12,6 +12,23 @@ import {
 	ServerOptions,
 	TransportKind,
 } from "vscode-languageclient/node";
+
+const schemes = [
+	"file",
+	"untitled",
+	"git",
+	"github",
+	"azurerepos",
+	"buffer",
+	"zipfile",
+	"vsls",
+	"walkThroughSnippet",
+	"vs-code-notebook-cell",
+	"vscode-notebook-cell",
+	"memfs",
+	"vscode-vfs",
+	"office-script",
+];
 
 let client: LanguageClient;
 
@@ -34,15 +51,35 @@ export function activate(context: ExtensionContext) {
 	// Options to control the language client
 	const clientOptions: LanguageClientOptions = {
 		// Register the server for plain text documents
-		documentSelector: [
-			{ scheme: "file", language: "factory" },
-			{
-				scheme: "file",
+		// documentSelector: [
+		// 	{ scheme: "file", language: "factory" },
+		// 	{ scheme: "untitled", language: "factory" },
+		// 	{
+		// 		scheme: "file",
+		// 		pattern: "**/*.factory",
+		// 	},
+		// 	{
+		// 		scheme: "file",
+		// 		pattern: "**/*.md",
+		// 		language: "factory",
+		// 	},
+		// 	{
+		// 		scheme: "untitled",
+		// 		pattern: "**/*.md",
+		// 		language: "factory",
+		// 	},
+		// ],
+		documentSelector: schemes.flatMap(
+			(
+				x,
+			) => [{ scheme: x, language: "factory" }, {
+				scheme: x,
+				language: "markdown",
+			}, {
+				scheme: x,
 				pattern: "**/*.factory",
-			},
-			{ scheme: "markdown", language: "factory" },
-			{ scheme: "vscode-notebook-cell", language: "factory" },
-		],
+			}, { scheme: x, pattern: "**/*.md" }],
+		),
 		synchronize: {
 			// Notify the server about file changes to '.clientrc files contained in the workspace
 			fileEvents: workspace.createFileSystemWatcher("**/.clientrc"),

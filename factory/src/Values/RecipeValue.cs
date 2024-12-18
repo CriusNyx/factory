@@ -52,10 +52,9 @@ public class RecipeValue(string recipeName, ArrayVal? arguments = null) : FactVa
     );
 
   [ExposeMember("Amend")]
-  [ArgumentTypeEvaluator(typeof(RecipeValue), nameof(EvaluateAmendTypeValues))]
-  public RecipeValue AmendInvocation(ArrayVal arrayVal)
+  public RecipeValue AmendInvocation(FactVal[] args)
   {
-    return arrayVal.array.Reduce(this, (element, recipe) => recipe.Amend(element));
+    return args.Reduce(this, (element, recipe) => recipe.Amend(element));
   }
 
   public RecipeValue Amend(FactVal factVal)
@@ -170,9 +169,14 @@ public class RecipeValue(string recipeName, ArrayVal? arguments = null) : FactVa
   }
 
   [ExposeMember("Invoke")]
-  [ArgumentTypeEvaluator(typeof(RecipeValue), nameof(EvaluateInvocationArgumentTypes))]
-  public RecipeSearchResult Invoke(ArrayVal arguments)
+  public RecipeSearchResult Invoke(FactVal[] args)
   {
-    return RecipeInvocation.InvokeRecipe(this, arguments);
+    return RecipeInvocation.InvokeRecipe(this, args);
+  }
+
+  [ExposeMember("Test")]
+  public RecipeSearchResult Test(decimal number, FactVal[] arguments)
+  {
+    throw new NotImplementedException();
   }
 }

@@ -59,8 +59,7 @@ public class Recipe : FactVal
   }
 
   [ExposeMember("Invoke")]
-  [ArgumentTypeEvaluator(typeof(RecipeValue), nameof(RecipeValue.EvaluateInvocationArgumentTypes))]
-  public RecipeSearchResult Invoke(ArrayVal arguments)
+  public RecipeSearchResult Invoke(FactVal[] arguments)
   {
     return RecipeInvocation.InvokeRecipe(this, arguments);
   }

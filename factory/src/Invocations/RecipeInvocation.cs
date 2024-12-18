@@ -36,13 +36,21 @@ public class RecipeInvocation(
     return RecipeSearch.Search(searchRequest).Balance(hasQuantityValue);
   }
 
-  public static RecipeSearchResult InvokeRecipe(FactVal recipe, ArrayVal invocationParams)
+  public static RecipeSearchResult InvokeRecipe(FactVal recipe, FactVal[] invocationParams)
   {
-    var invocation = invocationParams.array.Reduce(
-      new RecipeInvocation(GetRecipeForInvocation(recipe)),
-      (factVal, context) => context.Amend(factVal)
-    );
-    return invocation.Invoke();
+    var recVal = GetRecipeForInvocation(recipe)
+      .AmendInvocation(invocationParams.Filter(x => !(x is NumVal)));
+    decimal quantity = 1;
+    bool hasQuantity = false;
+    foreach (var param in invocationParams)
+    {
+      if (param is NumVal numVal)
+      {
+        quantity = numVal.value;
+        hasQuantity = true;
+      }
+    }
+    return new RecipeInvocation(recVal, quantity, hasQuantity).Invoke();
   }
 
   private static RecipeValue GetRecipeForInvocation(object o)
