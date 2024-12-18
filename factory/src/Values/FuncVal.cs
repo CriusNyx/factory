@@ -2,9 +2,12 @@ using System.Reflection;
 
 namespace Factory;
 
-public class FuncVal(Func<ArrayVal, FactVal> func) : FactVal, IFunc
+public class FuncVal(Func<ArrayVal, FactVal> func, Func<FactoryType[], bool[]> evaluateTypes)
+  : FactVal,
+    IFunc
 {
   public readonly Func<ArrayVal, FactVal> func = func;
+  public readonly Func<FactoryType[], bool[]> evaluateTypes = evaluateTypes;
 
   public FactVal Invoke(ArrayVal arguments) => func.Invoke(arguments);
 

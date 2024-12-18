@@ -44,7 +44,15 @@ public class RecipeValue(string recipeName, ArrayVal? arguments = null) : FactVa
     return builder.ToString();
   }
 
+  public static bool[] EvaluateAmendTypeValues(FactoryType[] argTypes) =>
+    FactoryType.UnorderedTypeEvaluator(
+      argTypes,
+      FactoryType.NumberType,
+      new RecipeType(RecipeTypeType.any)
+    );
+
   [ExposeMember("Amend")]
+  [ArgumentTypeEvaluator(typeof(RecipeValue), nameof(EvaluateAmendTypeValues))]
   public RecipeValue AmendInvocation(ArrayVal arrayVal)
   {
     return arrayVal.array.Reduce(this, (element, recipe) => recipe.Amend(element));
@@ -152,7 +160,17 @@ public class RecipeValue(string recipeName, ArrayVal? arguments = null) : FactVa
     return arguments;
   }
 
+  public static bool[] EvaluateInvocationArgumentTypes(FactoryType[] factoryTypes)
+  {
+    return FactoryType.UnorderedTypeEvaluator(
+      factoryTypes,
+      new RecipeType(RecipeTypeType.any),
+      FactoryType.NumberType
+    );
+  }
+
   [InvocationType(typeof(RecipeSearchResult))]
+  [ArgumentTypeEvaluator(typeof(RecipeValue), nameof(EvaluateInvocationArgumentTypes))]
   public FactVal Invoke(ArrayVal arguments)
   {
     return RecipeInvocation.InvokeRecipe(this, arguments);

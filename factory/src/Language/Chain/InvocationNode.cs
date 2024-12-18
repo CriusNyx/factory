@@ -1,4 +1,3 @@
-using System.Formats.Tar;
 using System.Reflection;
 using GenParse.Functional;
 using GenParse.Parsing;
@@ -39,13 +38,19 @@ public class InvocationNode : LanguageNode, ChainNode
   public FactoryType CalculateType(TypeContext context)
   {
     var current = context.Peek().Resolve(context);
+    var argTypes = parameters.Map(x => x.CalculateType(context));
+
     if (current is CSharpType cSharpType)
     {
       var type = cSharpType.type;
       if (type.IsAssignableTo(typeof(IFunc)))
       {
-        var methodInfo = type.GetMethod("Invoke");
-        var resultInfo = methodInfo?.GetCustomAttribute<InvocationTypeAttribute>();
+        var methodInfo = type.GetMethod("Invoke").NotNull();
+        var resultInfo = methodInfo.GetCustomAttribute<InvocationTypeAttribute>().NotNull();
+        var typeEvaluator = methodInfo
+          .GetCustomAttribute<ArgumentTypeEvaluatorAttribute>()
+          .NotNull();
+        CheckArgsForErrors(argTypes, typeEvaluator.CheckTypes, context);
         if (resultInfo?.outType != null)
         {
           return FactoryType.FromCSharpType(resultInfo.outType);
@@ -55,10 +60,34 @@ public class InvocationNode : LanguageNode, ChainNode
     if (current is MethodType methodType)
     {
       var type = methodType.outType;
+      CheckArgsForErrors(argTypes, methodType.typeEvaluator.CheckTypes, context);
+
       return FactoryType.FromCSharpType(type);
     }
     var pos = ast.CalculatePosition();
     context.AddError(pos.start, pos.length, $"Cannot invoke on type {current}");
     return FactoryType.VoidType;
+  }
+
+  private void CheckArgsForErrors(
+    FactoryType[] argTypes,
+    Func<FactoryType[], bool[]> evaluator,
+    TypeContext typeContext
+  )
+  {
+    var typesAreValid = evaluator(argTypes);
+
+    foreach (var (parameter, argType, valid) in parameters.Zip(argTypes, typesAreValid))
+    {
+      if (!valid)
+      {
+        var argErrorPos = parameter.astNode.CalculatePosition();
+        typeContext.AddError(
+          argErrorPos.start,
+          argErrorPos.length,
+          $"Argument of type {argType} is not valid."
+        );
+      }
+    }
   }
 }

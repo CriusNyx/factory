@@ -1,6 +1,7 @@
 using System.Formats.Tar;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using GenParse.Functional;
 using GenParse.Parsing;
 using GenParse.Util;
 
@@ -42,7 +43,10 @@ public class DerefNode : LanguageNode, ChainNode
           }
           if (member is MethodInfo method)
           {
-            return new FuncVal((args) => FuncVal.InvokeCSharpMethod(target, method, args)!);
+            return new FuncVal(
+              (args) => FuncVal.InvokeCSharpMethod(target, method, args).NotNull(),
+              method.GetCustomAttribute<ArgumentTypeEvaluatorAttribute>().NotNull().CheckTypes
+            );
           }
         }
       }

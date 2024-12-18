@@ -11,6 +11,7 @@
       "projectPath": "${workspaceFolder}/factory/factory.csproj"
     },
     {
+      "preLaunchTask": "npm: compile - lsp",
       "type": "extensionHost",
       "request": "launch",
       "name": "Launch Client",
