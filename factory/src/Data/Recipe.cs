@@ -3,7 +3,7 @@ using GenParse.Functional;
 namespace Factory;
 
 [Serializable]
-public class Recipe : FactVal, IFunc
+public class Recipe : FactVal
 {
   private static string[] nonAlternateRecipes = new string[]
   {
@@ -58,7 +58,9 @@ public class Recipe : FactVal, IFunc
       return string.Join(" + ", quantity.Map(x => x.ToString(60 / manufactoringDuration)));
   }
 
-  public FactVal Invoke(ArrayVal arguments)
+  [ExposeMember("Invoke")]
+  [ArgumentTypeEvaluator(typeof(RecipeValue), nameof(RecipeValue.EvaluateInvocationArgumentTypes))]
+  public RecipeSearchResult Invoke(ArrayVal arguments)
   {
     return RecipeInvocation.InvokeRecipe(this, arguments);
   }

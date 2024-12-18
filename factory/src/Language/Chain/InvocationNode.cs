@@ -1,4 +1,5 @@
 using System.Reflection;
+using CommandLine;
 using GenParse.Functional;
 using GenParse.Parsing;
 using GenParse.Util;
@@ -23,11 +24,8 @@ public class InvocationNode : LanguageNode, ChainNode
   {
     var invocationParams = parameters.Map(x => x.Evaluate(ref context)).ToArrayVal();
 
-    if (target is IFunc func)
-    {
-      return func.Invoke(invocationParams);
-    }
-    return null!;
+    var invocationMethod = target.GetType().GetFactoryInvocationMethod();
+    return (invocationMethod?.Invoke(target, [invocationParams]) as FactVal)!;
   }
 
   public string GetIdentifier()
@@ -43,18 +41,17 @@ public class InvocationNode : LanguageNode, ChainNode
     if (current is CSharpType cSharpType)
     {
       var type = cSharpType.type;
-      if (type.IsAssignableTo(typeof(IFunc)))
+
+      var invocationMethod = type.GetFactoryInvocationMethod();
+
+      var typeEvaluator = invocationMethod
+        .GetCustomAttribute<ArgumentTypeEvaluatorAttribute>()
+        .NotNull();
+      CheckArgsForErrors(argTypes, typeEvaluator.CheckTypes, context);
+
+      if (invocationMethod.ReturnType != null)
       {
-        var methodInfo = type.GetMethod("Invoke").NotNull();
-        var resultInfo = methodInfo.GetCustomAttribute<InvocationTypeAttribute>().NotNull();
-        var typeEvaluator = methodInfo
-          .GetCustomAttribute<ArgumentTypeEvaluatorAttribute>()
-          .NotNull();
-        CheckArgsForErrors(argTypes, typeEvaluator.CheckTypes, context);
-        if (resultInfo?.outType != null)
-        {
-          return FactoryType.FromCSharpType(resultInfo.outType);
-        }
+        return FactoryType.FromCSharpType(invocationMethod.ReturnType);
       }
     }
     if (current is MethodType methodType)
@@ -89,5 +86,23 @@ public class InvocationNode : LanguageNode, ChainNode
         );
       }
     }
+  }
+}
+
+public static class InvocationExtensions
+{
+  public static MethodInfo GetFactoryInvocationMethod(this Type type)
+  {
+    foreach (var method in type.GetMethods())
+    {
+      if (
+        method.GetCustomAttribute<ExposeMemberAttribute>() is ExposeMemberAttribute expose
+        && expose.name == "Invoke"
+      )
+      {
+        return method;
+      }
+    }
+    return null!;
   }
 }

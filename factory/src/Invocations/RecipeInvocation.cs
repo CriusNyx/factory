@@ -30,13 +30,13 @@ public class RecipeInvocation(
     return new RecipeInvocation(recipeValue ?? this.recipeValue, quantity ?? this.quantity);
   }
 
-  public FactVal Invoke()
+  public RecipeSearchResult Invoke()
   {
     var searchRequest = new RecipeSearchRequest(recipeValue, quantity);
     return RecipeSearch.Search(searchRequest).Balance(hasQuantityValue);
   }
 
-  public static FactVal InvokeRecipe(FactVal recipe, ArrayVal invocationParams)
+  public static RecipeSearchResult InvokeRecipe(FactVal recipe, ArrayVal invocationParams)
   {
     var invocation = invocationParams.array.Reduce(
       new RecipeInvocation(GetRecipeForInvocation(recipe)),

@@ -14,11 +14,6 @@ public class MethodType(Type outType, ArgumentTypeEvaluatorAttribute typeEvaluat
   }
 }
 
-public class InvocationTypeAttribute(Type outType) : Attribute
-{
-  public readonly Type outType = outType;
-}
-
 [AttributeUsage(AttributeTargets.Method)]
 public class ArgumentTypeEvaluatorAttribute(Type typeOwner, string evaluationMethod) : Attribute
 {

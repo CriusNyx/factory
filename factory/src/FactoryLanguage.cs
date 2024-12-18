@@ -119,7 +119,7 @@ public static class FactoryLanguage
 
   public static object? ResolveGlobal(string symbol)
   {
-    return Docs.itemsByIdentifier.Safe(symbol);
+    return Docs.recipesByProductIdentifier.Safe(symbol).NotNull().FirstOrDefault();
   }
 
   public static Lexon<FactoryLexon>[] Lex(string sourceCode, bool resumeAfterError = false)

@@ -4,7 +4,7 @@ using GenParse.Functional;
 
 namespace Factory;
 
-public class RecipeValue(string recipeName, ArrayVal? arguments = null) : FactVal, ISpread, IFunc
+public class RecipeValue(string recipeName, ArrayVal? arguments = null) : FactVal, ISpread
 {
   [ExposeMember("Name")]
   public string recipeName = recipeName.NotNull();
@@ -169,9 +169,9 @@ public class RecipeValue(string recipeName, ArrayVal? arguments = null) : FactVa
     );
   }
 
-  [InvocationType(typeof(RecipeSearchResult))]
+  [ExposeMember("Invoke")]
   [ArgumentTypeEvaluator(typeof(RecipeValue), nameof(EvaluateInvocationArgumentTypes))]
-  public FactVal Invoke(ArrayVal arguments)
+  public RecipeSearchResult Invoke(ArrayVal arguments)
   {
     return RecipeInvocation.InvokeRecipe(this, arguments);
   }

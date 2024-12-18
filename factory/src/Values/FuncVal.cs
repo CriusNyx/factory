@@ -3,12 +3,12 @@ using System.Reflection;
 namespace Factory;
 
 public class FuncVal(Func<ArrayVal, FactVal> func, Func<FactoryType[], bool[]> evaluateTypes)
-  : FactVal,
-    IFunc
+  : FactVal
 {
   public readonly Func<ArrayVal, FactVal> func = func;
   public readonly Func<FactoryType[], bool[]> evaluateTypes = evaluateTypes;
 
+  [ExposeMember("Invoke")]
   public FactVal Invoke(ArrayVal arguments) => func.Invoke(arguments);
 
   public static FactVal? InvokeCSharpMethod(
