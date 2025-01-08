@@ -20,15 +20,11 @@ public class LimitExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode, Langua
 
   public override (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
-    return new ArrayVal(expressions.Map(x => x.Evaluate(ref context))).With(context);
+    return expressions.Map(x => x.Evaluate(ref context)).ToRecipeArgValSet().With(context);
   }
 
   public override FactoryType CalculateType(TypeContext context)
   {
-    foreach (var exp in expressions)
-    {
-      exp.CalculateType(context);
-    }
-    return FactoryType.LimitType;
+    return FactoryType.FromCSharpType(typeof(RecipeArgSet));
   }
 }

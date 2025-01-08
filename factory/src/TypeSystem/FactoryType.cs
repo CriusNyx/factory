@@ -98,4 +98,13 @@ public static class FactoryTypeExtensions
     }
     return factoryType;
   }
+
+  public static Type GetCSharpType(this FactoryType factoryType)
+  {
+    if (factoryType is CSharpType csType)
+    {
+      return csType.type;
+    }
+    throw new NotImplementedException();
+  }
 }

@@ -11,19 +11,12 @@ public abstract class FactVal { }
 
 public static class FactValExtensions
 {
-  public static bool IsLimitVal(this FactVal factVal)
-  {
-    return factVal is TypedFactVal typedVal && typedVal.type == ValType.limit;
-  }
-
   public static (decimal quantity, string symbol) ToLimitVal(this FactVal factVal)
   {
-    if (IsLimitVal(factVal))
+    if (factVal is LimitVal limitVal)
     {
-      var pairVal = ((factVal as TypedFactVal).NotNull().value as PairVal).NotNull();
-      var (numVal, symbolVal) = pairVal!;
-      var quantity = (numVal as NumVal).NotNull().value;
-      var symbol = (symbolVal as SymbolVal).NotNull().symbol;
+      var quantity = limitVal.value.value;
+      var symbol = limitVal.identifier;
       return quantity.With(symbol);
     }
     throw new InvalidOperationException(

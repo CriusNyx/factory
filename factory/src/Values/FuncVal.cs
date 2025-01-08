@@ -9,7 +9,7 @@ public class FuncVal(FactVal target, MethodInfo method, MethodType methodType) :
   public readonly MethodType methodType = methodType;
 
   [ExposeMember("Invoke")]
-  public FactVal? Invoke(FactVal[] arguments)
+  public FactVal? Invoke([Params] FactVal[] arguments)
   {
     return method.Invoke(target, [arguments]) as FactVal;
   }

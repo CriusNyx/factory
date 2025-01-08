@@ -1,3 +1,4 @@
+using CommandLine;
 using GenParse.Functional;
 
 namespace Factory;
@@ -22,8 +23,8 @@ public static class RecipeSearch
 
   public static RecipeSearchResult Search(RecipeSearchRequest request)
   {
-    var rootItemIdentifier = request.recipe.arguments.ExtractSymbolsOfType(ValType.output).First();
-    var rootItem = Docs.itemsByIdentifier.Safe(rootItemIdentifier)!;
+    var recOut = request.recipe.arguments.outVal;
+    var rootItem = Docs.itemsByIdentifier.Safe(recOut.identifier)!;
 
     var root = ResolveRecipe(request.recipe, request.quantity * rootItem.ComputeUIConversionRate());
 
@@ -32,8 +33,8 @@ public static class RecipeSearch
 
   public static RecipeSearchNode? ResolveRecipe(RecipeValue recipeValue, decimal amount)
   {
-    var output = recipeValue.arguments.ExtractSymbolsOfType(ValType.output).First();
-    return MakeResult(ResolveRecipe(output, recipeValue, amount), recipeValue);
+    var recOut = recipeValue.arguments.outVal;
+    return MakeResult(ResolveRecipe(recOut.identifier, recipeValue, amount), recipeValue);
   }
 
   public static RecipeSearchNode? MakeResult(
@@ -77,8 +78,8 @@ public static class RecipeSearch
     decimal amount
   )
   {
-    var inputs = context.arguments.ExtractSymbolsOfType(ValType.input);
-    var alts = context.arguments.ExtractSymbolsOfType(ValType.alt);
+    var inputs = context.arguments.inVals.Map(x => x.identifier);
+    var alts = context.arguments.altVals.Map(x => x.identifier);
 
     if (resourceIdentifiers.Contains(itemIdentifier) || inputs.Contains(itemIdentifier))
     {

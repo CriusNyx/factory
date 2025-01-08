@@ -16,11 +16,8 @@ public class SpreadExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode, Langu
   public override (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
     var target = context.Resolve(symbol.Evaluate());
-    if (target is ISpread spread)
-    {
-      return new SpreadVal(spread.Spread()).With(context);
-    }
-    throw new NotImplementedException("Cannot spread on a value that is not spreadable.");
+    var spreadMethod = target?.GetType().GetFactorySpreadMethod();
+    return (spreadMethod?.Invoke(target, new object[] { }) as FactVal).NotNull().With(context);
   }
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()

@@ -20,29 +20,12 @@ public class LimitValueExpNode : LanguageNode
 
   public FactoryType CalculateType(TypeContext context)
   {
-    var valueType = value.CalculateType(context);
-    if (!FactoryType.NumberType.CanAcceptValue(valueType))
-    {
-      var pos = value.astNode.CalculatePosition();
-      context.AddError(pos.start, pos.length, $"Cannot assign {valueType.ToString()} to Number");
-    }
-    var symbolType = symbol.CalculateType(context);
-    return new CSharpType(typeof(TypedFactVal));
+    return FactoryType.FromCSharpType(typeof(LimitVal));
   }
 
-  public FactVal Evaluate(ref ExecutionContext context)
+  public LimitVal Evaluate(ref ExecutionContext context)
   {
-    FactVal result;
-    (result, context) = Evaluate(context);
-    return result;
-  }
-
-  public (FactVal factVal, ExecutionContext context) Evaluate(ExecutionContext context)
-  {
-    return new TypedFactVal(
-      ValType.limit,
-      new PairVal(value.Evaluate(ref context), symbol.Evaluate(ref context))
-    ).With(context);
+    return new LimitVal(symbol.symbolName, (value.Evaluate(ref context) as NumVal)!);
   }
 
   public IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()

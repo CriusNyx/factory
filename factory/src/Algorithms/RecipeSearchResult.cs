@@ -25,12 +25,7 @@ public class RecipeSearchResult : FactVal
 
   public override string ToString()
   {
-    var tallyArgs = request
-      .recipe.arguments.Map(x =>
-        x is TypedFactVal typedFactVal && typedFactVal.value is TallyVal tallyVal ? tallyVal : null!
-      )
-      .array.FilterDefined()
-      .ToTypedArray<TallyVal>();
+    var tallyArgs = request.recipe.arguments.tallyVals;
 
     var inlineTallys = tallyArgs.Filter(x => x.inline);
     var outlineTallys = tallyArgs.Filter(x => !x.inline);
@@ -38,7 +33,7 @@ public class RecipeSearchResult : FactVal
     List<string[]> lines = new List<string[]>();
 
     // Recipe Name
-    lines.Add(new string[] { request.recipe.recipeName }.Push(inlineTallys.Map(x => x.symbol)));
+    lines.Add(new string[] { request.recipe.recipeName }.Push(inlineTallys.Map(x => x.identifier)));
 
     // Blank line
     lines.Add(new string[] { "" }.Push(inlineTallys.Map(_ => "")));
@@ -86,7 +81,7 @@ public class RecipeSearchResult : FactVal
   private string ProcessInlineTally(RecipeSearchNode node, TallyVal tallyVal)
   {
     var ident = node.item.identifier ?? node.nodeName;
-    if (ident == tallyVal.symbol)
+    if (ident == tallyVal.identifier)
     {
       return node.quantity.ToString("0.###");
     }
@@ -100,7 +95,7 @@ public class RecipeSearchResult : FactVal
       (x) => x.children,
       (x) =>
       {
-        if (x.item.identifier == tallyVal.symbol)
+        if (x.item.identifier == tallyVal.identifier)
         {
           count += x.quantity;
         }
@@ -111,6 +106,6 @@ public class RecipeSearchResult : FactVal
 
   private string ProcessTally(TallyVal tallyVal)
   {
-    return $"{tallyVal.symbol} {TotalTally(tallyVal):0.###}";
+    return $"{tallyVal.identifier} {TotalTally(tallyVal):0.###}";
   }
 }

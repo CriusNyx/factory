@@ -13,7 +13,7 @@ public class NumberLiteralNode(ASTNode<FactoryLexon> astNode) : LiteralNode
 
   public FactoryType CalculateType(TypeContext context)
   {
-    return new FactoryPrimitiveType(FactoryPrimitiveTypeType.Number);
+    return FactoryType.FromCSharpType(typeof(NumVal));
   }
 
   public (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)

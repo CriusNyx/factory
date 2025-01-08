@@ -6,11 +6,19 @@ public class CSharpType(Type type) : FactoryType
 
   public bool CanAcceptValue(FactoryType other)
   {
-    throw new NotImplementedException();
+    if (other is CSharpType csType)
+    {
+      return csType.type.IsAssignableTo(type);
+    }
+    else if (type == typeof(FactVal))
+    {
+      return true;
+    }
+    return false;
   }
 
   public override string ToString()
   {
-    return type.ToString();
+    return $"CSharpType({type})";
   }
 }

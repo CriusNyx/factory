@@ -345,5 +345,10 @@ namespace GenParse.Functional
     {
       return source.Remove(index, len).Insert(index, newString);
     }
+
+    public static bool HasIndex<T>(this T[] arr, int index)
+    {
+      return index >= 0 && index < arr.Length;
+    }
   }
 }

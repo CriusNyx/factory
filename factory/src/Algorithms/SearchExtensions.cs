@@ -6,9 +6,7 @@ public static class SearchExtensions
 {
   public static RecipeSearchResult Balance(this RecipeSearchResult result, bool hasInitialQuantity)
   {
-    var limitArguments = result
-      .request.recipe.arguments.Filter(x => x.IsLimitVal())
-      .array.ToTypedArray<TypedFactVal>();
+    var limitArguments = result.request.recipe.arguments.limitVals;
 
     if (limitArguments.Length == 0)
     {
@@ -25,7 +23,7 @@ public static class SearchExtensions
     return new RecipeSearchResult(result.request, result.root.Multiply(targetLimitArg));
   }
 
-  private static decimal ComputeLimitRatio(this RecipeSearchResult result, TypedFactVal limitVal)
+  private static decimal ComputeLimitRatio(this RecipeSearchResult result, LimitVal limitVal)
   {
     var (quantity, symbol) = limitVal.ToLimitVal();
     var limitQuantity = result.recipeBalance.GetValueForIdentifier(symbol);

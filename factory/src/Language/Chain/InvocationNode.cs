@@ -14,6 +14,8 @@ public class InvocationNode : LanguageNode, ChainNode
   [ASTField("InvocationParamSet")]
   public ValueNode[] parameters;
 
+  private FactoryType[] argumentTypes;
+
   public IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
     return parameters;
@@ -24,7 +26,9 @@ public class InvocationNode : LanguageNode, ChainNode
     var invocationParams = parameters.Map(x => x.Evaluate(ref context));
 
     var invocationMethod = target.GetType().GetFactoryInvocationMethod();
-    return (invocationMethod?.Invoke(target, [invocationParams]) as FactVal)!;
+    var methodType = MethodType.FromCSharpMethod(invocationMethod);
+    var mappedParams = methodType.MapArguments(invocationParams, argumentTypes);
+    return (invocationMethod?.Invoke(target, mappedParams) as FactVal)!;
   }
 
   public string GetIdentifier()
@@ -35,7 +39,9 @@ public class InvocationNode : LanguageNode, ChainNode
   public FactoryType CalculateType(TypeContext context)
   {
     var current = context.Peek().Resolve(context);
-    var argTypes = parameters.Map(x => x.CalculateType(context));
+    argumentTypes = parameters.Map(x => x.CalculateType(context));
+
+    MethodType methodType = null!;
 
     if (current is CSharpType cSharpType)
     {
@@ -43,37 +49,28 @@ public class InvocationNode : LanguageNode, ChainNode
 
       var invocationMethod = type.GetFactoryInvocationMethod();
 
-      return MethodType.FromCSharpMethod(invocationMethod).returnType;
+      methodType = MethodType.FromCSharpMethod(invocationMethod);
     }
-    if (current is MethodType methodType)
+    if (current is MethodType mt)
     {
-      return methodType.returnType;
+      methodType = mt;
     }
-    var pos = ast.CalculatePosition();
-    context.AddError(pos.start, pos.length, $"Cannot invoke on type {current}");
-    return FactoryType.VoidType;
-  }
 
-  private void CheckArgsForErrors(
-    FactoryType[] argTypes,
-    Func<FactoryType[], bool[]> evaluator,
-    TypeContext typeContext
-  )
-  {
-    var typesAreValid = evaluator(argTypes);
-
-    foreach (var (parameter, argType, valid) in parameters.Zip(argTypes, typesAreValid))
+    var mapping = methodType!.GenerateTypeMappings(argumentTypes, out var succ);
+    foreach (var (success, type, param) in succ.Zip(argumentTypes, parameters))
     {
-      if (!valid)
+      if (!success)
       {
-        var argErrorPos = parameter.astNode.CalculatePosition();
-        typeContext.AddError(
-          argErrorPos.start,
-          argErrorPos.length,
-          $"Argument of type {argType} is not valid."
+        var errorPos = param.astNode.CalculatePosition();
+        context.AddError(
+          errorPos.start,
+          errorPos.length,
+          $"Argument of type {type} is not valid for {methodType.name}({string.Join(", ", methodType.argumentTypes.Map(x => x.ToString()))})."
         );
       }
     }
+
+    return methodType.returnType;
   }
 }
 
@@ -86,6 +83,21 @@ public static class InvocationExtensions
       if (
         method.GetCustomAttribute<ExposeMemberAttribute>() is ExposeMemberAttribute expose
         && expose.name == "Invoke"
+      )
+      {
+        return method;
+      }
+    }
+    return null!;
+  }
+
+  public static MethodInfo GetFactorySpreadMethod(this Type type)
+  {
+    foreach (var method in type.GetMethods())
+    {
+      if (
+        method.GetCustomAttribute<ExposeMemberAttribute>() is ExposeMemberAttribute expose
+        && expose.name == "Spread"
       )
       {
         return method;

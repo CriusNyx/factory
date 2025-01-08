@@ -12,19 +12,6 @@ public class RecipeInvocation(
   public readonly bool hasQuantityValue = hasQuantityValue;
   public readonly decimal quantity = quantity;
 
-  public RecipeInvocation Amend(FactVal factVal)
-  {
-    if (RecipeValue.FactValModifiesRecipeVal(factVal))
-    {
-      return Clone(recipeValue: recipeValue.Amend(factVal));
-    }
-    else if (factVal is NumVal number)
-    {
-      return Clone(quantity: number.value);
-    }
-    return this;
-  }
-
   public RecipeInvocation Clone(RecipeValue? recipeValue = null, decimal? quantity = null)
   {
     return new RecipeInvocation(recipeValue ?? this.recipeValue, quantity ?? this.quantity);
@@ -36,11 +23,14 @@ public class RecipeInvocation(
     return RecipeSearch.Search(searchRequest).Balance(hasQuantityValue);
   }
 
-  public static RecipeSearchResult InvokeRecipe(FactVal recipe, FactVal[] invocationParams)
+  public static RecipeSearchResult InvokeRecipe(
+    FactVal recipe,
+    decimal quantity,
+    FactVal[] invocationParams
+  )
   {
     var recVal = GetRecipeForInvocation(recipe)
-      .AmendInvocation(invocationParams.Filter(x => !(x is NumVal)));
-    decimal quantity = 1;
+      .AmendInvocation(invocationParams.FilterByType<FactVal, RecipeArgSet>());
     bool hasQuantity = false;
     foreach (var param in invocationParams)
     {
@@ -61,12 +51,7 @@ public class RecipeInvocation(
     }
     else if (o is Recipe recipe)
     {
-      return new RecipeValue(
-        recipe.identifier,
-        new ArrayVal(
-          new TypedFactVal(ValType.output, new SymbolVal(recipe.primaryProduct.identifier))
-        )
-      );
+      return new RecipeValue(recipe.identifier, new RecipeArgSet([new OutVal(recipe.identifier)]));
     }
     throw new InvalidOperationException($"Could not resolve invocation on object {o}");
   }

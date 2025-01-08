@@ -28,7 +28,7 @@ public class RecipeNode : LanguageNode, ProgramExp
 
     var recipe = expressionValues.Reduce(
       new RecipeValue(name.symbolName),
-      (factVal, recVal) => recVal.Amend(factVal!)
+      (factVal, recVal) => recVal.Amend((factVal as RecipeArgSet).NotNull())
     );
     context.GlobalValues.Add(recipe.recipeName, recipe);
     return recipe.With(context);

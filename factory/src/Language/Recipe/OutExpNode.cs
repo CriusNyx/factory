@@ -1,3 +1,4 @@
+using GenParse.Functional;
 using GenParse.Parsing;
 using GenParse.Util;
 
@@ -14,13 +15,13 @@ public class OutExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode, Language
 
   public override (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
-    return EvaluateKeywordSymbolArray(symbols, context, ValType.output);
+    return symbols.Map(x => new OutVal(x.symbolName)).ToRecipeArgValSet().With(context);
   }
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren() => symbols;
 
   public override FactoryType CalculateType(TypeContext context)
   {
-    return FactoryType.OutType;
+    return FactoryType.FromCSharpType(typeof(OutVal[]));
   }
 }
