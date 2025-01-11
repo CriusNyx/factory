@@ -14,7 +14,7 @@ public class RecipeSearchResult : FactVal
   public RecipeValue Recipe => request.recipe;
 
   [ExposeMember("Total")]
-  public NumVal Total => new NumVal(root.quantity);
+  public NumVal Total => new NumVal(root.productionQuantity);
 
   public RecipeSearchResult(RecipeSearchRequest request, RecipeSearchNode root)
   {
@@ -88,14 +88,35 @@ public class RecipeSearchResult : FactVal
     return "";
   }
 
-  private decimal TotalTally(TallyVal tallyVal)
+  public decimal TotalTally(TallyVal tallyVal) => TotalTally(tallyVal.identifier);
+
+  [ExposeMember("Tally")]
+  public FactVal TotalTally(FactVal arg)
+  {
+    string identifier;
+    if (arg is StringVal stringVal)
+    {
+      identifier = stringVal.value;
+    }
+    else if (arg is Recipe recipe)
+    {
+      identifier = recipe.primaryProduct.identifier;
+    }
+    else
+    {
+      throw new ArgumentException($"Unrecognized argument type {arg.GetType()}");
+    }
+    return new NumVal(Math.Abs(TotalTally(identifier)));
+  }
+
+  private decimal TotalTally(string identifier)
   {
     decimal count = 0;
     root.Crawl(
       (x) => x.children,
       (x) =>
       {
-        if (x.item.identifier == tallyVal.identifier)
+        if (x.item.identifier == identifier)
         {
           count += x.quantity;
         }

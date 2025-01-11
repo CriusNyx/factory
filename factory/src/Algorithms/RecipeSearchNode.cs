@@ -6,6 +6,7 @@ namespace Factory;
 public class RecipeSearchNode
 {
   public readonly decimal quantity;
+  public decimal productionQuantity => quantity * (recipe?.product?.FirstOrDefault()?.Amount ?? 1);
   public readonly string nodeName;
   public readonly Recipe recipe;
   public readonly Item item;
@@ -50,9 +51,7 @@ public class RecipeSearchNode
 
   public string FormatQuantity()
   {
-    return (quantity * (recipe?.product?.FirstOrDefault()?.Amount ?? 1))
-      .ToString("0.###")
-      .Replace("-", "(-)");
+    return productionQuantity.ToString("0.###").Replace("-", "(-)");
   }
 
   public static void Crawl(RecipeSearchNode root, Action<RecipeSearchNode, int> visitor)

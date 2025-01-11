@@ -1,6 +1,3 @@
-using System.Formats.Tar;
-using System.Net.Mime;
-using GenParse.Functional;
 using GenParse.Parsing;
 using GenParse.Util;
 
@@ -20,6 +17,7 @@ public class LimitValueExpNode : LanguageNode
 
   public FactoryType CalculateType(TypeContext context)
   {
+    value.CalculateType(context);
     return FactoryType.FromCSharpType(typeof(LimitVal));
   }
 

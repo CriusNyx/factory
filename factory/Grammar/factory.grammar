@@ -24,7 +24,13 @@ LimitValueExp = ValueExp symbol;
 
 // Print
 
-PrintExp = printKeyword ValueExp*;
+PrintExp = printKeyword PrintExpChain;
+
+PrintExpChain = ValueChain;
+PrintExpChain = ;
+
+ValueChain = ValueExp ValueChain;
+ValueChain = ValueExp;
 
 // AssignExp
 
@@ -32,9 +38,30 @@ AssignExp = letKeyword ExpChain equalSign ValueExp;
 
 // Value Exp
 
-ValueExp = Literal;
+ValueExp = MathExp;
 ValueExp = RecipeExp;
-ValueExp = ExpChain;
+
+// Math
+
+MathExp = Term TermChain*;
+TermChain = TermOperation Term;
+
+TermOperation = plus;
+TermOperation = minus;
+
+Term = Factor FactorChain*;
+FactorChain = FactorOperation Factor;
+
+FactorOperation = asterisk;
+FactorOperation = forwardSlash;
+FactorOperation = percent;
+
+Factor = minus? Primitive;
+
+// Primitives
+Primitive = Literal;
+Primitive = ExpChain;
+Primitive = openParen MathExp closeParen;
 
 // Exp Chain
 ExpChain = symbol ChainContinue?;

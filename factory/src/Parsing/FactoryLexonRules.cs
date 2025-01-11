@@ -18,6 +18,13 @@ public enum FactoryLexon
   equalSign,
   spread,
 
+  // Math Symbols
+  minus,
+  plus,
+  asterisk,
+  forwardSlash,
+  percent,
+
   // keywords
   letKeyword,
   recipeKeyword,
@@ -62,6 +69,12 @@ internal static class FactoryLexonRules
     (FactoryLexon.openParen, @"^\("),
     (FactoryLexon.closeParen, @"^\)"),
     (FactoryLexon.equalSign, @"^\="),
+    // Math Symbol
+    (FactoryLexon.plus, @"^\+"),
+    (FactoryLexon.minus, @"^\-"),
+    (FactoryLexon.asterisk, @"^\*"),
+    (FactoryLexon.forwardSlash, @"^\/"),
+    (FactoryLexon.percent, @"^\%"),
     // keywords
     (FactoryLexon.letKeyword, @"^let"),
     (FactoryLexon.recipeKeyword, @"^recipe"),
@@ -73,7 +86,7 @@ internal static class FactoryLexonRules
     (FactoryLexon.inKeyword, @"^in"),
     (FactoryLexon.limitKeyword, @"^limit"),
     // Literals
-    (FactoryLexon.stringLiteral, @"^"".*"""),
+    (FactoryLexon.stringLiteral, @"^"".*?"""),
     (FactoryLexon.numberLiteral, @"^[+-]?([0-9]*[.])?[0-9]+"),
     // Identifier Symbols
     (FactoryLexon.symbol, @"^\p{L}\w*"),

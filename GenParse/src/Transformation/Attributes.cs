@@ -2,9 +2,9 @@
 public class ASTAttribute : Attribute { }
 
 [AttributeUsage(AttributeTargets.Class)]
-public class ASTClassAttribute(string nodeName) : Attribute
+public class ASTClassAttribute(params string[] nodeName) : Attribute
 {
-  public readonly string nodeName = nodeName;
+  public readonly string[] nodeName = nodeName;
 }
 
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]

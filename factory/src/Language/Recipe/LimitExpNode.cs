@@ -25,6 +25,10 @@ public class LimitExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode, Langua
 
   public override FactoryType CalculateType(TypeContext context)
   {
+    foreach (var exp in expressions)
+    {
+      exp.CalculateType(context);
+    }
     return FactoryType.FromCSharpType(typeof(RecipeArgSet));
   }
 }

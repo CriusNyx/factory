@@ -11,9 +11,12 @@ public static class Transformer
   {
     foreach (var type in AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes()))
     {
-      if (type.GetCustomAttribute<ASTClassAttribute>() is ASTClassAttribute aSTClass)
+      if (type.GetCustomAttribute<ASTClassAttribute>() is ASTClassAttribute astClass)
       {
-        transformCache.Add(aSTClass.nodeName, type);
+        foreach (var className in astClass.nodeName)
+        {
+          transformCache.Add(className, type);
+        }
       }
     }
   }

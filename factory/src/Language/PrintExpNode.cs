@@ -6,7 +6,7 @@ namespace Factory;
 [ASTClass("PrintExp")]
 public class PrintExpNode : ProgramExp, LanguageNode
 {
-  [ASTField("ValueExp*")]
+  [ASTField("PrintExpChain")]
   public ValueNode[] values;
 
   public IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()

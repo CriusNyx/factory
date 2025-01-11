@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace GenParse.Functional
 {
   public static class Functional
@@ -349,6 +351,15 @@ namespace GenParse.Functional
     public static bool HasIndex<T>(this T[] arr, int index)
     {
       return index >= 0 && index < arr.Length;
+    }
+
+    public static T To<T>(this object value)
+    {
+      if (value is T output)
+      {
+        return output;
+      }
+      throw new NullReferenceException();
     }
   }
 }

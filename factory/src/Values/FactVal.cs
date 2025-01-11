@@ -47,4 +47,10 @@ public static class FactValExtensions
     }
     throw new NotImplementedException();
   }
+
+  public static T To<T>(this FactVal factVal)
+    where T : FactVal
+  {
+    return (factVal as T).NotNull();
+  }
 }

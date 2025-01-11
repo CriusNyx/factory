@@ -18,6 +18,11 @@ public static class LexonExtensions
       case FactoryLexon.closeParen:
       case FactoryLexon.equalSign:
       case FactoryLexon.spread:
+      case FactoryLexon.plus:
+      case FactoryLexon.minus:
+      case FactoryLexon.asterisk:
+      case FactoryLexon.forwardSlash:
+      case FactoryLexon.percent:
         return FactorySemanticType.@operator;
       case FactoryLexon.letKeyword:
       case FactoryLexon.recipeKeyword:
