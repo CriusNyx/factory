@@ -266,7 +266,7 @@ recipe MyHeavyFrameRecipe
   alt CastScrew
   tally IronIngot SteelIngot
 
-print MyHeavyFrameRecipe(2), MyHeavyFrameRecipe(2, alt IronPipe EncasedIndustrialPipe)
+print MyHeavyFrameRecipe(2) MyHeavyFrameRecipe(2, alt IronPipe EncasedIndustrialPipe)
 ```
 
 ```#output factory --stream
@@ -462,7 +462,7 @@ recipe A
 
 let B = A.Amend(in IronIngot)
 
-print A, B
+print A B
 ```
 
 ```#output factory --stream
@@ -486,7 +486,7 @@ recipe A
 let B = A.Amend(in IronIngot)
 let B.Name = "B"
 
-print A, B
+print A B
 ```
 
 ```#output factory --stream
