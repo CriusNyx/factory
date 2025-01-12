@@ -266,7 +266,7 @@ recipe MyHeavyFrameRecipe
   alt CastScrew
   tally IronIngot SteelIngot
 
-print MyHeavyFrameRecipe(2) MyHeavyFrameRecipe(2, alt IronPipe EncasedIndustrialPipe)
+print MyHeavyFrameRecipe(2), MyHeavyFrameRecipe(2, alt IronPipe EncasedIndustrialPipe)
 ```
 
 ```#output factory --stream
@@ -462,7 +462,7 @@ recipe A
 
 let B = A.Amend(in IronIngot)
 
-print A B
+print A, B
 ```
 
 ```#output factory --stream
@@ -486,7 +486,7 @@ recipe A
 let B = A.Amend(in IronIngot)
 let B.Name = "B"
 
-print A B
+print A, B
 ```
 
 ```#output factory --stream
@@ -497,6 +497,41 @@ recipe A
 recipe B
   in IronIngot
   out IronPlate
+```
+
+### RecipeSolution.Recipe(): Recipe
+
+Returns the recipe used to generate this solution.
+
+### RecipeSolution.Total: number
+
+Return production total of the output.
+
+```factory factory --stream
+let Solution = IronPlate(in IronIngot, limit 60 IronIngot)
+
+print Solution.Total
+```
+
+```#output factory --stream
+40
+```
+
+### RecipeSolution.Tally((string | Item) item): number
+
+Returns the amount of the specified item consumed or produced by the specified
+recipe.
+
+```factory factory --stream
+let Solution = Plastic(limit 60 CrudeOil)
+
+let HOilBiproduct = Solution.Tally(HeavyOilResidue)
+
+print HOilBiproduct
+```
+
+```#output factory --stream
+20
 ```
 
 # Operators

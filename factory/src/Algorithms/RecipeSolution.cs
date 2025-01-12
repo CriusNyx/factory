@@ -14,7 +14,7 @@ public class RecipeSolution : FactVal
   public RecipeValue Recipe => request.recipe;
 
   [ExposeMember("Total")]
-  public NumVal Total => new NumVal(root.productionQuantity);
+  public NumVal Output => new NumVal(root.productionQuantity);
 
   public RecipeSolution(RecipeSearchRequest request, RecipeSearchNode root)
   {
