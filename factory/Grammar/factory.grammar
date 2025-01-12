@@ -29,7 +29,7 @@ PrintExp = printKeyword PrintExpChain;
 PrintExpChain = ValueChain;
 PrintExpChain = ;
 
-ValueChain = ValueExp ValueChain;
+ValueChain = ValueExp comma? ValueChain;
 ValueChain = ValueExp;
 
 // AssignExp
