@@ -79,16 +79,18 @@ public class RecipeValue(string recipeName, RecipeArgSet? arguments = null) : Fa
   }
 
   [ExposeMember("Invoke")]
-  public RecipeSearchResult Invoke(NumVal? numVal = null, [Params] RecipeArgSet[]? args = null)
+  public RecipeSolution Invoke(NumVal? numVal = null, [Params] RecipeArgSet[]? args = null)
   {
     return RecipeInvocation.InvokeRecipe(this, numVal?.value ?? 1, args ?? new FactVal[] { });
   }
 
+#if DEBUG
   [ExposeMember("Test")]
-  public RecipeSearchResult Test(decimal number, FactVal[] arguments)
+  public RecipeSolution Test(decimal number, FactVal[] arguments)
   {
     throw new NotImplementedException();
   }
+#endif
 
   [ExposeMember("Spread")]
   public RecipeArgSet Spread()

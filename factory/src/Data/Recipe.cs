@@ -59,14 +59,14 @@ public class Recipe : FactVal
   }
 
   [ExposeMember("Invoke")]
-  public RecipeSearchResult Invoke(NumVal? value = null, [Params] RecipeArgSet[] arguments = null!)
+  public RecipeSolution Invoke(NumVal? value = null, [Params] RecipeArgSet[] arguments = null!)
   {
     return RecipeInvocation.InvokeRecipe(this, value?.value ?? 1, arguments);
   }
 
   [ExposeMember("Spread")]
-  public RecipeArgSet Spread()
+  public RecipeArgVal[] Spread()
   {
-    return new RecipeArgSet(new RecipeArgVal[] { new OutVal(identifier) });
+    return new RecipeArgVal[] { new OutVal(identifier) };
   }
 }

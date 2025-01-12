@@ -8,9 +8,8 @@ public class FuncVal(FactVal target, MethodInfo method, MethodType methodType) :
   public readonly MethodInfo method = method;
   public readonly MethodType methodType = methodType;
 
-  [ExposeMember("Invoke")]
-  public FactVal? Invoke([Params] FactVal[] arguments)
+  public FactVal? Invoke(FactVal[] arguments, FactoryType[] types)
   {
-    return method.Invoke(target, [arguments]) as FactVal;
+    return method.Invoke(target, methodType.MapArguments(arguments, types)) as FactVal;
   }
 }

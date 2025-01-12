@@ -2,10 +2,10 @@
 
 ## Example 1
 
-The following program prints the resources needed to produce 1 Reinforced Iron Plate.
-You can see the code and output below.
+The following program prints the resources needed to produce 1 Reinforced Iron
+Plate. You can see the code and output below.
 
-``` factory factory --stream
+```factory factory --stream
 print ReinforcedIronPlate()
 ```
 
@@ -45,7 +45,8 @@ ReinforcedIronPlate
 
 ## Example 3
 
-We can also specify that we want to start at ingots instead of ore by using the `in` parameter.
+We can also specify that we want to start at ingots instead of ore by using the
+`in` parameter.
 
 ```factory factory --stream
 print ReinforcedIronPlate(5, in IronIngot)
@@ -64,7 +65,8 @@ ReinforcedIronPlate
 
 ## Example 4
 
-The `tally` parameter can be used to list the amounts of a particular material needed.
+The `tally` parameter can be used to list the amounts of a particular material
+needed.
 
 ```factory factory --stream
 print ReinforcedIronPlate(5, in IronIngot, tally IronIngot)
@@ -83,7 +85,8 @@ ReinforcedIronPlate
 IronIngot 60
 ```
 
-Or with the addition of the `inline` keyword the tallys can be displayed in a list.
+Or with the addition of the `inline` keyword the tallys can be displayed in a
+list.
 
 ```factory factory --stream
 print ReinforcedIronPlate(5, in IronIngot, tally inline IronIngot)
@@ -104,8 +107,8 @@ Totals                 |        60  |
 
 ## Example 5
 
-The `limit` parameter can be used to specify how many resources are available for a particular
-recipe.
+The `limit` parameter can be used to specify how many resources are available
+for a particular recipe.
 
 ```factory factory --stream
 print ReinforcedIronPlate(limit 480 IronOre)
@@ -226,11 +229,11 @@ Concrete 62.609
 
 # The recipe syntax
 
-The code above is a bit cumbersome. We can rewrite it in a more readable format using the recipe 
-syntax.
+The code above is a bit cumbersome. We can rewrite it in a more readable format
+using the recipe syntax.
 
-<span style="color:red">**NOTE:**</span> The recipe name must be different from the name of the 
-item.
+<span style="color:red">**NOTE:**</span> The recipe name must be different from
+the name of the item.
 
 ```factory factory --stream
 recipe MyPlateRecipe
@@ -238,7 +241,6 @@ recipe MyPlateRecipe
   in IronIngot
 
 print MyPlateRecipe()
-
 ```
 
 ```#output factory --stream
@@ -254,8 +256,8 @@ MyPlateRecipe
 
 ## Example 1
 
-Combining the recipe syntax with the features above we can easily compare multiple versions of the 
-same recipe.
+Combining the recipe syntax with the features above we can easily compare
+multiple versions of the same recipe.
 
 ```factory factory --stream
 recipe MyHeavyFrameRecipe
@@ -319,8 +321,8 @@ SteelIngot 0
 
 ## Example 2
 
-You can print the recipe definition by omitting the parens in 
-the print statement.
+You can print the recipe definition by omitting the parens in the print
+statement.
 
 ```factory factory --stream
 recipe MyHeavyFrameRecipe
@@ -358,8 +360,9 @@ IronPlate
 | |-3600 IronOre
 ```
 
-Unlike most languages the `let` keyword does not declare a variable, but is instead used to being an
-assignment statement. For example, the following will not work.
+Unlike most languages the `let` keyword does not declare a variable, but is
+instead used to being an assignment statement. For example, the following will
+not work.
 
 ```factory
 RecipeSolution = IronPlate(2400)
@@ -393,5 +396,107 @@ IronPlate
 | |-3600 IronOre
 ```
 
-**NOTE:** The use of the let keyword is a current limitation of the language parser. If you have a 
-solution for this problem feel free to open up an issue on the repo.
+**NOTE:** The use of the let keyword is a current limitation of the language
+parser. If you have a solution for this problem feel free to open up an issue on
+the repo.
+
+# Methods and Fields
+
+Methods can be called on objects to compute certain information. Consider the
+following syntax.
+
+```
+print IronPlate(2400)
+```
+
+This is equivalent to calling the `Invoke` method on the `IronPlate` item.
+
+```
+print IronPlate.Invoke(2400)
+```
+
+## Common Methods and Fields
+
+Here are some common methods
+
+### Recipe.Invoke(number = null, params RecipeArg[] args): RecipeSolution
+
+Modifies a recipe by the parameters, and then solves it.
+
+```factory factory --stream
+recipe MyPlateRecipe
+  out IronPlate
+
+print MyPlateRecipe.Invoke(20)
+
+print MyPlateRecipe.Invoke(in IronIngot)
+
+print MyPlateRecipe.Invoke(20, in IronIngot)
+```
+
+```#output factory --stream
+MyPlateRecipe 
+              
+20 IronPlate  
+|-30 IronIngot
+| |-30 IronOre
+
+MyPlateRecipe  
+               
+1 IronPlate    
+|-1.5 IronIngot
+
+MyPlateRecipe 
+              
+20 IronPlate  
+|-30 IronIngot
+```
+
+### Recipe.Amend(params RecipeArg[] args): Recipe
+
+Returns a copy of the recipe modified by the amend value
+
+```factory factory --stream
+recipe A
+  out IronPlate
+
+let B = A.Amend(in IronIngot)
+
+print A B
+```
+
+```#output factory --stream
+recipe A
+  in 
+  out IronPlate
+
+recipe A
+  in IronIngot
+  out IronPlate
+```
+
+### Recipe.Name: string
+
+Gets or sets the name of the recipe
+
+```factory factory --stream
+recipe A
+  out IronPlate
+
+let B = A.Amend(in IronIngot)
+let B.Name = "B"
+
+print A B
+```
+
+```#output factory --stream
+recipe A
+  in 
+  out IronPlate
+
+recipe B
+  in IronIngot
+  out IronPlate
+```
+
+# Operators

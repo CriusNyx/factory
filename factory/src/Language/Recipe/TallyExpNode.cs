@@ -23,7 +23,7 @@ public class TallyExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode, Langua
 
   public override (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
-    return symbols.Map(x => new TallyVal(x.symbolName, inline)).ToRecipeArgValSet().With(context);
+    return symbols.Map(x => new TallyVal(x.symbolName, inline)).ToRecipeArgSet().With(context);
   }
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
@@ -33,6 +33,6 @@ public class TallyExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode, Langua
 
   public override FactoryType CalculateType(TypeContext context)
   {
-    return FactoryType.FromCSharpType(typeof(TallyVal[]));
+    return FactoryType.FromCSharpType(typeof(RecipeArgSet));
   }
 }

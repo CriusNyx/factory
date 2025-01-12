@@ -1,3 +1,5 @@
+using GenParse.Functional;
+
 namespace Factory;
 
 public class CSharpType(Type type) : FactoryType
@@ -15,6 +17,11 @@ public class CSharpType(Type type) : FactoryType
       return true;
     }
     return false;
+  }
+
+  public string ToShortString()
+  {
+    return type.ToString();
   }
 
   public override string ToString()

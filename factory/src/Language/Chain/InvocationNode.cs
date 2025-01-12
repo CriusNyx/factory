@@ -15,6 +15,7 @@ public class InvocationNode : LanguageNode, ChainNode
   public ValueNode[] parameters;
 
   private FactoryType[] argumentTypes;
+  private MethodType methodType;
 
   public IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
@@ -24,11 +25,17 @@ public class InvocationNode : LanguageNode, ChainNode
   public FactVal Evaluate(FactVal target, ExecutionContext context)
   {
     var invocationParams = parameters.Map(x => x.Evaluate(ref context));
-
-    var invocationMethod = target.GetType().GetFactoryInvocationMethod();
-    var methodType = MethodType.FromCSharpMethod(invocationMethod);
-    var mappedParams = methodType.MapArguments(invocationParams, argumentTypes);
-    return (invocationMethod?.Invoke(target, mappedParams) as FactVal)!;
+    if (target is FuncVal funcVal)
+    {
+      return funcVal.Invoke(invocationParams, argumentTypes)!;
+    }
+    else
+    {
+      var invocationMethod = target.GetType().GetFactoryInvocationMethod();
+      var methodType = MethodType.FromCSharpMethod(invocationMethod);
+      var mappedParams = methodType.MapArguments(invocationParams, argumentTypes);
+      return (invocationMethod?.Invoke(target, mappedParams) as FactVal)!;
+    }
   }
 
   public string GetIdentifier()
@@ -40,8 +47,6 @@ public class InvocationNode : LanguageNode, ChainNode
   {
     var current = context.Peek().Resolve(context);
     argumentTypes = parameters.Map(x => x.CalculateType(context));
-
-    MethodType methodType = null!;
 
     if (current is CSharpType cSharpType)
     {
@@ -65,7 +70,7 @@ public class InvocationNode : LanguageNode, ChainNode
         context.AddError(
           errorPos.start,
           errorPos.length,
-          $"Argument of type {type} is not valid for {methodType.name}({string.Join(", ", methodType.argumentTypes.Map(x => x.ToString()))})."
+          $"Argument of type {type.ToShortString()} is not valid for {methodType.name}({string.Join(", ", methodType.argumentTypes.Map(x => x.ToShortString()))})."
         );
       }
     }

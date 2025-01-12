@@ -20,7 +20,7 @@ public class RecipeArgSet(RecipeArgVal[] values) : FactVal
 
 public static class RecipeExpSetExtensions
 {
-  public static RecipeArgSet ToRecipeArgValSet(this RecipeArgVal[] values)
+  public static RecipeArgSet ToRecipeArgSet(this RecipeArgVal[] values)
   {
     return new RecipeArgSet(values);
   }

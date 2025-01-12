@@ -4,7 +4,7 @@ using GenParse.Util;
 
 namespace Factory;
 
-public class RecipeSearchResult : FactVal
+public class RecipeSolution : FactVal
 {
   public readonly RecipeSearchRequest request;
   public readonly RecipeSearchNode root;
@@ -16,7 +16,7 @@ public class RecipeSearchResult : FactVal
   [ExposeMember("Total")]
   public NumVal Total => new NumVal(root.productionQuantity);
 
-  public RecipeSearchResult(RecipeSearchRequest request, RecipeSearchNode root)
+  public RecipeSolution(RecipeSearchRequest request, RecipeSearchNode root)
   {
     this.request = request;
     this.root = root;

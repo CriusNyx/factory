@@ -15,7 +15,7 @@ public class AltExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode, Language
 
   public override (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
-    return symbols.Map(x => new AltVal(x.symbolName)).ToRecipeArgValSet().With(context);
+    return symbols.Map(x => new AltVal(x.symbolName)).ToRecipeArgSet().With(context);
   }
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
@@ -25,6 +25,6 @@ public class AltExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode, Language
 
   public override FactoryType CalculateType(TypeContext context)
   {
-    return FactoryType.FromCSharpType(typeof(AltVal[]));
+    return FactoryType.FromCSharpType(typeof(RecipeArgSet));
   }
 }

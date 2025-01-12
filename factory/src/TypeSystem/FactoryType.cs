@@ -79,6 +79,8 @@ public interface FactoryType
 
   bool CanAcceptValue(FactoryType other);
 
+  string ToShortString();
+
   public static bool[] UnorderedTypeEvaluator(
     FactoryType[] argTypes,
     params FactoryType[] acceptableTypes

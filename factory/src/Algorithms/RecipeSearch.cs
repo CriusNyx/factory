@@ -21,14 +21,14 @@ public static class RecipeSearch
     "Water",
   };
 
-  public static RecipeSearchResult Search(RecipeSearchRequest request)
+  public static RecipeSolution Search(RecipeSearchRequest request)
   {
     var recOut = request.recipe.arguments.outVal;
     var rootItem = Docs.itemsByIdentifier.Safe(recOut.identifier)!;
 
     var root = ResolveRecipe(request.recipe, request.quantity * rootItem.ComputeUIConversionRate());
 
-    return new RecipeSearchResult(request, root!);
+    return new RecipeSolution(request, root!);
   }
 
   public static RecipeSearchNode? ResolveRecipe(RecipeValue recipeValue, decimal amount)

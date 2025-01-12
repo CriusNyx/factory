@@ -4,7 +4,7 @@ namespace Factory;
 
 public static class SearchExtensions
 {
-  public static RecipeSearchResult Balance(this RecipeSearchResult result, bool hasInitialQuantity)
+  public static RecipeSolution Balance(this RecipeSolution result, bool hasInitialQuantity)
   {
     var limitArguments = result.request.recipe.arguments.limitVals;
 
@@ -20,10 +20,10 @@ public static class SearchExtensions
       return result;
     }
 
-    return new RecipeSearchResult(result.request, result.root.Multiply(targetLimitArg));
+    return new RecipeSolution(result.request, result.root.Multiply(targetLimitArg));
   }
 
-  private static decimal ComputeLimitRatio(this RecipeSearchResult result, LimitVal limitVal)
+  private static decimal ComputeLimitRatio(this RecipeSolution result, LimitVal limitVal)
   {
     var (quantity, symbol) = limitVal.ToLimitVal();
     var limitQuantity = result.recipeBalance.GetValueForIdentifier(symbol);

@@ -38,4 +38,9 @@ public class FactoryPrimitiveType(FactoryPrimitiveTypeType type) : FactoryType
   {
     return type.ToString();
   }
+
+  public string ToShortString()
+  {
+    return ToString();
+  }
 }

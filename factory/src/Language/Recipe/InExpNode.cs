@@ -15,7 +15,7 @@ public class InExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode, LanguageN
 
   public override (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
-    return symbols.Map(x => new InVal(x.symbolName)).ToRecipeArgValSet().With(context);
+    return symbols.Map(x => new InVal(x.symbolName)).ToRecipeArgSet().With(context);
   }
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren() => symbols;

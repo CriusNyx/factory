@@ -19,4 +19,9 @@ public class RecipeType(RecipeTypeType type) : FactoryType
   {
     return other is RecipeType recType && (recType.type & type) != 0;
   }
+
+  public string ToShortString()
+  {
+    return type.ToString();
+  }
 }

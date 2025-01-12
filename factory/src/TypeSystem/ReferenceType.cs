@@ -8,4 +8,9 @@ public class ReferenceType(string symbol) : FactoryType
   {
     throw new NotImplementedException();
   }
+
+  public string ToShortString()
+  {
+    return $"typeof {symbol}";
+  }
 }

@@ -1,4 +1,3 @@
-using GenParse.Functional;
 using GenParse.Parsing;
 using GenParse.Util;
 

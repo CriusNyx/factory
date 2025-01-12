@@ -17,13 +17,13 @@ public class RecipeInvocation(
     return new RecipeInvocation(recipeValue ?? this.recipeValue, quantity ?? this.quantity);
   }
 
-  public RecipeSearchResult Invoke()
+  public RecipeSolution Invoke()
   {
     var searchRequest = new RecipeSearchRequest(recipeValue, quantity);
     return RecipeSearch.Search(searchRequest).Balance(hasQuantityValue);
   }
 
-  public static RecipeSearchResult InvokeRecipe(
+  public static RecipeSolution InvokeRecipe(
     FactVal recipe,
     decimal quantity,
     FactVal[] invocationParams

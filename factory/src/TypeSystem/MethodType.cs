@@ -117,6 +117,21 @@ public class MethodType(string name, FactoryType returnType, MethodArgumentType[
     GenerateTypeMappings(types, out var output);
     return output;
   }
+
+  public override string ToString()
+  {
+    return $"{InvocationString()}: {returnType.ToShortString()}";
+  }
+
+  public string InvocationString()
+  {
+    return $"{name}({string.Join(", ", argumentTypes.Map(x => x.ToShortString()))})";
+  }
+
+  public string ToShortString()
+  {
+    return InvocationString();
+  }
 }
 
 public class MethodArgumentType(FactoryType argType, bool optional, bool paramsType)
@@ -143,7 +158,12 @@ public class MethodArgumentType(FactoryType argType, bool optional, bool paramsT
 
   public override string ToString()
   {
-    return $"MethodArgumentType({(optional ? "optional, " : "")}{(paramsType ? "params, " : "")}{argType})";
+    return $"MethodArgumentType({(optional ? "optional, " : "")}{(paramsType ? "params, " : "")}{argType}";
+  }
+
+  public string ToShortString()
+  {
+    return $"{(optional && !paramsType ? "optional " : "")}{(paramsType ? "params " : "")}{argType.ToShortString()}{(paramsType ? "[]" : "")}";
   }
 }
 
