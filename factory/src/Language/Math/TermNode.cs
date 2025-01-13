@@ -12,7 +12,8 @@ public class TermNode : LanguageNode, ValueNode
   [ASTField("FactorChain*")]
   public FactorChainNode[] factorChian;
 
-  public ASTNode<FactoryLexon> astNode => throw new NotImplementedException();
+  [AST]
+  public ASTNode<FactoryLexon> astNode { get; set; }
 
   public FactoryType CalculateType(TypeContext context)
   {

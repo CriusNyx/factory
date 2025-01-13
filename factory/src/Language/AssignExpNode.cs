@@ -26,7 +26,7 @@ public class AssignExpNode : ProgramExp, LanguageNode
     }
     if (assignType is ReferenceType refType)
     {
-      context.SetType(refType.symbol, evaluationType.Resolve(context));
+      context.SetType(refType.symbol, evaluationType.ResolveType(context));
     }
     else { }
     return new FactoryPrimitiveType(FactoryPrimitiveTypeType.Void);

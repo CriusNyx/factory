@@ -12,7 +12,8 @@ public class FactorNode : LanguageNode, ValueNode
   [ASTField("Primitive")]
   public ValueNode primitive;
 
-  public ASTNode<FactoryLexon> astNode => throw new NotImplementedException();
+  [AST]
+  public ASTNode<FactoryLexon> astNode { get; set; }
 
   public FactoryType CalculateType(TypeContext context)
   {

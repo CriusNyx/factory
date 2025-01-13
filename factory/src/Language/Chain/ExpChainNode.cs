@@ -120,6 +120,6 @@ public class ExpChainNode : LanguageNode, ValueNode
 
   public FactoryType CalculateType(TypeContext context)
   {
-    return ComputeRef(context).Resolve(context);
+    return ComputeRef(context).ResolveType(context);
   }
 }

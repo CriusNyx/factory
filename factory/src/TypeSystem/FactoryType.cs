@@ -13,6 +13,10 @@ public enum FactoryPrimitiveTypeType
 
 public interface FactoryType
 {
+  bool CanAcceptValue(FactoryType other);
+
+  string ToShortString();
+
   public static readonly FactoryType VoidType = new FactoryPrimitiveType(
     FactoryPrimitiveTypeType.Void
   );
@@ -77,10 +81,6 @@ public interface FactoryType
     }
   }
 
-  bool CanAcceptValue(FactoryType other);
-
-  string ToShortString();
-
   public static bool[] UnorderedTypeEvaluator(
     FactoryType[] argTypes,
     params FactoryType[] acceptableTypes
@@ -92,7 +92,7 @@ public interface FactoryType
 
 public static class FactoryTypeExtensions
 {
-  public static FactoryType Resolve(this FactoryType factoryType, TypeContext context)
+  public static FactoryType ResolveType(this FactoryType factoryType, TypeContext context)
   {
     if (factoryType is ReferenceType refType)
     {

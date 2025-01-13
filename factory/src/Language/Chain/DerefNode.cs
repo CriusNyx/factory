@@ -61,7 +61,7 @@ public class DerefNode : LanguageNode, ChainNode
 
   public FactoryType CalculateType(TypeContext context)
   {
-    var value = context.Peek().Resolve(context);
+    var value = context.Peek().ResolveType(context);
     if (value is CSharpType cSharpType)
     {
       foreach (var member in cSharpType.type.GetMembers())

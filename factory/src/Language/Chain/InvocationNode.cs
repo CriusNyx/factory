@@ -45,7 +45,7 @@ public class InvocationNode : LanguageNode, ChainNode
 
   public FactoryType CalculateType(TypeContext context)
   {
-    var current = context.Peek().Resolve(context);
+    var current = context.Peek().ResolveType(context);
     argumentTypes = parameters.Map(x => x.CalculateType(context));
 
     if (current is CSharpType cSharpType)
