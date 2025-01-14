@@ -1,4 +1,8 @@
 ﻿using Factory;
+#if !DEBUG
+using GenParse.Util;
+using GenParse.Functional;
+#endif
 
 bool debug = false;
 #if DEBUG
