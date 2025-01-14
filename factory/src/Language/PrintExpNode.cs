@@ -1,20 +1,26 @@
 using GenParse.Functional;
+using GenParse.Parsing;
 using GenParse.Util;
 
 namespace Factory;
 
 [ASTClass("PrintExp")]
-public class PrintExpNode : ProgramExp, LanguageNode
+public class PrintExpNode : ProgramExp
 {
+  public override ASTNode<FactoryLexon> astNode => throw new NotImplementedException();
+
+  [AST]
+  public ASTNode<FactoryLexon> _astNode { get; set; }
+
   [ASTField("PrintExpChain")]
   public ValueNode[] values;
 
-  public IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
+  public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
     return values;
   }
 
-  public (FactVal? value, ExecutionContext context) Evaluate(ExecutionContext context)
+  public override (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
     var values = this.values.Map(x => x.Evaluate(ref context));
     foreach (var element in values)
@@ -26,7 +32,7 @@ public class PrintExpNode : ProgramExp, LanguageNode
     return (null!, context);
   }
 
-  public FactoryType CalculateType(TypeContext context)
+  public override FactoryType CalculateType(TypeContext context)
   {
     foreach (var value in values)
     {

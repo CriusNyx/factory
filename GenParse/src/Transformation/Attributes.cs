@@ -22,3 +22,8 @@ public interface ASTTransformer
 {
   object Transform();
 }
+
+public interface ASTSimplifier
+{
+  bool TrySimplify(out object result);
+}

@@ -2,7 +2,8 @@ using static GenParse.Util.Formatting;
 
 namespace Factory;
 
-public interface LanguageNode : ITree<LanguageNode>
+public abstract class LanguageNode : ITree<LanguageNode>
 {
-  FactoryType CalculateType(TypeContext context);
+  public abstract FactoryType CalculateType(TypeContext context);
+  public abstract IEnumerable<ITree<LanguageNode>> GetChildren();
 }

@@ -8,7 +8,7 @@ public class TermChainNode : LanguageNode
   public OperationNode operation;
 
   [ASTField("Term")]
-  public TermNode term;
+  public ValueNode term;
 
   public NumVal Evaluate(NumVal leftOperand, ref Factory.ExecutionContext context)
   {
@@ -24,12 +24,12 @@ public class TermChainNode : LanguageNode
     }
   }
 
-  public FactoryType CalculateType(TypeContext context)
+  public override FactoryType CalculateType(TypeContext context)
   {
     return term.CalculateType(context);
   }
 
-  public IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
+  public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
     return [operation, term];
   }

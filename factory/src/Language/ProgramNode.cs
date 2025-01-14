@@ -9,7 +9,7 @@ public class ProgramNode : LanguageNode
   [ASTField("ProgramExp*")]
   public ProgramExp[] expressions;
 
-  public IEnumerable<Formatting.ITree<LanguageNode>> GetChildren() =>
+  public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren() =>
     expressions.ToTypedArray<Formatting.ITree<LanguageNode>>();
 
   public void Evaluate(ExecutionContext executionContext)
@@ -25,7 +25,7 @@ public class ProgramNode : LanguageNode
     return Formatting.PrintTree(this, x => x.ToString()!);
   }
 
-  public FactoryType CalculateType(TypeContext context)
+  public override FactoryType CalculateType(TypeContext context)
   {
     foreach (var expression in expressions)
     {
@@ -35,7 +35,4 @@ public class ProgramNode : LanguageNode
   }
 }
 
-public interface ProgramExp : LanguageNode
-{
-  (FactVal? value, ExecutionContext context) Evaluate(ExecutionContext context);
-}
+public abstract class ProgramExp : ValueNode { }

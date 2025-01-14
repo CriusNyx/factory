@@ -4,17 +4,20 @@ using GenParse.Parsing;
 using GenParse.Util;
 
 [ASTClass("MathExp")]
-public class MathExpNode : LanguageNode, ValueNode
+public class MathExpNode : ValueNode, ASTSimplifier
 {
   [ASTField("Term")]
-  public TermNode term;
+  public ValueNode term;
 
   [ASTField("TermChain*")]
   public TermChainNode[] termChain;
 
-  public ASTNode<FactoryLexon> astNode => throw new NotImplementedException();
+  public override ASTNode<FactoryLexon> astNode => _astNode;
 
-  public FactoryType CalculateType(TypeContext context)
+  [AST]
+  public ASTNode<FactoryLexon> _astNode { get; set; }
+
+  public override FactoryType CalculateType(TypeContext context)
   {
     foreach (var element in termChain)
     {
@@ -23,7 +26,7 @@ public class MathExpNode : LanguageNode, ValueNode
     return term.CalculateType(context);
   }
 
-  public (FactVal value, Factory.ExecutionContext context) Evaluate(
+  public override (FactVal value, Factory.ExecutionContext context) Evaluate(
     Factory.ExecutionContext context
   )
   {
@@ -46,8 +49,19 @@ public class MathExpNode : LanguageNode, ValueNode
     }
   }
 
-  public IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
+  public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
     return [term, .. termChain];
+  }
+
+  public bool TrySimplify(out object result)
+  {
+    result = null!;
+    if (termChain.Length == 0)
+    {
+      result = term;
+      return true;
+    }
+    return false;
   }
 }

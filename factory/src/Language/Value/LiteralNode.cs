@@ -1,3 +1,3 @@
 namespace Factory;
 
-public interface LiteralNode : LanguageNode, ValueNode { }
+public abstract class LiteralNode : ValueNode { }

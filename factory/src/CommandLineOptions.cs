@@ -32,6 +32,9 @@ public class CommandLineOptions
   [Option('t', "transform", HelpText = "Print the AST after transformation")]
   public bool transform { get; set; }
 
+  [Option("types", HelpText = "Print program types")]
+  public bool types { get; set; }
+
   [Option('g', "debug-grammar", HelpText = "Print debug information for program grammar")]
   public bool debugGrammar { get; set; }
 

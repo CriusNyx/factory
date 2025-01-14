@@ -83,11 +83,16 @@ public static class Transformer
     var transformType = transformCache.Safe(node.name);
     if (transformType != null)
     {
+      var a = transformType.GetConstructor(new Type[] { typeof(ASTNode<T>) });
+      var b = transformType.GetConstructor(new Type[] { });
+
       var value =
         transformType
           .GetConstructor(new Type[] { typeof(ASTNode<T>) })
           ?.Invoke(new object[] { node })
         ?? transformType.GetConstructor(new Type[] { })?.Invoke(new object[] { });
+
+      value = value.NotNull();
 
       foreach (var member in transformType.GetMembers())
       {
@@ -171,13 +176,13 @@ public static class Transformer
       // If this node is an ASTTransformationNode return it's transformation instead.
       if (nodeValue is ASTTransformer transformer)
       {
-        return transformer.Transform();
+        nodeValue = transformer.Transform();
       }
-      // Otherwise return it as it is.
-      else
+      while (nodeValue is ASTSimplifier simplifier && simplifier.TrySimplify(out var simplified))
       {
-        return nodeValue;
+        nodeValue = simplified;
       }
+      return nodeValue;
     }
   }
 }

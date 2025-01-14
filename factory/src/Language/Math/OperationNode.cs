@@ -7,12 +7,12 @@ public class OperationNode(ASTNode<FactoryLexon> astNode) : LanguageNode
 {
   public readonly string operation = astNode.children.First().SourceCode();
 
-  public FactoryType CalculateType(TypeContext context)
+  public override FactoryType CalculateType(TypeContext context)
   {
     return FactoryType.VoidType;
   }
 
-  public IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
+  public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
     return [];
   }

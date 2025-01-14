@@ -6,7 +6,7 @@ using GenParse.Util;
 namespace Factory;
 
 [ASTClass("Invocation")]
-public class InvocationNode : LanguageNode, ChainNode
+public class InvocationNode : ChainNode
 {
   [AST]
   public ASTNode<FactoryLexon> ast;
@@ -17,12 +17,12 @@ public class InvocationNode : LanguageNode, ChainNode
   private FactoryType[] argumentTypes;
   private MethodType methodType;
 
-  public IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
+  public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
     return parameters;
   }
 
-  public FactVal Evaluate(FactVal target, ExecutionContext context)
+  public override FactVal Evaluate(FactVal target, ExecutionContext context)
   {
     var invocationParams = parameters.Map(x => x.Evaluate(ref context));
     if (target is FuncVal funcVal)
@@ -38,12 +38,12 @@ public class InvocationNode : LanguageNode, ChainNode
     }
   }
 
-  public string GetIdentifier()
+  public override string GetIdentifier()
   {
     throw new Exception("Invocation nodes cannot be converted to identifiers.");
   }
 
-  public FactoryType CalculateType(TypeContext context)
+  public override FactoryType CalculateType(TypeContext context)
   {
     var current = context.Peek().ResolveType(context);
     argumentTypes = parameters.Map(x => x.CalculateType(context));

@@ -5,7 +5,7 @@ using GenParse.Util;
 namespace Factory;
 
 [ASTClass("Deref")]
-public class DerefNode : LanguageNode, ChainNode
+public class DerefNode : ChainNode
 {
   [AST]
   public ASTNode<FactoryLexon> ast;
@@ -13,7 +13,7 @@ public class DerefNode : LanguageNode, ChainNode
   [ASTField("symbol")]
   public SymbolNode derefSymbol;
 
-  public FactVal Evaluate(FactVal target, ExecutionContext context)
+  public override FactVal Evaluate(FactVal target, ExecutionContext context)
   {
     return EvaluateDereference(target, derefSymbol.symbolName);
   }
@@ -49,17 +49,17 @@ public class DerefNode : LanguageNode, ChainNode
     throw new NotImplementedException();
   }
 
-  public IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
+  public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
     return [derefSymbol];
   }
 
-  public string GetIdentifier()
+  public override string GetIdentifier()
   {
     return derefSymbol.symbolName;
   }
 
-  public FactoryType CalculateType(TypeContext context)
+  public override FactoryType CalculateType(TypeContext context)
   {
     var value = context.Peek().ResolveType(context);
     if (value is CSharpType cSharpType)

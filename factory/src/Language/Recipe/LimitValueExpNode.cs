@@ -15,7 +15,7 @@ public class LimitValueExpNode : LanguageNode
   [ASTField("symbol")]
   public SymbolNode symbol;
 
-  public FactoryType CalculateType(TypeContext context)
+  public override FactoryType CalculateType(TypeContext context)
   {
     value.CalculateType(context);
     return FactoryType.FromCSharpType(typeof(LimitVal));
@@ -26,7 +26,7 @@ public class LimitValueExpNode : LanguageNode
     return new LimitVal(symbol.symbolName, (value.Evaluate(ref context) as NumVal)!);
   }
 
-  public IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
+  public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
     return new Formatting.ITree<LanguageNode>[] { value, symbol };
   }

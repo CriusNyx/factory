@@ -5,7 +5,7 @@ using GenParse.Util;
 namespace Factory;
 
 [ASTClass("ExpChain")]
-public class ExpChainNode : LanguageNode, ValueNode
+public class ExpChainNode : ValueNode
 {
   [ASTField("symbol")]
   public SymbolNode initialSymbol;
@@ -14,10 +14,12 @@ public class ExpChainNode : LanguageNode, ValueNode
   [ASTField("ChainContinue?")]
   public ExpChainNode chainContinue;
 
-  [AST]
-  public ASTNode<FactoryLexon> astNode { get; set; }
+  public override ASTNode<FactoryLexon> astNode => _astNode;
 
-  public (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
+  [AST]
+  public ASTNode<FactoryLexon> _astNode { get; set; }
+
+  public override (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
     if (initialSymbol == null)
     {
@@ -80,7 +82,7 @@ public class ExpChainNode : LanguageNode, ValueNode
     }
   }
 
-  public IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
+  public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
     return new Formatting.ITree<LanguageNode>[]
     {
@@ -118,7 +120,7 @@ public class ExpChainNode : LanguageNode, ValueNode
     }
   }
 
-  public FactoryType CalculateType(TypeContext context)
+  public override FactoryType CalculateType(TypeContext context)
   {
     return ComputeRef(context).ResolveType(context);
   }

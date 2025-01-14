@@ -1,18 +1,23 @@
 using GenParse.Functional;
+using GenParse.Parsing;
 using GenParse.Util;
 
 namespace Factory;
 
 [ASTClass("AssignExp")]
-public class AssignExpNode : ProgramExp, LanguageNode
+public class AssignExpNode : ProgramExp
 {
+  public override ASTNode<FactoryLexon> astNode => _astNode;
+
+  public ASTNode<FactoryLexon> _astNode { get; set; }
+
   [ASTField("ExpChain")]
   public ExpChainNode left;
 
   [ASTField("ValueExp")]
   public ValueNode right;
 
-  public FactoryType CalculateType(TypeContext context)
+  public override FactoryType CalculateType(TypeContext context)
   {
     var evaluationType = right.CalculateType(context);
     var assignType = left.ComputeRef(context);
@@ -32,7 +37,7 @@ public class AssignExpNode : ProgramExp, LanguageNode
     return new FactoryPrimitiveType(FactoryPrimitiveTypeType.Void);
   }
 
-  public (FactVal? value, ExecutionContext context) Evaluate(ExecutionContext context)
+  public override (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
     var reference = left.GetReference(context);
     var result = right.Evaluate(ref context);
@@ -40,7 +45,7 @@ public class AssignExpNode : ProgramExp, LanguageNode
     return result.With(context);
   }
 
-  public IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
+  public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
     return new Formatting.ITree<LanguageNode>[] { left, right };
   }

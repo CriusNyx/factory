@@ -10,7 +10,7 @@ public class FactorChainNode : LanguageNode
   [ASTField("Factor")]
   public FactorNode factor;
 
-  public FactoryType CalculateType(TypeContext context)
+  public override FactoryType CalculateType(TypeContext context)
   {
     return factor.CalculateType(context);
   }
@@ -31,7 +31,7 @@ public class FactorChainNode : LanguageNode
     }
   }
 
-  public IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
+  public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
     return [operation, factor];
   }

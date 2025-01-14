@@ -1,18 +1,24 @@
 using GenParse.Functional;
+using GenParse.Parsing;
 using GenParse.Util;
 
 namespace Factory;
 
 [ASTClass("Recipe")]
-public class RecipeNode : LanguageNode, ProgramExp
+public class RecipeNode : ProgramExp
 {
+  public override ASTNode<FactoryLexon> astNode => _astNode;
+
+  [AST]
+  public ASTNode<FactoryLexon> _astNode { get; set; }
+
   [ASTField("symbol")]
   public SymbolNode name;
 
   [ASTField("RecipeExp*")]
   public RecipeExpNode[] expressions;
 
-  public FactoryType CalculateType(TypeContext context)
+  public override FactoryType CalculateType(TypeContext context)
   {
     foreach (var expression in expressions)
     {
@@ -22,7 +28,7 @@ public class RecipeNode : LanguageNode, ProgramExp
     return new FactoryPrimitiveType(FactoryPrimitiveTypeType.Void);
   }
 
-  public (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
+  public override (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
     var expressionValues = expressions.Map(x => x.Evaluate(ref context));
 
@@ -34,5 +40,6 @@ public class RecipeNode : LanguageNode, ProgramExp
     return recipe.With(context);
   }
 
-  public IEnumerable<Formatting.ITree<LanguageNode>> GetChildren() => [name, .. expressions];
+  public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren() =>
+    [name, .. expressions];
 }

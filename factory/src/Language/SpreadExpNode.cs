@@ -5,7 +5,7 @@ using GenParse.Util;
 namespace Factory;
 
 [ASTClass("SpreadExp")]
-public class SpreadExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode, LanguageNode
+public class SpreadExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode
 {
   private ASTNode<FactoryLexon> _astNode = astNode;
   public override ASTNode<FactoryLexon> astNode => _astNode;

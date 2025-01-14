@@ -1,7 +1,7 @@
 namespace Factory;
 
-public interface ChainNode : LanguageNode
+public abstract class ChainNode : LanguageNode
 {
-  public FactVal Evaluate(FactVal target, ExecutionContext context);
-  public string GetIdentifier();
+  public abstract FactVal Evaluate(FactVal target, ExecutionContext context);
+  public abstract string GetIdentifier();
 }

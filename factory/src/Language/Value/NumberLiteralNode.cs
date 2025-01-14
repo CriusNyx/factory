@@ -9,19 +9,19 @@ public class NumberLiteralNode(ASTNode<FactoryLexon> astNode) : LiteralNode
 {
   ASTNode<FactoryLexon> _astNode = astNode;
 
-  public ASTNode<FactoryLexon> astNode => _astNode;
+  public override ASTNode<FactoryLexon> astNode => _astNode;
 
-  public FactoryType CalculateType(TypeContext context)
+  public override FactoryType CalculateType(TypeContext context)
   {
     return FactoryType.FromCSharpType(typeof(NumVal));
   }
 
-  public (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
+  public override (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
     return decimal.Parse(astNode.SourceCode()).ToNumVal().With(context);
   }
 
-  public IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
+  public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
     return new Formatting.ITree<LanguageNode>[] { };
   }

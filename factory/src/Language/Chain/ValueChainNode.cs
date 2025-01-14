@@ -19,19 +19,19 @@ public class ValueChainNode : LanguageNode
     }
     else if (astNode.TryMatch("ValueExp", out var valueExpNode))
     {
-      valueNode = Transformer.Transform(valueExpNode).To<ValueNode>();
+      valueNode = Transformer.Transform(valueExpNode).NotNull().To<ValueNode>();
       valueChainNode = null;
     }
   }
 
-  public FactoryType CalculateType(TypeContext context)
+  public override FactoryType CalculateType(TypeContext context)
   {
     var output = valueNode.CalculateType(context);
     valueChainNode?.CalculateType(context);
     return output;
   }
 
-  public IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
+  public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
     return (new LanguageNode[] { valueNode, valueChainNode! }).FilterDefined();
   }

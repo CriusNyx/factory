@@ -2,11 +2,11 @@ using GenParse.Parsing;
 
 namespace Factory;
 
-public interface ValueNode : LanguageNode
+public abstract class ValueNode : LanguageNode
 {
-  public ASTNode<FactoryLexon> astNode { get; }
+  public abstract ASTNode<FactoryLexon> astNode { get; }
 
-  (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context);
+  public abstract (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context);
 }
 
 public static class ValueNodeExtensions
