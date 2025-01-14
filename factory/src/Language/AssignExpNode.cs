@@ -19,7 +19,7 @@ public class AssignExpNode : ProgramExp
 
   public override FactoryType CalculateType(TypeContext context)
   {
-    var evaluationType = right.CalculateType(context);
+    var evaluationType = right.GetFactoryType(context);
     var assignType = left.ComputeRef(context);
     if (
       evaluationType is FactoryPrimitiveType primType
@@ -48,5 +48,10 @@ public class AssignExpNode : ProgramExp
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
     return new Formatting.ITree<LanguageNode>[] { left, right };
+  }
+
+  public override (string?, string?) PrintSelf()
+  {
+    return ("let", null);
   }
 }

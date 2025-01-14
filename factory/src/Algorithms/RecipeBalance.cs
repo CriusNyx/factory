@@ -2,8 +2,14 @@ using GenParse.Functional;
 
 namespace Factory;
 
+/// <summary>
+/// The balance of a recipe.
+/// </summary>
 public class RecipeBalance
 {
+  /// <summary>
+  /// Balance elements
+  /// </summary>
   public readonly RecipeBalanceElement[] elements;
 
   public RecipeBalance(RecipeBalanceElement[] elements)

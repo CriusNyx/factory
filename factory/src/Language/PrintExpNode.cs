@@ -36,8 +36,13 @@ public class PrintExpNode : ProgramExp
   {
     foreach (var value in values)
     {
-      value.CalculateType(context);
+      value.GetFactoryType(context);
     }
     return new FactoryPrimitiveType(FactoryPrimitiveTypeType.Void);
+  }
+
+  public override (string?, string?) PrintSelf()
+  {
+    return ("print", null);
   }
 }

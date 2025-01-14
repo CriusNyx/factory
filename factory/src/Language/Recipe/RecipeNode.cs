@@ -22,7 +22,7 @@ public class RecipeNode : ProgramExp
   {
     foreach (var expression in expressions)
     {
-      expression.CalculateType(context);
+      expression.GetFactoryType(context);
     }
     context.SetType(name.symbolName, new CSharpType(typeof(RecipeValue)));
     return new FactoryPrimitiveType(FactoryPrimitiveTypeType.Void);
@@ -42,4 +42,9 @@ public class RecipeNode : ProgramExp
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren() =>
     [name, .. expressions];
+
+  public override (string?, string?) PrintSelf()
+  {
+    return ("recipe", null);
+  }
 }

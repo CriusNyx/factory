@@ -21,7 +21,7 @@ public class CSharpType(Type type) : FactoryType
 
   public string ToShortString()
   {
-    return type.ToString();
+    return type.Name;
   }
 
   public override string ToString()

@@ -29,7 +29,7 @@ public class ProgramNode : LanguageNode
   {
     foreach (var expression in expressions)
     {
-      expression.CalculateType(context);
+      expression.GetFactoryType(context);
     }
     return new FactoryPrimitiveType(FactoryPrimitiveTypeType.Void);
   }

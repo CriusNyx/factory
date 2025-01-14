@@ -30,4 +30,9 @@ public class NumberLiteralNode(ASTNode<FactoryLexon> astNode) : LiteralNode
   {
     return $"{base.ToString()} {astNode.SourceCode()}";
   }
+
+  public override (string?, string?) PrintSelf()
+  {
+    return (astNode.SourceCode(), null);
+  }
 }

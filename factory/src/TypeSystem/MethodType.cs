@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
 using GenParse.Functional;
 
 namespace Factory;
@@ -125,7 +126,7 @@ public class MethodType(string name, FactoryType returnType, MethodArgumentType[
 
   public string InvocationString()
   {
-    return $"{name}({string.Join(", ", argumentTypes.Map(x => x.ToShortString()))})";
+    return $"{name}({string.Join(", ", argumentTypes.Map(x => x.ToShortString()))}): {returnType.ToShortString()}";
   }
 
   public string ToShortString()

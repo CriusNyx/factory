@@ -46,7 +46,7 @@ public class InvocationNode : ChainNode
   public override FactoryType CalculateType(TypeContext context)
   {
     var current = context.Peek().ResolveType(context);
-    argumentTypes = parameters.Map(x => x.CalculateType(context));
+    argumentTypes = parameters.Map(x => x.GetFactoryType(context));
 
     if (current is CSharpType cSharpType)
     {
@@ -76,6 +76,11 @@ public class InvocationNode : ChainNode
     }
 
     return methodType.returnType;
+  }
+
+  public override (string?, string?) PrintSelf()
+  {
+    return ("(", ")");
   }
 }
 

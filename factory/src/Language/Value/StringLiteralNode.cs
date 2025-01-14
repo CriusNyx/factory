@@ -28,4 +28,9 @@ public class StringLiteralNode : ValueNode
   {
     return new FactoryPrimitiveType(FactoryPrimitiveTypeType.String);
   }
+
+  public override (string?, string?) PrintSelf()
+  {
+    return (astNode.SourceCode(), null);
+  }
 }

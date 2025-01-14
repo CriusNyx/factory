@@ -27,4 +27,9 @@ public class AltExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode
   {
     return FactoryType.FromCSharpType(typeof(RecipeArgSet));
   }
+
+  public override (string?, string?) PrintSelf()
+  {
+    return ("alt", null);
+  }
 }

@@ -26,7 +26,7 @@ public class TermChainNode : LanguageNode
 
   public override FactoryType CalculateType(TypeContext context)
   {
-    return term.CalculateType(context);
+    return term.GetFactoryType(context);
   }
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()

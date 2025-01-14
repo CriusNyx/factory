@@ -100,7 +100,7 @@ public class ExpChainNode : ValueNode
       if (chainContinue != null)
       {
         context.Push(symType);
-        var result = chainContinue.CalculateType(context);
+        var result = chainContinue.GetFactoryType(context);
         context.Pop();
         return result;
       }
@@ -108,11 +108,11 @@ public class ExpChainNode : ValueNode
     }
     else
     {
-      var chainType = chain.CalculateType(context);
+      var chainType = chain.GetFactoryType(context);
       if (chainContinue != null)
       {
         context.Push(chainType);
-        var result = chainContinue.CalculateType(context);
+        var result = chainContinue.GetFactoryType(context);
         context.Pop();
         return result;
       }

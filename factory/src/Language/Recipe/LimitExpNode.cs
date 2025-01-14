@@ -1,3 +1,4 @@
+using System.Reflection.Metadata.Ecma335;
 using GenParse.Functional;
 using GenParse.Parsing;
 using GenParse.Util;
@@ -27,8 +28,13 @@ public class LimitExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode
   {
     foreach (var exp in expressions)
     {
-      exp.CalculateType(context);
+      exp.GetFactoryType(context);
     }
     return FactoryType.FromCSharpType(typeof(RecipeArgSet));
+  }
+
+  public override (string?, string?) PrintSelf()
+  {
+    return ("limit", null);
   }
 }

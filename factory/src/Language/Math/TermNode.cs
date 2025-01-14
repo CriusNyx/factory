@@ -21,9 +21,9 @@ public class TermNode : ValueNode, ASTSimplifier
   {
     foreach (var element in factorChian)
     {
-      element.CalculateType(context);
+      element.GetFactoryType(context);
     }
-    return factor.CalculateType(context);
+    return factor.GetFactoryType(context);
   }
 
   public override (FactVal value, Factory.ExecutionContext context) Evaluate(

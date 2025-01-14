@@ -91,7 +91,7 @@ public class RecipeSolution : FactVal
   public decimal TotalTally(TallyVal tallyVal) => TotalTally(tallyVal.identifier);
 
   [ExposeMember("Tally")]
-  public FactVal TotalTally(FactVal arg)
+  public NumVal TotalTally(FactVal arg)
   {
     string identifier;
     if (arg is StringVal stringVal)

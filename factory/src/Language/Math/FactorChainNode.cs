@@ -12,7 +12,7 @@ public class FactorChainNode : LanguageNode
 
   public override FactoryType CalculateType(TypeContext context)
   {
-    return factor.CalculateType(context);
+    return factor.GetFactoryType(context);
   }
 
   public NumVal Evaluate(NumVal leftOperand, ref Factory.ExecutionContext context)

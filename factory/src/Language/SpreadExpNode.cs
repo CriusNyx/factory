@@ -29,4 +29,9 @@ public class SpreadExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode
   {
     return new FactoryPrimitiveType(FactoryPrimitiveTypeType.Complex);
   }
+
+  public override (string?, string?) PrintSelf()
+  {
+    return ("...", null);
+  }
 }

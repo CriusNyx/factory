@@ -16,4 +16,9 @@ public class OperationNode(ASTNode<FactoryLexon> astNode) : LanguageNode
   {
     return [];
   }
+
+  public override (string?, string?) PrintSelf()
+  {
+    return (operation, null);
+  }
 }

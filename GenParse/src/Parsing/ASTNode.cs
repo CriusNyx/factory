@@ -39,11 +39,11 @@ public class ASTNode<LexonType>
     string indent = "";
     for (int i = 0; i < indentLength - 1; i++)
     {
-      indent += "| ";
+      indent += " ";
     }
     if (indentLength > 0)
     {
-      indent += "|-";
+      indent += " ";
     }
     return
     [

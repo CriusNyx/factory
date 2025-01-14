@@ -19,7 +19,7 @@ public class FactorNode : ValueNode, ASTSimplifier
 
   public override FactoryType CalculateType(TypeContext context)
   {
-    return primitive.CalculateType(context);
+    return primitive.GetFactoryType(context);
   }
 
   public override (FactVal value, Factory.ExecutionContext context) Evaluate(
@@ -37,6 +37,11 @@ public class FactorNode : ValueNode, ASTSimplifier
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
     return [primitive];
+  }
+
+  public override (string?, string?) PrintSelf()
+  {
+    return (negative ? "-" : "", null);
   }
 
   public bool TrySimplify(out object result)

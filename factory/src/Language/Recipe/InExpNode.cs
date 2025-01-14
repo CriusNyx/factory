@@ -24,4 +24,9 @@ public class InExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode
   {
     return FactoryType.FromCSharpType(typeof(RecipeArgSet));
   }
+
+  public override (string?, string?) PrintSelf()
+  {
+    return ("in", null);
+  }
 }

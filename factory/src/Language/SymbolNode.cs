@@ -35,4 +35,9 @@ public class SymbolNode : ValueNode
   {
     return context.GetType(symbolName);
   }
+
+  public override (string?, string?) PrintSelf()
+  {
+    return (symbolName, null);
+  }
 }

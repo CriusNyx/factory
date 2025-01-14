@@ -21,9 +21,9 @@ public class MathExpNode : ValueNode, ASTSimplifier
   {
     foreach (var element in termChain)
     {
-      element.CalculateType(context);
+      element.GetFactoryType(context);
     }
-    return term.CalculateType(context);
+    return term.GetFactoryType(context);
   }
 
   public override (FactVal value, Factory.ExecutionContext context) Evaluate(

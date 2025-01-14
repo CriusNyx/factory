@@ -17,7 +17,7 @@ public class LimitValueExpNode : LanguageNode
 
   public override FactoryType CalculateType(TypeContext context)
   {
-    value.CalculateType(context);
+    value.GetFactoryType(context);
     return FactoryType.FromCSharpType(typeof(LimitVal));
   }
 

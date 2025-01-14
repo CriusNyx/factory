@@ -35,4 +35,14 @@ public class TallyExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode
   {
     return FactoryType.FromCSharpType(typeof(RecipeArgSet));
   }
+
+  public override (string?, string?) PrintSelf()
+  {
+    string output = "tally";
+    if (inline)
+    {
+      output += " inline";
+    }
+    return (output, null);
+  }
 }

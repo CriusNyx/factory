@@ -26,8 +26,8 @@ public class ValueChainNode : LanguageNode
 
   public override FactoryType CalculateType(TypeContext context)
   {
-    var output = valueNode.CalculateType(context);
-    valueChainNode?.CalculateType(context);
+    var output = valueNode.GetFactoryType(context);
+    valueChainNode?.GetFactoryType(context);
     return output;
   }
 

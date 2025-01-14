@@ -32,6 +32,7 @@ public interface FactoryType
   public static readonly FactoryType LimitType = new RecipeType(RecipeTypeType.limit);
   public static readonly FactoryType AltType = new RecipeType(RecipeTypeType.alt);
   public static readonly FactoryType TallyType = new RecipeType(RecipeTypeType.tally);
+
   public static FactoryType FromCSharpType(Type type)
   {
     if (type == typeof(string))
