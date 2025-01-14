@@ -8,7 +8,7 @@ public class FactorChainNode : LanguageNode
   public OperationNode operation;
 
   [ASTField("Factor")]
-  public FactorNode factor;
+  public ValueNode factor;
 
   public override FactoryType CalculateType(TypeContext context)
   {
