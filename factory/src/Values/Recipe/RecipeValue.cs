@@ -42,13 +42,6 @@ public class RecipeValue(string recipeName, RecipeArgSet? arguments = null) : Fa
     return builder.ToString();
   }
 
-  public static bool[] EvaluateAmendTypeValues(FactoryType[] argTypes) =>
-    FactoryType.UnorderedTypeEvaluator(
-      argTypes,
-      FactoryType.NumberType,
-      new RecipeType(RecipeTypeType.any)
-    );
-
   [ExposeMember("Amend")]
   public RecipeValue AmendInvocation([Params] FactVal[] args)
   {
@@ -68,15 +61,6 @@ public class RecipeValue(string recipeName, RecipeArgSet? arguments = null) : Fa
     Debugger.Break();
   }
 #endif
-
-  public static bool[] EvaluateInvocationArgumentTypes(FactoryType[] factoryTypes)
-  {
-    return FactoryType.UnorderedTypeEvaluator(
-      factoryTypes,
-      new RecipeType(RecipeTypeType.any),
-      FactoryType.NumberType
-    );
-  }
 
   [ExposeMember("Invoke")]
   public RecipeSolution Invoke(NumVal? numVal = null, [Params] RecipeArgSet[]? args = null)

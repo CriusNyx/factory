@@ -27,12 +27,6 @@ public interface FactoryType
     FactoryPrimitiveTypeType.String
   );
 
-  public static readonly FactoryType InType = new RecipeType(RecipeTypeType.@in);
-  public static readonly FactoryType OutType = new RecipeType(RecipeTypeType.@out);
-  public static readonly FactoryType LimitType = new RecipeType(RecipeTypeType.limit);
-  public static readonly FactoryType AltType = new RecipeType(RecipeTypeType.alt);
-  public static readonly FactoryType TallyType = new RecipeType(RecipeTypeType.tally);
-
   public static FactoryType FromCSharpType(Type type)
   {
     if (type == typeof(string))
