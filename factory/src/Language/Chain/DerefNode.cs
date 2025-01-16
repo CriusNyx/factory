@@ -1,5 +1,4 @@
 using System.Reflection;
-using GenParse.Parsing;
 using GenParse.Util;
 
 namespace Factory;
@@ -59,9 +58,17 @@ public class DerefNode : ChainNode
   public override FactoryType CalculateType(TypeContext context)
   {
     derefSymbol.GetFactoryType(context);
-    var value = context.Peek().ResolveType(context);
-    if (value is CSharpType cSharpType)
+    refType = context.Peek();
+
+    if (refType is ReferenceType referenceType)
     {
+      derefSymbol.refInfo = new RefInfo(referenceType.symbol, derefSymbol.symbolName);
+    }
+
+    var resolvedType = refType.ResolveType(context);
+    if (resolvedType is CSharpType cSharpType)
+    {
+      derefSymbol.refInfo = new RefInfo(cSharpType.GetCSharpType().Name, derefSymbol.symbolName);
       foreach (var member in cSharpType.type.GetMembers())
       {
         var exposeAttr = member.GetCustomAttribute<ExposeMemberAttribute>();
@@ -74,7 +81,7 @@ public class DerefNode : ChainNode
       }
     }
     var pos = astNode.CalculatePosition();
-    context.AddError(pos.start, pos.length, $"{value} has no member {derefSymbol.symbolName}");
+    context.AddError(pos.start, pos.length, $"{refType} has no member {derefSymbol.symbolName}");
     return FactoryType.VoidType;
   }
 }

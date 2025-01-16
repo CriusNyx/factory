@@ -9,6 +9,7 @@ import {
 	Hover,
 	InitializeParams,
 	InitializeResult,
+	MarkupKind,
 	ProposedFeatures,
 	Range,
 	TextDocumentPositionParams,
@@ -188,7 +189,10 @@ connection.onHover(async (params) => {
 		return null;
 	}
 	return {
-		contents: hoverString,
+		contents: {
+			kind: MarkupKind.Markdown,
+			value: `\`\`\`typescript\n${hoverString}\n\`\`\``,
+		},
 	} satisfies Hover;
 });
 

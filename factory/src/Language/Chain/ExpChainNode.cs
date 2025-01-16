@@ -6,12 +6,19 @@ namespace Factory;
 [ASTClass("ExpChain")]
 public class ExpChainNode : ValueNode
 {
+  // The symbol for this node, if this is the first node in the chain.
   [ASTField("symbol")]
   public SymbolNode symbol;
-  public ChainNode chain;
+
+  // The link if this is not the first node in the chain.
+  public ChainNode chainLink;
+
+  // The next element in the ref chain
 
   [ASTField("ChainContinue?")]
   public ExpChainNode chainContinue;
+  public ReferenceType refType { get; private set; }
+  public FactoryType chainType { get; private set; }
 
   public override (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
@@ -34,7 +41,7 @@ public class ExpChainNode : ValueNode
 
   private FactVal Continue(FactVal value, ExecutionContext context)
   {
-    value = chain.Evaluate(value, context);
+    value = chainLink.Evaluate(value, context);
     if (chainContinue == null)
     {
       return value;
@@ -60,7 +67,7 @@ public class ExpChainNode : ValueNode
       }
       else
       {
-        return new ObjectRefVal(owner, chain.GetIdentifier());
+        return new ObjectRefVal(owner, chainLink.GetIdentifier());
       }
     }
     else
@@ -71,34 +78,40 @@ public class ExpChainNode : ValueNode
       }
       else
       {
-        return chainContinue._GetReference(context, chain.Evaluate(owner.NotNull(), context));
+        return chainContinue._GetReference(context, chainLink.Evaluate(owner.NotNull(), context));
       }
     }
   }
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
-    return new Formatting.ITree<LanguageNode>[] { symbol, chain, chainContinue }.FilterDefined();
+    return new Formatting.ITree<LanguageNode>[]
+    {
+      symbol,
+      chainLink,
+      chainContinue,
+    }.FilterDefined();
   }
 
   public FactoryType ComputeRef(TypeContext context)
   {
     if (symbol != null)
     {
-      var symType = new ReferenceType(symbol.symbolName, symbol);
-      symbol.OverrideType(symType.ResolveType(context));
+      refType = new ReferenceType(symbol.symbolName, symbol);
+      symbol.OverrideType(refType.ResolveType(context));
+      symbol.refInfo = new RefInfo(symbol.symbolName);
       if (chainContinue != null)
       {
-        context.Push(symType);
+        context.Push(refType);
         var result = chainContinue.GetFactoryType(context);
         context.Pop();
         return result;
       }
-      return symType;
+      return refType;
     }
     else
     {
-      var chainType = chain.GetFactoryType(context);
+      chainType = chainLink.GetFactoryType(context);
       if (chainContinue != null)
       {
         context.Push(chainType);

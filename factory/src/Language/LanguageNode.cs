@@ -57,6 +57,55 @@ public abstract class LanguageNode : ITree<LanguageNode>
     return GetHoverType();
   }
 
+  public FactoryType? GetReferenceTypeAtIndex(int index)
+  {
+    if (!HasIndex(index))
+    {
+      return null;
+    }
+    foreach (var child in GetChildren())
+    {
+      var node = child.To<LanguageNode>();
+      var result = node.GetReferenceTypeAtIndex(index);
+      if (result != null)
+      {
+        return result;
+      }
+    }
+    if (this is ExpChainNode expChainNode)
+    {
+      return expChainNode.refType;
+    }
+    if (this is ChainNode chainNode)
+    {
+      return chainNode.refType;
+    }
+    return null;
+  }
+
+  public string? GetHoverString(int index)
+  {
+    if (!HasIndex(index))
+    {
+      return null!;
+    }
+    foreach (var child in GetChildren())
+    {
+      var node = child.To<LanguageNode>();
+      var result = node.GetHoverString(index);
+      if (result != null)
+      {
+        return result;
+      }
+    }
+    return GetNodeHoverString();
+  }
+
+  public virtual string? GetNodeHoverString()
+  {
+    return null;
+  }
+
   public virtual FactoryType? GetHoverType()
   {
     return null!;

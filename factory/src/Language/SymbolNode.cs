@@ -1,7 +1,6 @@
-using System.Net.Mime;
 using GenParse.Functional;
-using GenParse.Parsing;
 using GenParse.Util;
+using Microsoft.VisualBasic.FileIO;
 
 namespace Factory;
 
@@ -9,6 +8,12 @@ namespace Factory;
 public class SymbolNode : ValueNode
 {
   public string symbolName => astNode.SourceCode();
+  private RefInfo _refInfo;
+  public RefInfo refInfo
+  {
+    get => _refInfo;
+    set { _refInfo = value; }
+  }
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
@@ -45,5 +50,25 @@ public class SymbolNode : ValueNode
   public override FactoryType? GetHoverType()
   {
     return FactoryType;
+  }
+
+  public override string? GetNodeHoverString()
+  {
+    if (FactoryType is MethodType method)
+    {
+      return method.ToShortString();
+    }
+    else if (refInfo != null)
+    {
+      return $"{refInfo.ToShortString()}: {FactoryType.ToShortString()}";
+    }
+    else
+    {
+      if (FactoryLanguage.ResolveGlobal(symbolName) is object o)
+      {
+        return $"{symbolName}: {o.GetType().Name}";
+      }
+    }
+    return null;
   }
 }

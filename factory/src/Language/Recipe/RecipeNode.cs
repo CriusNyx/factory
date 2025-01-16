@@ -1,5 +1,4 @@
 using GenParse.Functional;
-using GenParse.Parsing;
 using GenParse.Util;
 
 namespace Factory;
@@ -16,6 +15,7 @@ public class RecipeNode : ProgramExp
   public override FactoryType CalculateType(TypeContext context)
   {
     name.OverrideType(new CSharpType(typeof(RecipeValue)));
+    name.refInfo = new RefInfo(name.symbolName);
     foreach (var expression in expressions)
     {
       expression.GetFactoryType(context);

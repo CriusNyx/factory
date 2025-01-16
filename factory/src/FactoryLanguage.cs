@@ -57,8 +57,8 @@ public static class FactoryLanguage
     {
       return "";
     }
-    var types = program.PrintPretty(x => [x.FactoryType.ToShortString()]);
-    return program.GetTypeAtIndex(hoverIndex)?.ToShortString();
+
+    return program.GetHoverString(hoverIndex);
   }
 
   /// <summary>
@@ -322,7 +322,9 @@ public static class FactoryLanguage
 
     if (options.types)
     {
-      result = program.PrintPretty(x => [x.FactoryType.ToShortString()]);
+      result = program.PrintPretty(x =>
+        [x.FactoryType.ToShortString(), x.GetNodeHoverString() ?? ""]
+      );
       return true;
     }
 

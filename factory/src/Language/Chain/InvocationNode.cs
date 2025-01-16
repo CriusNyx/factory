@@ -42,10 +42,11 @@ public class InvocationNode : ChainNode
 
   public override FactoryType CalculateType(TypeContext context)
   {
-    var current = context.Peek().ResolveType(context);
+    // Get the parent
+    refType = context.Peek().ResolveType(context);
     argumentTypes = parameters.Map(x => x.GetFactoryType(context));
 
-    if (current is CSharpType cSharpType)
+    if (refType is CSharpType cSharpType)
     {
       var type = cSharpType.type;
 
@@ -53,7 +54,7 @@ public class InvocationNode : ChainNode
 
       methodType = MethodType.FromCSharpMethod(invocationMethod);
     }
-    if (current is MethodType mt)
+    if (refType is MethodType mt)
     {
       methodType = mt;
     }

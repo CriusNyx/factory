@@ -67,11 +67,6 @@ namespace GenParse.Functional
       return current;
     }
 
-    public static T[] FilterNull<T>(this T?[] arr)
-    {
-      return arr.Filter((value) => value != null)!;
-    }
-
     public static U[] Collapse<U>(this U[][] arr)
     {
       return arr.FlatMap((element) => element);
@@ -310,6 +305,11 @@ namespace GenParse.Functional
       {
         Crawl(child, newContext, traversalFunc, visitorFunc);
       }
+    }
+
+    public static T[] FromDefined<T>(params T?[] arr)
+    {
+      return arr.FilterDefined();
     }
 
     public static T[] FilterDefined<T>(this T?[] arr)

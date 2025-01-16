@@ -12,7 +12,7 @@ public class ChainContinueTransformerNode : ASTTransformer
   public object Transform()
   {
     var outputNode = new ExpChainNode();
-    outputNode.chain = chainNode;
+    outputNode.chainLink = chainNode;
     outputNode.chainContinue = chainContinue;
     return outputNode;
   }
