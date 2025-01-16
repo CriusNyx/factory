@@ -50,6 +50,17 @@ public static class FactoryLanguage
     return Functional.Range(count).Map(x => ((FactorySemanticModifier)(1 << x)).ToString());
   }
 
+  public static string? GetHoverString(string sourceCode, int hoverIndex)
+  {
+    var (program, _) = TypeCheck(sourceCode);
+    if (program == null)
+    {
+      return "";
+    }
+    var types = program.PrintPretty(x => [x.FactoryType.ToShortString()]);
+    return program.GetTypeAtIndex(hoverIndex)?.ToShortString();
+  }
+
   /// <summary>
   /// Analyze the factory language for errors.
   /// </summary>
@@ -152,7 +163,8 @@ public static class FactoryLanguage
   /// <returns></returns>
   public static object? ResolveGlobal(string symbol)
   {
-    return Docs.recipesByProductIdentifier.Safe(symbol)?.FirstOrDefault();
+    return Docs.recipesByProductIdentifier.Safe(symbol)?.FirstOrDefault()
+      ?? Docs.recipesByIdentifier.Safe(symbol)?.FirstOrDefault();
   }
 
   /// <summary>
@@ -310,7 +322,7 @@ public static class FactoryLanguage
 
     if (options.types)
     {
-      result = program.PrintPretty(x => [x.GetFactoryType(typeContext).ToShortString()]);
+      result = program.PrintPretty(x => [x.FactoryType.ToShortString()]);
       return true;
     }
 

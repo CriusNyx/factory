@@ -1,5 +1,4 @@
 using GenParse.Functional;
-using GenParse.Parsing;
 using GenParse.Util;
 
 namespace Factory;
@@ -7,11 +6,6 @@ namespace Factory;
 [ASTClass("PrintExp")]
 public class PrintExpNode : ProgramExp
 {
-  public override ASTNode<FactoryLexon> astNode => throw new NotImplementedException();
-
-  [AST]
-  public ASTNode<FactoryLexon> _astNode { get; set; }
-
   [ASTField("PrintExpChain")]
   public ValueNode[] values;
 

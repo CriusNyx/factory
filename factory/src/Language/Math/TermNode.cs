@@ -12,11 +12,6 @@ public class TermNode : ValueNode, ASTSimplifier
   [ASTField("FactorChain*")]
   public FactorChainNode[] factorChian;
 
-  public override ASTNode<FactoryLexon> astNode => _astNode;
-
-  [AST]
-  public ASTNode<FactoryLexon> _astNode { get; set; }
-
   public override FactoryType CalculateType(TypeContext context)
   {
     foreach (var element in factorChian)

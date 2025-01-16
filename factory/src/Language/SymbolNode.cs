@@ -8,10 +8,6 @@ namespace Factory;
 [ASTClass("symbol")]
 public class SymbolNode : ValueNode
 {
-  public override ASTNode<FactoryLexon> astNode => _astNode;
-
-  [AST]
-  public ASTNode<FactoryLexon> _astNode { get; set; }
   public string symbolName => astNode.SourceCode();
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
@@ -33,11 +29,21 @@ public class SymbolNode : ValueNode
 
   public override FactoryType CalculateType(TypeContext context)
   {
-    return context.GetType(symbolName);
+    return context.GetType(symbolName) ?? FactoryType.VoidType;
   }
 
   public override (string?, string?) PrintSelf()
   {
     return (symbolName, null);
+  }
+
+  public new void OverrideType(FactoryType factoryType)
+  {
+    base.OverrideType(factoryType);
+  }
+
+  public override FactoryType? GetHoverType()
+  {
+    return FactoryType;
   }
 }

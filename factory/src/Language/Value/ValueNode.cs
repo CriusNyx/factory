@@ -4,8 +4,6 @@ namespace Factory;
 
 public abstract class ValueNode : LanguageNode
 {
-  public abstract ASTNode<FactoryLexon> astNode { get; }
-
   public abstract (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context);
 }
 

@@ -5,11 +5,8 @@ using GenParse.Util;
 namespace Factory;
 
 [ASTClass("AltExp")]
-public class AltExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode
+public class AltExpNode : RecipeExpNode
 {
-  private ASTNode<FactoryLexon> _astNode = astNode;
-  public override ASTNode<FactoryLexon> astNode => _astNode;
-
   [ASTField("symbol*")]
   public SymbolNode[] symbols;
 
@@ -25,6 +22,10 @@ public class AltExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode
 
   public override FactoryType CalculateType(TypeContext context)
   {
+    foreach (var sym in symbols)
+    {
+      sym.GetFactoryType(context);
+    }
     return FactoryType.FromCSharpType(typeof(RecipeArgSet));
   }
 

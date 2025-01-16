@@ -7,11 +7,6 @@ namespace Factory;
 [ASTClass("Recipe")]
 public class RecipeNode : ProgramExp
 {
-  public override ASTNode<FactoryLexon> astNode => _astNode;
-
-  [AST]
-  public ASTNode<FactoryLexon> _astNode { get; set; }
-
   [ASTField("symbol")]
   public SymbolNode name;
 
@@ -20,6 +15,7 @@ public class RecipeNode : ProgramExp
 
   public override FactoryType CalculateType(TypeContext context)
   {
+    name.OverrideType(new CSharpType(typeof(RecipeValue)));
     foreach (var expression in expressions)
     {
       expression.GetFactoryType(context);

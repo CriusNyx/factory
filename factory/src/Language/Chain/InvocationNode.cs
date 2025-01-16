@@ -8,9 +8,6 @@ namespace Factory;
 [ASTClass("Invocation")]
 public class InvocationNode : ChainNode
 {
-  [AST]
-  public ASTNode<FactoryLexon> ast;
-
   [ASTField("InvocationParamSet")]
   public ValueNode[] parameters;
 

@@ -5,12 +5,8 @@ using GenParse.Util;
 namespace Factory;
 
 [ASTClass("numberLiteral")]
-public class NumberLiteralNode(ASTNode<FactoryLexon> astNode) : LiteralNode
+public class NumberLiteralNode : LiteralNode
 {
-  ASTNode<FactoryLexon> _astNode = astNode;
-
-  public override ASTNode<FactoryLexon> astNode => _astNode;
-
   public override FactoryType CalculateType(TypeContext context)
   {
     return FactoryType.FromCSharpType(typeof(NumVal));
@@ -23,7 +19,7 @@ public class NumberLiteralNode(ASTNode<FactoryLexon> astNode) : LiteralNode
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
-    return new Formatting.ITree<LanguageNode>[] { };
+    return [];
   }
 
   public override string ToString()

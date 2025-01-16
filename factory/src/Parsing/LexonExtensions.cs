@@ -49,7 +49,7 @@ public static class LexonExtensions
   {
     if (lexon.lexonType == FactoryLexon.symbol)
     {
-      if (Docs.recipesByProductIdentifier.ContainsKey(lexon.sourceCode))
+      if (FactoryLanguage.ResolveGlobal(lexon.sourceCode) != null)
       {
         return FactorySemanticModifier.@readonly;
       }

@@ -6,9 +6,6 @@ namespace Factory;
 [ASTClass("LimitValueExp")]
 public class LimitValueExpNode : LanguageNode
 {
-  [AST]
-  public ASTNode<FactoryLexon> ast;
-
   [ASTField("ValueExp")]
   public ValueNode value;
 
@@ -18,6 +15,7 @@ public class LimitValueExpNode : LanguageNode
   public override FactoryType CalculateType(TypeContext context)
   {
     value.GetFactoryType(context);
+    symbol.GetFactoryType(context);
     return FactoryType.FromCSharpType(typeof(LimitVal));
   }
 

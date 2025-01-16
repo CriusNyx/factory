@@ -5,11 +5,8 @@ using GenParse.Util;
 namespace Factory;
 
 [ASTClass("SpreadExp")]
-public class SpreadExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode
+public class SpreadExpNode : RecipeExpNode
 {
-  private ASTNode<FactoryLexon> _astNode = astNode;
-  public override ASTNode<FactoryLexon> astNode => _astNode;
-
   [ASTField("symbol")]
   public SymbolNode symbol;
 

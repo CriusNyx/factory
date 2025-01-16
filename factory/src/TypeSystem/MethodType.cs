@@ -1,5 +1,4 @@
 using System.Reflection;
-using System.Reflection.Metadata.Ecma335;
 using GenParse.Functional;
 
 namespace Factory;
@@ -14,7 +13,7 @@ public class MethodType(string name, FactoryType returnType, MethodArgumentType[
   public static MethodType FromCSharpMethod(MethodInfo methodInfo)
   {
     return new MethodType(
-      $"{methodInfo.DeclaringType!.Name}.{methodInfo.Name}",
+      $"{methodInfo.DeclaringType!.Name}.{methodInfo.GetCustomAttribute<ExposeMemberAttribute>()?.name ?? methodInfo.Name}",
       FactoryType.FromCSharpType(methodInfo.ReturnType),
       MethodArgumentType.FromCSharpMethod(methodInfo)
     );

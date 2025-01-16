@@ -5,11 +5,8 @@ using GenParse.Util;
 namespace Factory;
 
 [ASTClass("TallyExp")]
-public class TallyExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode
+public class TallyExpNode : RecipeExpNode
 {
-  private ASTNode<FactoryLexon> _astNode = astNode;
-  public override ASTNode<FactoryLexon> astNode => _astNode;
-
   [ASTField("inlineKeyword?")]
   public bool inline;
 

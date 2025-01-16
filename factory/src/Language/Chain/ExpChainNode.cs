@@ -1,5 +1,4 @@
 using GenParse.Functional;
-using GenParse.Parsing;
 using GenParse.Util;
 
 namespace Factory;
@@ -8,26 +7,21 @@ namespace Factory;
 public class ExpChainNode : ValueNode
 {
   [ASTField("symbol")]
-  public SymbolNode initialSymbol;
+  public SymbolNode symbol;
   public ChainNode chain;
 
   [ASTField("ChainContinue?")]
   public ExpChainNode chainContinue;
 
-  public override ASTNode<FactoryLexon> astNode => _astNode;
-
-  [AST]
-  public ASTNode<FactoryLexon> _astNode { get; set; }
-
   public override (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
-    if (initialSymbol == null)
+    if (symbol == null)
     {
       throw new NotImplementedException(
         "Attempted to evaluate a chain node that is not the head. Only the head of the chain can begin evaluation."
       );
     }
-    var value = context.Resolve(initialSymbol.Evaluate())!;
+    var value = context.Resolve(symbol.Evaluate())!;
     if (chainContinue != null)
     {
       return chainContinue.Continue(value, context).With(context);
@@ -62,7 +56,7 @@ public class ExpChainNode : ValueNode
     {
       if (owner == null)
       {
-        return new ScopeRefVal(context, initialSymbol.symbolName);
+        return new ScopeRefVal(context, symbol.symbolName);
       }
       else
       {
@@ -71,9 +65,9 @@ public class ExpChainNode : ValueNode
     }
     else
     {
-      if (initialSymbol != null)
+      if (symbol != null)
       {
-        return chainContinue._GetReference(context, context.Resolve(initialSymbol.Evaluate())!);
+        return chainContinue._GetReference(context, context.Resolve(symbol.Evaluate())!);
       }
       else
       {
@@ -84,19 +78,15 @@ public class ExpChainNode : ValueNode
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
-    return new Formatting.ITree<LanguageNode>[]
-    {
-      initialSymbol,
-      chain,
-      chainContinue,
-    }.FilterDefined();
+    return new Formatting.ITree<LanguageNode>[] { symbol, chain, chainContinue }.FilterDefined();
   }
 
   public FactoryType ComputeRef(TypeContext context)
   {
-    if (initialSymbol != null)
+    if (symbol != null)
     {
-      var symType = new ReferenceType(initialSymbol.symbolName);
+      var symType = new ReferenceType(symbol.symbolName, symbol);
+      symbol.OverrideType(symType.ResolveType(context));
       if (chainContinue != null)
       {
         context.Push(symType);
@@ -123,5 +113,21 @@ public class ExpChainNode : ValueNode
   public override FactoryType CalculateType(TypeContext context)
   {
     return ComputeRef(context).ResolveType(context);
+  }
+
+  public void SetAssignType(FactoryType factoryType)
+  {
+    if (factoryType.IsEmpty())
+    {
+      OverrideType(factoryType);
+    }
+    if (chainContinue != null)
+    {
+      chainContinue.SetAssignType(factoryType);
+    }
+    else
+    {
+      symbol.OverrideType(factoryType);
+    }
   }
 }

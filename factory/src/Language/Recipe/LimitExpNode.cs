@@ -6,11 +6,8 @@ using GenParse.Util;
 namespace Factory;
 
 [ASTClass("LimitExp")]
-public class LimitExpNode(ASTNode<FactoryLexon> astNode) : RecipeExpNode
+public class LimitExpNode : RecipeExpNode
 {
-  private ASTNode<FactoryLexon> _astNode = astNode;
-  public override ASTNode<FactoryLexon> astNode => _astNode;
-
   [ASTField("LimitValueExp*")]
   public LimitValueExpNode[] expressions;
 

@@ -9,6 +9,7 @@ public enum FactoryPrimitiveTypeType
   Void,
   Number,
   String,
+  Error,
 }
 
 public interface FactoryType
@@ -25,6 +26,10 @@ public interface FactoryType
   );
   public static readonly FactoryType StringType = new FactoryPrimitiveType(
     FactoryPrimitiveTypeType.String
+  );
+
+  public static readonly FactoryType ErrorType = new FactoryPrimitiveType(
+    FactoryPrimitiveTypeType.Error
   );
 
   public static FactoryType FromCSharpType(Type type)
@@ -103,5 +108,11 @@ public static class FactoryTypeExtensions
       return csType.type;
     }
     throw new NotImplementedException();
+  }
+
+  public static bool IsEmpty(this FactoryType factoryType)
+  {
+    return factoryType is FactoryPrimitiveType primitiveType
+      && (primitiveType.type == FactoryPrimitiveTypeType.Void);
   }
 }

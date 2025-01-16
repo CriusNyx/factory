@@ -5,13 +5,8 @@ using GenParse.Util;
 namespace Factory;
 
 [ASTClass("stringLiteral")]
-public class StringLiteralNode : ValueNode
+public class StringLiteralNode : LiteralNode
 {
-  public override ASTNode<FactoryLexon> astNode => _astNode;
-
-  [AST]
-  public ASTNode<FactoryLexon> _astNode { get; set; }
-
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
     return [];

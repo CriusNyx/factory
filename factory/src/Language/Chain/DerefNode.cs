@@ -7,9 +7,6 @@ namespace Factory;
 [ASTClass("Deref")]
 public class DerefNode : ChainNode
 {
-  [AST]
-  public ASTNode<FactoryLexon> ast;
-
   [ASTField("symbol")]
   public SymbolNode derefSymbol;
 
@@ -61,6 +58,7 @@ public class DerefNode : ChainNode
 
   public override FactoryType CalculateType(TypeContext context)
   {
+    derefSymbol.GetFactoryType(context);
     var value = context.Peek().ResolveType(context);
     if (value is CSharpType cSharpType)
     {
@@ -69,11 +67,13 @@ public class DerefNode : ChainNode
         var exposeAttr = member.GetCustomAttribute<ExposeMemberAttribute>();
         if (exposeAttr?.name == derefSymbol.symbolName)
         {
-          return FactoryType.FromCSharpMember(member);
+          var output = FactoryType.FromCSharpMember(member);
+          derefSymbol.OverrideType(output);
+          return output;
         }
       }
     }
-    var pos = ast.CalculatePosition();
+    var pos = astNode.CalculatePosition();
     context.AddError(pos.start, pos.length, $"{value} has no member {derefSymbol.symbolName}");
     return FactoryType.VoidType;
   }

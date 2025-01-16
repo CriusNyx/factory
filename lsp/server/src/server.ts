@@ -1,7 +1,3 @@
-/* --------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- * ------------------------------------------------------------------------------------------ */
 import {
 	CompletionItem,
 	createConnection,
@@ -10,6 +6,7 @@ import {
 	DidChangeConfigurationNotification,
 	type DocumentDiagnosticReport,
 	DocumentDiagnosticReportKind,
+	Hover,
 	InitializeParams,
 	InitializeResult,
 	ProposedFeatures,
@@ -86,6 +83,7 @@ connection.onInitialize((params: InitializeParams) => {
 				full: true,
 				range: false,
 			},
+			hoverProvider: true,
 		},
 	};
 	if (hasWorkspaceFolderCapability) {
@@ -176,6 +174,22 @@ connection.languages.diagnostics.on(async (params) => {
 			items: [],
 		} satisfies DocumentDiagnosticReport;
 	}
+});
+
+connection.onHover(async (params) => {
+	const doc = documents.get(params.textDocument.uri);
+	if (!doc) {
+		return null;
+	}
+	const position = params.position;
+	const hoverIndex = doc.offsetAt(position);
+	const hoverString = FactoryLanguage.GetHoverString(doc.getText(), hoverIndex);
+	if (!hoverString) {
+		return null;
+	}
+	return {
+		contents: hoverString,
+	} satisfies Hover;
 });
 
 // The content of a text document has changed. This event is emitted

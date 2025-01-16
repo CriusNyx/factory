@@ -14,6 +14,7 @@ public class Docs
   public static readonly Dictionary<string, Item> itemsByIdentifier;
   public static readonly Dictionary<string, Recipe[]> recipesByProductClass;
   public static readonly Dictionary<string, Recipe[]> recipesByProductIdentifier;
+  public static readonly Dictionary<string, Recipe[]> recipesByIdentifier;
 
   static Docs()
   {
@@ -31,9 +32,13 @@ public class Docs
         new Dictionary<string, List<Recipe>>();
       Dictionary<string, List<Recipe>> _recipesByProductIdentifier =
         new Dictionary<string, List<Recipe>>();
+      Dictionary<string, List<Recipe>> _recipesByIdentifier =
+        new Dictionary<string, List<Recipe>>();
 
       foreach (var recipe in docs.Recipe)
       {
+        _recipesByIdentifier.AddOrGet(recipe.identifier).Add(recipe);
+
         var primaryProductClass = recipe.primaryProductClass;
         if (primaryProductClass == null)
         {
@@ -58,6 +63,7 @@ public class Docs
         x => x.Key,
         y => y.Value.OrderBy(x => x.isMachineRecipe && !x.isAlternative ? 0 : 1).ToArray()
       );
+      recipesByIdentifier = _recipesByIdentifier.ToDictionary(x => x.Key, y => y.Value.ToArray());
     }
     catch (Exception e)
     {

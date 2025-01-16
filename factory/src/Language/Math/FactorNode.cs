@@ -12,11 +12,6 @@ public class FactorNode : ValueNode, ASTSimplifier
   [ASTField("Primitive")]
   public ValueNode primitive;
 
-  public override ASTNode<FactoryLexon> astNode => _astNode;
-
-  [AST]
-  public ASTNode<FactoryLexon> _astNode { get; set; }
-
   public override FactoryType CalculateType(TypeContext context)
   {
     return primitive.GetFactoryType(context);

@@ -1,3 +1,4 @@
+using System.Dynamic;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using GenParse.Functional;
@@ -39,6 +40,18 @@ public static class Transformer
     );
 
     return ResolveNodeToFinalForm<T>(root, transformationMap)!;
+  }
+
+  private static void AssignMember(object target, MemberInfo member, object value)
+  {
+    if (member is FieldInfo field)
+    {
+      field.SetValue(target, value);
+    }
+    if (member is PropertyInfo property)
+    {
+      property.SetValue(target, value);
+    }
   }
 
   private static void AssignField<T>(
@@ -83,16 +96,12 @@ public static class Transformer
     var transformType = transformCache.Safe(node.name);
     if (transformType != null)
     {
-      var a = transformType.GetConstructor(new Type[] { typeof(ASTNode<T>) });
-      var b = transformType.GetConstructor(new Type[] { });
-
-      var value =
+      var value = (
         transformType
           .GetConstructor(new Type[] { typeof(ASTNode<T>) })
           ?.Invoke(new object[] { node })
-        ?? transformType.GetConstructor(new Type[] { })?.Invoke(new object[] { });
-
-      value = value.NotNull();
+        ?? transformType.GetConstructor(new Type[] { })?.Invoke(new object[] { })
+      ).NotNull();
 
       foreach (var member in transformType.GetMembers())
       {
@@ -177,6 +186,13 @@ public static class Transformer
       if (nodeValue is ASTTransformer transformer)
       {
         nodeValue = transformer.Transform();
+        foreach (var member in nodeValue.GetType().GetMembers())
+        {
+          if (member.GetCustomAttribute<ASTAttribute>() != null)
+          {
+            AssignMember(nodeValue, member, node);
+          }
+        }
       }
       while (nodeValue is ASTSimplifier simplifier && simplifier.TrySimplify(out var simplified))
       {

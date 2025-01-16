@@ -1,6 +1,5 @@
 using Factory;
 using GenParse.Functional;
-using GenParse.Parsing;
 using GenParse.Util;
 
 [ASTClass("MathExp")]
@@ -11,11 +10,6 @@ public class MathExpNode : ValueNode, ASTSimplifier
 
   [ASTField("TermChain*")]
   public TermChainNode[] termChain;
-
-  public override ASTNode<FactoryLexon> astNode => _astNode;
-
-  [AST]
-  public ASTNode<FactoryLexon> _astNode { get; set; }
 
   public override FactoryType CalculateType(TypeContext context)
   {

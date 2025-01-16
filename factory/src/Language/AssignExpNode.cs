@@ -1,5 +1,4 @@
 using GenParse.Functional;
-using GenParse.Parsing;
 using GenParse.Util;
 
 namespace Factory;
@@ -7,10 +6,6 @@ namespace Factory;
 [ASTClass("AssignExp")]
 public class AssignExpNode : ProgramExp
 {
-  public override ASTNode<FactoryLexon> astNode => _astNode;
-
-  public ASTNode<FactoryLexon> _astNode { get; set; }
-
   [ASTField("ExpChain")]
   public ExpChainNode left;
 
@@ -21,6 +16,8 @@ public class AssignExpNode : ProgramExp
   {
     var evaluationType = right.GetFactoryType(context);
     var assignType = left.ComputeRef(context);
+    left.SetAssignType(evaluationType);
+
     if (
       evaluationType is FactoryPrimitiveType primType
       && primType.type == FactoryPrimitiveTypeType.Void
