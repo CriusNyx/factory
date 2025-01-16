@@ -140,7 +140,7 @@ public class ExpChainNode : ValueNode
     }
     else
     {
-      symbol.OverrideType(factoryType);
+      symbol?.OverrideType(factoryType);
     }
   }
 }
