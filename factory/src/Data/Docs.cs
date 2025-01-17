@@ -35,7 +35,7 @@ public class Docs
       Dictionary<string, List<Recipe>> _recipesByIdentifier =
         new Dictionary<string, List<Recipe>>();
 
-      foreach (var recipe in docs.Recipe)
+      foreach (var recipe in docs.Recipe.Where(x => x.isMachineRecipe))
       {
         _recipesByIdentifier.AddOrGet(recipe.identifier).Add(recipe);
 

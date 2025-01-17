@@ -3,6 +3,7 @@ using GenParse.Functional;
 using GenParse.Lexing;
 using GenParse.Parsing;
 using GenParse.Util;
+using Microsoft.VisualBasic;
 
 namespace Factory;
 
@@ -52,13 +53,31 @@ public static class FactoryLanguage
 
   public static string? GetHoverString(string sourceCode, int hoverIndex)
   {
-    var (program, _) = TypeCheck(sourceCode);
-    if (program == null)
+    try
     {
-      return "";
-    }
+      var (program, _) = TypeCheck(sourceCode);
+      if (program == null)
+      {
+        return "";
+      }
 
-    return program.GetHoverString(hoverIndex);
+      return program.GetHoverString(hoverIndex);
+    }
+    catch
+    {
+      return null;
+    }
+  }
+
+  public static string[] GetAutocompleteStrings(string sourceCode, int index)
+  {
+    var lexons = Lex(sourceCode);
+    var owner = lexons.FirstOrDefault(x => x.HasIndex(index) && x.lexonType == FactoryLexon.symbol);
+    if (owner == null)
+    {
+      return [];
+    }
+    return AutocompleteCache.Search(owner.sourceCode);
   }
 
   /// <summary>

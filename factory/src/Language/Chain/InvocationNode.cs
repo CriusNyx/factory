@@ -59,7 +59,7 @@ public class InvocationNode : ChainNode
       methodType = mt;
     }
 
-    var mapping = methodType!.GenerateTypeMappings(argumentTypes, out var succ);
+    var mapping = methodType.GenerateTypeMappings(argumentTypes, out var succ);
     foreach (var (success, type, param) in succ.Zip(argumentTypes, parameters))
     {
       if (!success)

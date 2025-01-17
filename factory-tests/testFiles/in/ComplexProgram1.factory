@@ -1,0 +1,11 @@
+let DirectSol = Plastic(limit 60 CrudeOil)
+
+recipe Reprocess
+  out Plastic
+  in HeavyOilResidue Rubber
+  alt ResidualFuel RecycledPlastic
+  limit DirectSol.Tally(HeavyOilResidue) HeavyOilResidue
+
+let IndirectSol = Reprocess()
+
+print DirectSol.Total IndirectSol.Total DirectSol.Total + IndirectSol.Total

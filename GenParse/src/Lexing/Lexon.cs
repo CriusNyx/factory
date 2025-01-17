@@ -28,4 +28,9 @@ public class Lexon<LexonType>
   {
     return $"{lexonType} \"{sourceCode}\"";
   }
+
+  public bool HasIndex(int index)
+  {
+    return index >= this.index && index <= this.index + length;
+  }
 }

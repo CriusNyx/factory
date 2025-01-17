@@ -318,6 +318,19 @@ connection.languages.semanticTokens.on((params) => {
 	return { data: tokens };
 });
 
+connection.onCompletion((params) => {
+	const doc = documents.get(params.textDocument.uri);
+	if (!doc) {
+		return null;
+	}
+	const pos = params.position;
+	const index = doc.offsetAt(pos);
+	var docText = doc.getText();
+	return FactoryLanguage.GetAutocompleteStrings(docText, index).map(
+		(x) => ({ label: x } satisfies CompletionItem),
+	);
+});
+
 function encodeToken(
 	line: number,
 	char: number,

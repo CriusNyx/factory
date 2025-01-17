@@ -1,3 +1,5 @@
+using System.Timers;
+
 namespace GenParse.Functional
 {
   public static class Functional
@@ -339,6 +341,20 @@ namespace GenParse.Functional
       }
       list.Add(replace(default!));
       return list;
+    }
+
+    public static T FindOrAdd<T>(this List<T> list, Func<T, bool> searchFunc, Func<T> constructor)
+    {
+      foreach (var element in list)
+      {
+        if (searchFunc(element))
+        {
+          return element;
+        }
+      }
+      var newElement = constructor();
+      list.Add(newElement);
+      return newElement;
     }
 
     public static string ReplaceAt(this string source, int index, int len, string newString)
