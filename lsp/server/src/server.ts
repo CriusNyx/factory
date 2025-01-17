@@ -327,7 +327,12 @@ connection.onCompletion((params) => {
 	const index = doc.offsetAt(pos);
 	var docText = doc.getText();
 	return FactoryLanguage.GetAutocompleteStrings(docText, index).map(
-		(x) => ({ label: x } satisfies CompletionItem),
+		(
+			[label, detail],
+		) => ({
+			label,
+			detail,
+		} satisfies CompletionItem),
 	);
 });
 

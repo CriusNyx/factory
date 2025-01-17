@@ -1,16 +1,72 @@
+using System.Reflection;
 using Factory;
 using GenParse.Functional;
+using GenParse.Util;
 
 public static class AutocompleteCache
 {
-  private static AutocompleteSourceNode root => BuildAutocomplete(GetSearchStrings());
+  private static Dictionary<string, List<(RefInfo?, FactoryType)>> autocompleteStringTypes =
+    new Dictionary<string, List<(RefInfo?, FactoryType)>>();
 
-  private static string[] GetSearchStrings()
+  private static AutocompleteSourceNode root;
+
+  public static (RefInfo? refInfo, FactoryType factoryType)[] TypesForString(string str) =>
+    autocompleteStringTypes.Safe(str)?.ToArray() ?? [];
+
+  static AutocompleteCache()
+  {
+    var recipesStrings = GetRecipeStrings();
+    var memberInfo = GetExposedMembers();
+    var searchStrings = recipesStrings.Concat(memberInfo.Map(x => x.name)).Distinct().ToArray();
+    root = BuildAutocomplete(
+      recipesStrings.Concat(memberInfo.Map(x => x.name)).Distinct().ToArray()
+    );
+
+    foreach (var recipeName in recipesStrings)
+    {
+      autocompleteStringTypes
+        .AddOrGet(recipeName)
+        .Add((null, FactoryType.FromCSharpType(typeof(Recipe))));
+    }
+    foreach (var (name, refInfo, factoryType) in memberInfo)
+    {
+      autocompleteStringTypes.AddOrGet(name).Add((refInfo, factoryType));
+    }
+
+    List<string[]> autocompleteEntries = new List<string[]>();
+    foreach (var list in autocompleteStringTypes.Values)
+    {
+      foreach (var (refInfo, type) in list)
+      {
+        autocompleteEntries.Add([refInfo?.ToShortString() ?? "", type.ToShortString()]);
+      }
+    }
+
+    Console.WriteLine(Formatting.PrintGrid(autocompleteEntries.ToArray()));
+  }
+
+  private static string[] GetRecipeStrings()
   {
     return Docs
       .recipesByIdentifier.Keys.Concat(Docs.recipesByProductIdentifier.Keys)
       .Distinct()
       .ToArray();
+  }
+
+  private static (string name, RefInfo refInfo, FactoryType factoryType)[] GetExposedMembers()
+  {
+    return typeof(AutocompleteCache)
+      .Assembly.GetTypes()
+      .FlatMap(type => type.GetMembers())
+      .Map(member => (member, attr: member.GetCustomAttribute<ExposeMemberAttribute>()))
+      .Filter(pair => pair.attr != null)
+      .Map(pair =>
+        (
+          pair.attr!.name,
+          new RefInfo(pair.member.DeclaringType?.Name!, pair.attr.name),
+          FactoryType.FromCSharpMember(pair.member)
+        )
+      );
   }
 
   public static string[] Search(string searchString)
@@ -44,7 +100,6 @@ class AutocompleteSourceNode(AutocompleteSourceNode? parent, char character)
 {
   AutocompleteSourceNode? parent = parent;
   char character = character;
-  public int index;
   public bool isResult = false;
   List<AutocompleteSourceNode> children = new List<AutocompleteSourceNode>();
 

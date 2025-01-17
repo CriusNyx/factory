@@ -3,7 +3,6 @@ using GenParse.Functional;
 using GenParse.Lexing;
 using GenParse.Parsing;
 using GenParse.Util;
-using Microsoft.VisualBasic;
 
 namespace Factory;
 
@@ -69,7 +68,10 @@ public static class FactoryLanguage
     }
   }
 
-  public static string[] GetAutocompleteStrings(string sourceCode, int index)
+  public static (string label, string documentation)[] GetAutocompleteStrings(
+    string sourceCode,
+    int index
+  )
   {
     var lexons = Lex(sourceCode);
     var owner = lexons.FirstOrDefault(x => x.HasIndex(index) && x.lexonType == FactoryLexon.symbol);
@@ -77,7 +79,42 @@ public static class FactoryLanguage
     {
       return [];
     }
-    return AutocompleteCache.Search(owner.sourceCode);
+    var output = AutocompleteCache
+      .Search(owner.sourceCode)
+      .Concat(
+        lexons
+          .Filter(x => x.lexonType == FactoryLexon.symbol)
+          .Map(x => x.sourceCode)
+          .Where(x => x.StartsWith(owner.sourceCode))
+      )
+      .Distinct()
+      .ToArray();
+
+    Array.Sort(output);
+
+    return output.Map(x => x.With(GetDocumentation(x)));
+  }
+
+  private static string GetDocumentation(string label)
+  {
+    List<string> output = new List<string>();
+    foreach (var (refInfo, type) in AutocompleteCache.TypesForString(label))
+    {
+      if (type is MethodType methodType)
+      {
+        output.Add(methodType.ToShortString());
+      }
+      else
+      {
+        output.Add(
+          string.Join(
+            ": ",
+            Functional.FromDefined(refInfo?.ToShortString() ?? label, type.ToShortString())
+          )
+        );
+      }
+    }
+    return string.Join("\n\n", output);
   }
 
   /// <summary>
