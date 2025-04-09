@@ -1,7 +1,7 @@
 using System.Reflection.Metadata.Ecma335;
-using GenParse.Functional;
-using GenParse.Parsing;
-using GenParse.Util;
+using SharpParse.Functional;
+using SharpParse.Parsing;
+using SharpParse.Util;
 
 namespace Factory;
 

@@ -1,7 +1,7 @@
 using System.Reflection;
-using GenParse.Functional;
-using GenParse.Parsing;
-using GenParse.Util;
+using SharpParse.Functional;
+using SharpParse.Parsing;
+using SharpParse.Util;
 
 namespace Factory;
 
@@ -57,6 +57,17 @@ public class InvocationNode : ChainNode
     if (refType is MethodType mt)
     {
       methodType = mt;
+    }
+
+    if (methodType == null)
+    {
+      var pos = astNode.CalculatePosition();
+      context.AddError(
+        pos.start,
+        pos.length,
+        $"{refType.ToShortString()} cannot be invoked as a method."
+      );
+      return null!;
     }
 
     var mapping = methodType.GenerateTypeMappings(argumentTypes, out var succ);

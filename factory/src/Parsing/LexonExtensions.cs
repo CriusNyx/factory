@@ -1,4 +1,4 @@
-using GenParse.Lexing;
+using SharpParse.Lexing;
 
 namespace Factory;
 

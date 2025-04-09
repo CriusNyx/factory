@@ -1,5 +1,5 @@
 using Factory;
-using GenParse.Functional;
+using SharpParse.Functional;
 
 namespace factory_tests
 {

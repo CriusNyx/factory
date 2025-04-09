@@ -1,4 +1,4 @@
-using GenParse.Lexing;
+using SharpParse.Lexing;
 
 namespace Factory;
 
@@ -10,7 +10,7 @@ public class FactoryLexer
     {
       return LexFactoryWithErrors(code);
     }
-    return Lexer.Lex(
+    return LexerStatic.Lex(
       code,
       FactoryLexonRules.Rules,
       (lexonType, source, index) =>
@@ -29,7 +29,7 @@ public class FactoryLexer
     int index = 0;
     while (index < code.Length)
     {
-      var lexons = Lexer.Lex(code, FactoryLexonRules.Rules, CreateLexon, index);
+      var lexons = LexerStatic.Lex(code, FactoryLexonRules.Rules, CreateLexon, index);
       list.AddRange(lexons);
       var last = lexons.LastOrDefault();
       index = Math.Max(last?.end ?? 0 + 1, index + 1);

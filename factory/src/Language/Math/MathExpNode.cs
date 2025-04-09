@@ -1,6 +1,6 @@
 using Factory;
-using GenParse.Functional;
-using GenParse.Util;
+using SharpParse.Functional;
+using SharpParse.Util;
 
 [ASTClass("MathExp")]
 public class MathExpNode : ValueNode, ASTSimplifier

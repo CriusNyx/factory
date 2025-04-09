@@ -1,5 +1,5 @@
 using Factory;
-using GenParse.Util;
+using SharpParse.Util;
 
 [ASTClass("TermChain")]
 public class TermChainNode : LanguageNode

@@ -38,6 +38,9 @@ public class CommandLineOptions
   [Option('g', "debug-grammar", HelpText = "Print debug information for program grammar")]
   public bool debugGrammar { get; set; }
 
+  [Option("profile", HelpText = "Run requested profile method")]
+  public string profile { get; set; }
+
   public static CommandLineOptions Create(params string[] args)
   {
     CommandLineOptions output = null!;

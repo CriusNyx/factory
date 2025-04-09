@@ -1,6 +1,6 @@
-using GenParse.Functional;
-using GenParse.Parsing;
-using static GenParse.Util.Formatting;
+using SharpParse.Functional;
+using SharpParse.Parsing;
+using static SharpParse.Util.Formatting;
 
 namespace Factory;
 

@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using System.Text;
-using GenParse.Functional;
+using SharpParse.Functional;
 
 namespace Factory;
 

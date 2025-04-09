@@ -1,8 +1,8 @@
 using System.Text;
-using GenParse.Functional;
-using GenParse.Lexing;
-using GenParse.Parsing;
-using GenParse.Util;
+using SharpParse.Functional;
+using SharpParse.Lexing;
+using SharpParse.Parsing;
+using SharpParse.Util;
 
 namespace Factory;
 

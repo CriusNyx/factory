@@ -1,7 +1,8 @@
 ﻿using Factory;
+using SharpParse.Lexing;
 #if !DEBUG
-using GenParse.Util;
-using GenParse.Functional;
+using SharpParse.Util;
+using SharpParse.Functional;
 #endif
 
 bool debug = false;
@@ -45,6 +46,12 @@ try
       throw new FactoryParseException(sourceLocation, sourceCode, e.failedParseResult);
     }
 #endif
+  }
+
+  if (!string.IsNullOrEmpty(options.profile))
+  {
+    Profiler.Profile(options.profile, 1000);
+    return;
   }
 
   if (options.debugGrammar)

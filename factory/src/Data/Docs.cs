@@ -1,5 +1,5 @@
-using GenParse.Functional;
 using Newtonsoft.Json;
+using SharpParse.Functional;
 
 namespace Factory;
 

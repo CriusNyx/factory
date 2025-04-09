@@ -1,4 +1,4 @@
-using GenParse.Functional;
+using SharpParse.Functional;
 
 public class RefInfo(string? objectIdentifier, string? fieldName = null)
 {

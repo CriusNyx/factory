@@ -1,5 +1,5 @@
-using GenParse.Functional;
-using GenParse.Util;
+using SharpParse.Functional;
+using SharpParse.Util;
 
 namespace Factory;
 

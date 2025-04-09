@@ -1,6 +1,6 @@
 using Factory;
-using GenParse.Parsing;
-using GenParse.Util;
+using SharpParse.Parsing;
+using SharpParse.Util;
 
 [ASTClass("FactorOperation", "TermOperation")]
 public class OperationNode(ASTNode<FactoryLexon> astNode) : LanguageNode

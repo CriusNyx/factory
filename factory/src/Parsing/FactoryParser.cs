@@ -1,7 +1,7 @@
-using GenParse.Functional;
-using GenParse.Grammar;
-using GenParse.Lexing;
-using GenParse.Parsing;
+using SharpParse.Functional;
+using SharpParse.Grammar;
+using SharpParse.Lexing;
+using SharpParse.Parsing;
 
 namespace Factory;
 
