@@ -10,7 +10,7 @@ public class RuntimeAssertException : Exception
 
 public static class RuntimeAssert
 {
-  public static void ASTNodeType(ASTNode<FactoryLexon> astNode, string type)
+  public static void ASTNodeType(ASTNode astNode, string type)
   {
     if (astNode.name != type)
     {

@@ -10,7 +10,7 @@ public class ValueChainNode : LanguageNode
 
   public ValueChainNode? valueChainNode;
 
-  public ValueChainNode(ASTNode<FactoryLexon> astNode)
+  public ValueChainNode(ASTNode astNode)
   {
     if (astNode.TryMatch(["ValueExp", "ValueChain"], out var elements))
     {

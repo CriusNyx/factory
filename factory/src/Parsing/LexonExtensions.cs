@@ -4,7 +4,7 @@ namespace Factory;
 
 public static class LexonExtensions
 {
-  public static FactorySemanticType GetSemanticType(this Lexon<FactoryLexon> lexon)
+  public static FactorySemanticType GetSemanticType(this Lexon lexon)
   {
     switch (lexon.lexonType)
     {
@@ -45,7 +45,7 @@ public static class LexonExtensions
     }
   }
 
-  public static FactorySemanticModifier GetSemanticModifier(this Lexon<FactoryLexon> lexon)
+  public static FactorySemanticModifier GetSemanticModifier(this Lexon lexon)
   {
     if (lexon.lexonType == FactoryLexon.symbol)
     {

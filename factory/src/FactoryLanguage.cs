@@ -177,7 +177,7 @@ public static class FactoryLanguage
       var result = FactoryParser.TryParse(lexons);
 
       // On a failed result, transfer errors to output.
-      if (result is FailedParseResult<FactoryLexon> failed)
+      if (result is FailedParseResult failed)
       {
         var lexon = failed.offendingLexon;
         var position = lexon?.index ?? sourceCode.Length;
@@ -187,7 +187,7 @@ public static class FactoryLanguage
         errors.Add(new FactoryLanguageError(position, length, FactoryErrorType.error, message));
       }
       // If the program succeeded, transform and type check it.
-      else if (result is SuccessParseResult<FactoryLexon> succ)
+      else if (result is SuccessParseResult succ)
       {
         var typeContext = new TypeContext();
         var program = Transformer.Transform(succ.astNode) as ProgramNode;
@@ -229,7 +229,7 @@ public static class FactoryLanguage
   /// <param name="sourceCode"></param>
   /// <param name="resumeAfterError"></param>
   /// <returns></returns>
-  public static Lexon<FactoryLexon>[] Lex(string sourceCode, bool resumeAfterError = false)
+  public static Lexon[] Lex(string sourceCode, bool resumeAfterError = false)
   {
     return FactoryLexer.LexFactory(sourceCode, resumeAfterError).Filter(x => x.isSemantic);
   }
@@ -239,7 +239,7 @@ public static class FactoryLanguage
   /// </summary>
   /// <param name="lexons"></param>
   /// <returns></returns>
-  public static ASTNode<FactoryLexon> Parse(Lexon<FactoryLexon>[] lexons)
+  public static ASTNode Parse(Lexon[] lexons)
   {
     return FactoryParser.Parse(lexons)!;
   }
@@ -249,7 +249,7 @@ public static class FactoryLanguage
   /// </summary>
   /// <param name="sourceCode"></param>
   /// <returns></returns>
-  public static ASTNode<FactoryLexon> Parse(string sourceCode)
+  public static ASTNode Parse(string sourceCode)
   {
     return Parse(Lex(sourceCode));
   }
@@ -259,7 +259,7 @@ public static class FactoryLanguage
   /// </summary>
   /// <param name="astNode"></param>
   /// <returns></returns>
-  public static ProgramNode Transform(ASTNode<FactoryLexon> astNode)
+  public static ProgramNode Transform(ASTNode astNode)
   {
     var result = Transformer.Transform(astNode);
     if (result is ProgramNode program)

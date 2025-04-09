@@ -7,7 +7,7 @@ namespace Factory;
 public abstract class LanguageNode : ITree<LanguageNode>
 {
   [AST]
-  public ASTNode<FactoryLexon> astNode;
+  public ASTNode astNode;
 
   private FactoryType factoryType;
 

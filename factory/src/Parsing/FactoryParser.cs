@@ -9,10 +9,10 @@ public static class FactoryParser
 {
   public static string GrammarSource { get; private set; }
 
-  public static readonly Parser<FactoryLexon> parser;
+  public static readonly Parser parser;
 
-  public static FactoryLexon[] ProgramLexonHeads => parser.ComputeHead("Program");
-  public static FactoryLexon[] RecipeExpLexonHeads => parser.ComputeHead("RecipeExp");
+  public static string[] ProgramLexonHeads => parser.ComputeHead("Program");
+  public static string[] RecipeExpLexonHeads => parser.ComputeHead("RecipeExp");
 
   static FactoryParser()
   {
@@ -21,28 +21,28 @@ public static class FactoryParser
     parser = GenerateFactoryParser();
   }
 
-  private static Parser<FactoryLexon> GenerateFactoryParser()
+  private static Parser GenerateFactoryParser()
   {
-    var grammar = GrammarParser.ParseGrammar([GrammarSource], FactoryLexonRules.lexonFromName);
-    return new Parser<FactoryLexon>(grammar);
+    var grammar = GrammarParser.ParseGrammar([GrammarSource], (x) => x);
+    return new Parser(grammar);
   }
 
-  public static ParseResult<FactoryLexon> TryParse(string sourceCode)
+  public static ParseResult TryParse(string sourceCode)
   {
     return TryParse(FactoryLexer.LexFactory(sourceCode).Filter(x => x.isSemantic));
   }
 
-  public static ParseResult<FactoryLexon> TryParse(Lexon<FactoryLexon>[] lexons)
+  public static ParseResult TryParse(Lexon[] lexons)
   {
     return parser.TryParse("Program", lexons.Filter(x => x.isSemantic))!;
   }
 
-  public static ASTNode<FactoryLexon>? Parse(string sourceCode)
+  public static ASTNode? Parse(string sourceCode)
   {
     var lexons = FactoryLexer.LexFactory(sourceCode);
     return parser.Parse("Program", lexons.Filter(x => x.isSemantic));
   }
 
-  public static ASTNode<FactoryLexon>? Parse(Lexon<FactoryLexon>[] lexons) =>
+  public static ASTNode? Parse(Lexon[] lexons) =>
     parser.Parse("Program", lexons.Filter(x => x.isSemantic));
 }

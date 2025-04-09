@@ -4,7 +4,7 @@ namespace Factory;
 
 public class FactoryLexer
 {
-  public static Lexon<FactoryLexon>[] LexFactory(string code, bool resumeAfterError = false)
+  public static Lexon[] LexFactory(string code, bool resumeAfterError = false)
   {
     if (resumeAfterError)
     {
@@ -14,18 +14,18 @@ public class FactoryLexer
       code,
       FactoryLexonRules.Rules,
       (lexonType, source, index) =>
-        new Lexon<FactoryLexon>(
+        new Lexon(
           lexonType,
           source,
-          !FactoryLexonRules.nonSemanticLexon.Contains(lexonType),
+          !FactoryLexonRules.nonSemanticLexonTypes.Contains(lexonType),
           index
         )
     );
   }
 
-  private static Lexon<FactoryLexon>[] LexFactoryWithErrors(string code)
+  private static Lexon[] LexFactoryWithErrors(string code)
   {
-    List<Lexon<FactoryLexon>> list = new List<Lexon<FactoryLexon>>();
+    List<Lexon> list = new List<Lexon>();
     int index = 0;
     while (index < code.Length)
     {
@@ -37,12 +37,12 @@ public class FactoryLexer
     return list.ToArray();
   }
 
-  private static Lexon<FactoryLexon> CreateLexon(FactoryLexon lexonType, string source, int index)
+  private static Lexon CreateLexon(string lexonType, string source, int index)
   {
-    return new Lexon<FactoryLexon>(
+    return new Lexon(
       lexonType,
       source,
-      !FactoryLexonRules.nonSemanticLexon.Contains(lexonType),
+      !FactoryLexonRules.nonSemanticLexonTypes.Contains(lexonType),
       index
     );
   }
