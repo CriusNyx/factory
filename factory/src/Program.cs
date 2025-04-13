@@ -1,5 +1,4 @@
 ﻿using Factory;
-using SharpParse.Lexing;
 #if !DEBUG
 using SharpParse.Util;
 using SharpParse.Functional;
@@ -17,6 +16,15 @@ try
 #endif
 {
   var options = CommandLineOptions.Create(args);
+
+  if (options.debugger)
+  {
+    Console.WriteLine("Waiting for debugger");
+    while (!System.Diagnostics.Debugger.IsAttached)
+    {
+      Thread.Sleep(100);
+    }
+  }
 
   void EvaluateSourceCode(string sourceLocation, string sourceCode, string outFile = "")
   {
@@ -46,6 +54,12 @@ try
       throw new FactoryParseException(sourceLocation, sourceCode, e.failedParseResult);
     }
 #endif
+  }
+
+  if (options.script != null)
+  {
+    Scripts.RunScript(options);
+    return;
   }
 
   if (!string.IsNullOrEmpty(options.profile))

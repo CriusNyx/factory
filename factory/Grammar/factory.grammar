@@ -1,10 +1,51 @@
-Program = ProgramExp*;
+# --- Lexon Rules ---
+
+# Non semantic
+comment? = ///.*(\n|$)/;
+whitespace? = /\s+/;
+
+# Language Symbols
+spread = /\.\.\./;
+dot = /\./;
+comma = /,/;
+openParen = /\(/;
+closeParen = /\)/;
+equalSign = /\=/;
+
+# Math Symbol
+plus = /\+/;
+minus = /\-/;
+asterisk = /\*/;
+forwardSlash = /\//;
+percent = /\%/;
+
+# keywords
+letKeyword = /let/;
+recipeKeyword = /recipe/;
+altKeyword = /alt/;
+outKeyword = /out/;
+printKeyword = /print/;
+tallyKeyword = /tally/;
+inlineKeyword = /inline/;
+inKeyword = /in/;
+limitKeyword = /limit/;
+
+# Literals
+stringLiteral = /".*?"/;
+numberLiteral = /[+-]?([0-9]*[.])?[0-9]+/;
+
+# Identifier Symbols
+symbol = /\p{L}\w*/;
+
+# --- Production Rules ---
+
+!Program = ProgramExp*;
 
 ProgramExp = AssignExp;
 ProgramExp = Recipe;
 ProgramExp = PrintExp;
 
-// Recipe
+# Recipe
 Recipe = recipeKeyword symbol RecipeExp*;
 
 RecipeExp = OutExp;
@@ -22,7 +63,7 @@ LimitExp = limitKeyword LimitValueExp*;
 
 LimitValueExp = ValueExp symbol;
 
-// Print
+# Print
 
 PrintExp = printKeyword PrintExpChain;
 
@@ -32,16 +73,16 @@ PrintExpChain = ;
 ValueChain = ValueExp comma? ValueChain;
 ValueChain = ValueExp;
 
-// AssignExp
+# AssignExp
 
 AssignExp = letKeyword ExpChain equalSign ValueExp;
 
-// Value Exp
+# Value Exp
 
 ValueExp = MathExp;
 ValueExp = RecipeExp;
 
-// Math
+# Math
 
 MathExp = Term TermChain*;
 TermChain = TermOperation Term;
@@ -58,12 +99,12 @@ FactorOperation = percent;
 
 Factor = minus? Primitive;
 
-// Primitives
+# Primitives
 Primitive = Literal;
 Primitive = ExpChain;
 Primitive = openParen MathExp closeParen;
 
-// Exp Chain
+# Exp Chain
 ExpChain = symbol ChainContinue?;
 
 Chain = Deref;
@@ -73,7 +114,7 @@ ChainContinue = Chain ChainContinue?;
 
 Deref = dot symbol;
 
-// Invocation
+# Invocation
 
 Invocation = openParen InvocationParamSet closeParen;
 
@@ -83,9 +124,9 @@ InvocationParamSet = ;
 InvocationParam = ValueExp comma;
 FinalInvocationParam = ValueExp;
 
-// Literals
+# Literals
 Literal = numberLiteral;
 Literal = stringLiteral;
 
-// Spread
+# Spread
 SpreadExp = spread symbol;

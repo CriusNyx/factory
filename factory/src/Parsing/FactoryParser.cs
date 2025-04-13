@@ -29,7 +29,7 @@ public static class FactoryParser
 
   public static ParseResult TryParse(string sourceCode)
   {
-    return TryParse(FactoryLexer.LexFactory(sourceCode).Filter(x => x.isSemantic));
+    return TryParse(FactoryLanguage.Lex(sourceCode).Filter(x => x.isSemantic));
   }
 
   public static ParseResult TryParse(Lexon[] lexons)
@@ -39,7 +39,7 @@ public static class FactoryParser
 
   public static ASTNode? Parse(string sourceCode)
   {
-    var lexons = FactoryLexer.LexFactory(sourceCode);
+    var lexons = FactoryLanguage.Lex(sourceCode);
     return parser.Parse("Program", lexons.Filter(x => x.isSemantic));
   }
 

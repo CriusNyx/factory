@@ -1,5 +1,6 @@
 using System.Text;
 using SharpParse.Functional;
+using SharpParse.Grammar;
 using SharpParse.Lexing;
 using SharpParse.Parsing;
 using SharpParse.Util;
@@ -11,6 +12,17 @@ namespace Factory;
 /// </summary>
 public static class FactoryLanguage
 {
+  public static readonly string GrammarSource;
+  public static readonly LexerParser factoryLexerParser;
+  public static readonly LanguageGrammar languageGrammar;
+
+  static FactoryLanguage()
+  {
+    GrammarSource = File.ReadAllText(Resources.GetPathForResource("Grammar/factory.grammar"));
+    languageGrammar = GrammarParser.TestParse(GrammarSource);
+    factoryLexerParser = new LexerParser(languageGrammar, []);
+  }
+
   /// <summary>
   /// Analyze the semantic content of source code for Factory LSP.
   /// </summary>
@@ -18,7 +30,7 @@ public static class FactoryLanguage
   /// <returns></returns>
   public static FactorySemanticToken[] AnalyzeSemanticTokens(string sourceCode)
   {
-    var lexons = FactoryLexer.LexFactory(sourceCode, true);
+    var lexons = factoryLexerParser.Lex(sourceCode);
     return lexons
       .Map(x => (lexon: x, semanticType: x.GetSemanticType()))
       .Filter(x => x.semanticType != FactorySemanticType.whitespace)
@@ -141,7 +153,7 @@ public static class FactoryLanguage
         );
       }
 
-      var lexons = FactoryLexer.LexFactory(sourceCode, true);
+      var lexons = factoryLexerParser.LexWithErrors(sourceCode);
 
       // Crawl lexons and check for errors
       for (int i = -1; i < lexons.Length; i++)
@@ -231,7 +243,7 @@ public static class FactoryLanguage
   /// <returns></returns>
   public static Lexon[] Lex(string sourceCode, bool resumeAfterError = false)
   {
-    return FactoryLexer.LexFactory(sourceCode, resumeAfterError).Filter(x => x.isSemantic);
+    return factoryLexerParser.Lex(sourceCode, resumeAfterError).Filter(x => x.isSemantic);
   }
 
   /// <summary>

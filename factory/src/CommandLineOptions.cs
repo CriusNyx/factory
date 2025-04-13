@@ -38,8 +38,17 @@ public class CommandLineOptions
   [Option('g', "debug-grammar", HelpText = "Print debug information for program grammar")]
   public bool debugGrammar { get; set; }
 
+  [Option(
+    "debugger",
+    HelpText = "Wait for debugger to attach before running the rest of the program"
+  )]
+  public bool debugger { get; set; }
+
   [Option("profile", HelpText = "Run requested profile method")]
   public string profile { get; set; }
+
+  [Option("script", HelpText = "Run a named script")]
+  public string script { get; set; }
 
   public static CommandLineOptions Create(params string[] args)
   {
