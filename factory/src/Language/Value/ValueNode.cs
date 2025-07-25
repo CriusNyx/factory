@@ -1,9 +1,12 @@
-using SharpParse.Parsing;
-
 namespace Factory;
 
 public abstract class ValueNode : LanguageNode
 {
+  public ValueNode() { }
+
+  public ValueNode(SourceCodeInfo sourceInfo)
+    : base(sourceInfo) { }
+
   public abstract (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context);
 }
 

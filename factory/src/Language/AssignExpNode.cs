@@ -3,14 +3,19 @@ using SharpParse.Util;
 
 namespace Factory;
 
-[ASTClass("AssignExp")]
 public class AssignExpNode : ProgramExp
 {
-  [ASTField("ExpChain")]
   public ExpChainNode left;
-
-  [ASTField("ValueExp")]
   public ValueNode right;
+
+  public AssignExpNode() { }
+
+  public AssignExpNode(SourceCodeInfo sourceInfo, ExpChainNode left, ValueNode right)
+    : base(sourceInfo)
+  {
+    this.left = left;
+    this.right = right;
+  }
 
   public override FactoryType CalculateType(TypeContext context)
   {
@@ -50,5 +55,21 @@ public class AssignExpNode : ProgramExp
   public override (string?, string?) PrintSelf()
   {
     return ("let", null);
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is AssignExpNode assign
+      && left.Equivalent(assign.left)
+      && right.Equivalent(assign.right);
+  }
+
+  public static AssignExpNode Create(SourceCodeInfo sourceInfo, ExpChainNode lhs, ValueNode rhs)
+  {
+    var output = new AssignExpNode();
+    output.SetSourceInfo(sourceInfo);
+    output.left = lhs;
+    output.right = rhs;
+    return output;
   }
 }

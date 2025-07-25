@@ -70,16 +70,7 @@ try
 
   if (options.debugGrammar)
   {
-    var parser = FactoryParser.parser;
-    foreach (var (setName, setValue) in parser.productionSets)
-    {
-      var name = setName;
-      Console.WriteLine(name);
-      foreach (var element in parser.ComputeHead(name))
-      {
-        Console.WriteLine($"  {element}");
-      }
-    }
+    throw new NotImplementedException();
   }
   else if (options.stream)
   {

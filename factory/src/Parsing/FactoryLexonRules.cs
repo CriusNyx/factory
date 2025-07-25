@@ -1,7 +1,3 @@
-using System.Text.RegularExpressions;
-using SharpParse.Functional;
-using SharpParse.Util;
-
 namespace Factory;
 
 public static class FactoryLexon

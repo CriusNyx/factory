@@ -1,9 +1,9 @@
 using System.Text;
+using Factory.Superpower;
 using SharpParse.Functional;
-using SharpParse.Grammar;
-using SharpParse.Lexing;
-using SharpParse.Parsing;
 using SharpParse.Util;
+using Superpower;
+using Superpower.Model;
 
 namespace Factory;
 
@@ -12,17 +12,6 @@ namespace Factory;
 /// </summary>
 public static class FactoryLanguage
 {
-  public static readonly string GrammarSource;
-  public static readonly LexerParser factoryLexerParser;
-  public static readonly LanguageGrammar languageGrammar;
-
-  static FactoryLanguage()
-  {
-    GrammarSource = File.ReadAllText(Resources.GetPathForResource("Grammar/factory.grammar"));
-    languageGrammar = GrammarParser.ParseGrammar(GrammarSource);
-    factoryLexerParser = new LexerParser(languageGrammar, []);
-  }
-
   /// <summary>
   /// Analyze the semantic content of source code for Factory LSP.
   /// </summary>
@@ -30,13 +19,13 @@ public static class FactoryLanguage
   /// <returns></returns>
   public static FactorySemanticToken[] AnalyzeSemanticTokens(string sourceCode)
   {
-    var lexons = factoryLexerParser.Lex(sourceCode);
+    var lexons = SuperpowerTokenizer.tokenizer.Tokenize(sourceCode).ToArray();
     return lexons
       .Map(x => (lexon: x, semanticType: x.GetSemanticType()))
       .Filter(x => x.semanticType != FactorySemanticType.whitespace)
       .Map(x => new FactorySemanticToken(
-        x.lexon.index,
-        x.lexon.length,
+        x.lexon.Position.Absolute,
+        x.lexon.Span.Length,
         x.semanticType,
         (int)x.lexon.GetSemanticModifier()
       ));
@@ -85,19 +74,24 @@ public static class FactoryLanguage
     int index
   )
   {
-    var lexons = Lex(sourceCode);
-    var owner = lexons.FirstOrDefault(x => x.HasIndex(index) && x.lexonType == FactoryLexon.symbol);
+    Token<SuperpowerTokenType>?[] tokens = SuperpowerTokenizer
+      .tokenizer.Tokenize(sourceCode)
+      .Select(x => x as Token<SuperpowerTokenType>?)
+      .ToArray();
+    var owner = tokens.FirstOrDefault(x =>
+      x!.Value.HasIndex(index) && x.Value.Kind == SuperpowerTokenType.symbol
+    );
     if (owner == null)
     {
       return [];
     }
     var output = AutocompleteCache
-      .Search(owner.sourceCode)
+      .Search(owner.Value.ToStringValue())
       .Concat(
-        lexons
-          .Filter(x => x.lexonType == FactoryLexon.symbol)
-          .Map(x => x.sourceCode)
-          .Where(x => x.StartsWith(owner.sourceCode))
+        tokens
+          .Filter(x => x!.Value.Kind == SuperpowerTokenType.symbol)
+          .Map(x => x!.Value.ToStringValue())
+          .Where(x => x.StartsWith(owner.Value.ToStringValue()))
       )
       .Distinct()
       .ToArray();
@@ -141,68 +135,46 @@ public static class FactoryLanguage
 
     try
     {
-      // Helper function to generate an error
-      FactoryLanguageError LexonError(int start, int end)
-      {
-        var len = end - start;
-        return new FactoryLanguageError(
-          start,
-          len,
-          FactoryErrorType.error,
-          $"Unrecognized symbol {sourceCode.Substring(start, len)}"
-        );
-      }
-
-      var lexons = factoryLexerParser.LexWithErrors(sourceCode);
+      Token<SuperpowerTokenType>[] lexons = SuperpowerTokenizer
+        .tokenizer.Tokenize(sourceCode)
+        .ToArray();
 
       // Crawl lexons and check for errors
-      for (int i = -1; i < lexons.Length; i++)
+      for (int i = 0; i < lexons.Length; i++)
       {
-        // No idea what's happening in here.
-        // I think it's checking to match up the heads and tails of lexons to look for code that failed to lex.
-        var a = lexons.SafeGet(i);
-        var b = lexons.SafeGet(i + 1);
-        if (a == null && b != null)
+        var lexon = lexons[i];
+        if (lexon.Kind == SuperpowerTokenType.unknown)
         {
-          if (b.index != 0)
-          {
-            errors.Add(LexonError(0, b.index));
-          }
-        }
-        else if (b == null && a != null)
-        {
-          if (a.end != sourceCode.Length)
-          {
-            errors.Add(LexonError(a.end, sourceCode.Length));
-          }
-        }
-        else if (a != null && b != null)
-        {
-          if (a.end != b.index)
-          {
-            errors.Add(LexonError(a.end, b.index));
-          }
+          errors.Add(
+            new FactoryLanguageError(
+              lexon.Position.Absolute,
+              lexon.Span.Length,
+              FactoryErrorType.error,
+              "Unknown lexon"
+            )
+          );
         }
       }
 
       // Parse factory language
-      var result = FactoryParser.TryParse(lexons);
+      var result = SuperpowerParser.TryParse(sourceCode);
 
-      // On a failed result, transfer errors to output.
-      if (result is FailedParseResult failed)
+      if (!result.HasValue)
       {
-        var lexon = failed.offendingLexon;
-        var position = lexon?.index ?? sourceCode.Length;
-        var length = lexon?.length ?? 0;
-        string message = failed.ErrorMessage();
-
-        errors.Add(new FactoryLanguageError(position, length, FactoryErrorType.error, message));
+        errors.Add(
+          new FactoryLanguageError(
+            result.ErrorPosition.Absolute,
+            1,
+            FactoryErrorType.error,
+            result.FormatErrorMessageFragment()
+          )
+        );
       }
-      // If the program succeeded, transform and type check it.
-      else if (result is SuccessParseResult succ)
+      else
       {
         var typeContext = new TypeContext();
-        var program = Transformer.Transform(succ.astNode) as ProgramNode;
+        var program = result.Value;
+
         program?.GetFactoryType(typeContext);
         foreach (var error in typeContext.Errors)
         {
@@ -236,59 +208,13 @@ public static class FactoryLanguage
   }
 
   /// <summary>
-  /// Lex the factory language.
-  /// </summary>
-  /// <param name="sourceCode"></param>
-  /// <param name="resumeAfterError"></param>
-  /// <returns></returns>
-  public static Lexon[] Lex(string sourceCode, bool resumeAfterError = false)
-  {
-    return factoryLexerParser.Lex(sourceCode, resumeAfterError).Filter(x => x.isSemantic);
-  }
-
-  /// <summary>
-  /// Parse the factory language.
-  /// </summary>
-  /// <param name="lexons"></param>
-  /// <returns></returns>
-  public static ASTNode Parse(Lexon[] lexons)
-  {
-    return FactoryParser.Parse(lexons)!;
-  }
-
-  /// <summary>
   /// Parse the factory language.
   /// </summary>
   /// <param name="sourceCode"></param>
   /// <returns></returns>
-  public static ASTNode Parse(string sourceCode)
+  public static ProgramNode Parse(string sourceCode)
   {
-    return Parse(Lex(sourceCode));
-  }
-
-  /// <summary>
-  /// Transform the AST into a program node.
-  /// </summary>
-  /// <param name="astNode"></param>
-  /// <returns></returns>
-  public static ProgramNode Transform(ASTNode astNode)
-  {
-    var result = Transformer.Transform(astNode);
-    if (result is ProgramNode program)
-    {
-      return program;
-    }
-    throw new InvalidCastException();
-  }
-
-  /// <summary>
-  /// Transform the AST into a program node.
-  /// </summary>
-  /// <param name="sourceCode"></param>
-  /// <returns></returns>
-  public static ProgramNode Transform(string sourceCode)
-  {
-    return Transform(Parse(sourceCode));
+    return SuperpowerParser.ParseString(sourceCode, SuperpowerParser.ProgramParser);
   }
 
   /// <summary>
@@ -312,7 +238,7 @@ public static class FactoryLanguage
   /// <returns></returns>
   public static (ProgramNode program, TypeContext typeContext) TypeCheck(string sourceCode)
   {
-    return TypeCheck(Transform(sourceCode));
+    return TypeCheck(Parse(sourceCode));
   }
 
   /// <summary>
@@ -358,26 +284,18 @@ public static class FactoryLanguage
   )
   {
     options = options ?? CommandLineOptions.Default;
-    var lexons = Lex(sourceCode);
 
     if (options.lexons)
     {
-      result = string.Join(
-        "\n",
-        lexons.Map(x => $"{x.lexonType.ToString().PadRight(20)} {x.sourceCode}")
-      );
-      return true;
+      throw new NotImplementedException();
     }
-
-    var ast = Parse(lexons);
 
     if (options.ast)
     {
-      result = ast.PrintProgram();
-      return true;
+      throw new NotImplementedException();
     }
 
-    var program = Transform(ast);
+    var program = Parse(sourceCode);
 
     if (options.transform)
     {

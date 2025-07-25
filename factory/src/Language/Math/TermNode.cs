@@ -1,16 +1,20 @@
 using Factory;
 using SharpParse.Functional;
-using SharpParse.Parsing;
 using SharpParse.Util;
 
-[ASTClass("Term")]
 public class TermNode : ValueNode, ASTSimplifier
 {
-  [ASTField("Factor")]
   public ValueNode factor;
-
-  [ASTField("FactorChain*")]
   public FactorChainNode[] factorChian;
+
+  public TermNode() { }
+
+  public TermNode(SourceCodeInfo sourceInfo, ValueNode factor, FactorChainNode[] factorChain)
+    : base(sourceInfo)
+  {
+    this.factor = factor;
+    this.factorChian = factorChain;
+  }
 
   public override FactoryType CalculateType(TypeContext context)
   {
@@ -58,5 +62,12 @@ public class TermNode : ValueNode, ASTSimplifier
       return true;
     }
     return false;
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is TermNode termNode
+      && factor.Equivalent(termNode.factor)
+      && factorChian.SetEquivalent(termNode.factorChian);
   }
 }

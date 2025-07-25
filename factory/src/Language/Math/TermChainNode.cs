@@ -1,14 +1,19 @@
 using Factory;
 using SharpParse.Util;
 
-[ASTClass("TermChain")]
 public class TermChainNode : LanguageNode
 {
-  [ASTField("TermOperation")]
   public OperationNode operation;
-
-  [ASTField("Term")]
   public ValueNode term;
+
+  public TermChainNode() { }
+
+  public TermChainNode(SourceCodeInfo sourceInfo, OperationNode operation, ValueNode term)
+    : base(sourceInfo)
+  {
+    this.operation = operation;
+    this.term = term;
+  }
 
   public NumVal Evaluate(NumVal leftOperand, ref Factory.ExecutionContext context)
   {
@@ -32,5 +37,12 @@ public class TermChainNode : LanguageNode
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
     return [operation, term];
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is TermChainNode chain
+      && operation.Equivalent(chain.operation)
+      && term.Equivalent(chain.term);
   }
 }

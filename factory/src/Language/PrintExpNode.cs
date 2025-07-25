@@ -3,10 +3,8 @@ using SharpParse.Util;
 
 namespace Factory;
 
-[ASTClass("PrintExp")]
 public class PrintExpNode : ProgramExp
 {
-  [ASTField("PrintExpChain")]
   public ValueNode[] values;
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
@@ -38,5 +36,18 @@ public class PrintExpNode : ProgramExp
   public override (string?, string?) PrintSelf()
   {
     return ("print", null);
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is PrintExpNode print && values.SetEquivalent(print.values);
+  }
+
+  public static PrintExpNode Create(SourceCodeInfo sourceInfo, ValueNode[] values)
+  {
+    var output = new PrintExpNode();
+    output.SetSourceInfo(sourceInfo);
+    output.values = values;
+    return output;
   }
 }

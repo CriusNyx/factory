@@ -3,11 +3,17 @@ using SharpParse.Util;
 
 namespace Factory;
 
-[ASTClass("Program")]
 public class ProgramNode : LanguageNode
 {
-  [ASTField("ProgramExp*")]
   public ProgramExp[] expressions;
+
+  public ProgramNode() { }
+
+  public ProgramNode(SourceCodeInfo sourceInfo, ProgramExp[] expressions)
+    : base(sourceInfo)
+  {
+    this.expressions = expressions;
+  }
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren() =>
     expressions.ToTypedArray<Formatting.ITree<LanguageNode>>();
@@ -35,4 +41,10 @@ public class ProgramNode : LanguageNode
   }
 }
 
-public abstract class ProgramExp : ValueNode { }
+public abstract class ProgramExp : ValueNode
+{
+  public ProgramExp() { }
+
+  public ProgramExp(SourceCodeInfo sourceInfo)
+    : base(sourceInfo) { }
+}

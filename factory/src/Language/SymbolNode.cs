@@ -3,7 +3,6 @@ using SharpParse.Util;
 
 namespace Factory;
 
-[ASTClass("symbol")]
 public class SymbolNode : ValueNode
 {
   public string symbolName => Source;
@@ -13,6 +12,11 @@ public class SymbolNode : ValueNode
     get => _refInfo;
     set { _refInfo = value; }
   }
+
+  public SymbolNode() { }
+
+  public SymbolNode(SourceCodeInfo sourceInfo)
+    : base(sourceInfo) { }
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
@@ -69,5 +73,10 @@ public class SymbolNode : ValueNode
       }
     }
     return null;
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is SymbolNode symNode && this.symbolName == symNode.symbolName;
   }
 }

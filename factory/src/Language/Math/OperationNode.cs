@@ -1,10 +1,20 @@
 using Factory;
 using SharpParse.Util;
 
-public class OperationNode(string operation) : LanguageNode
+public class OperationNode : LanguageNode
 {
-  // TODO: Make this throw not implemented until refactor is done.
-  public string Operation => operation;
+  public string Operation;
+
+  public OperationNode(string operation)
+  {
+    Operation = operation;
+  }
+
+  public OperationNode(SourceCodeInfo sourceCodeInfo)
+    : base(sourceCodeInfo)
+  {
+    Operation = sourceCodeInfo.Source;
+  }
 
   public override FactoryType CalculateType(TypeContext context)
   {
@@ -19,5 +29,10 @@ public class OperationNode(string operation) : LanguageNode
   public override (string?, string?) PrintSelf()
   {
     return (Operation, null);
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is OperationNode op && Operation == op.Operation;
   }
 }

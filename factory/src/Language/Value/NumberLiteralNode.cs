@@ -3,9 +3,13 @@ using SharpParse.Util;
 
 namespace Factory;
 
-[ASTClass("numberLiteral")]
 public class NumberLiteralNode : LiteralNode
 {
+  public NumberLiteralNode() { }
+
+  public NumberLiteralNode(SourceCodeInfo sourceCodeInfo)
+    : base(sourceCodeInfo) { }
+
   public override FactoryType CalculateType(TypeContext context)
   {
     return FactoryType.FromCSharpType(typeof(NumVal));
@@ -29,5 +33,10 @@ public class NumberLiteralNode : LiteralNode
   public override (string?, string?) PrintSelf()
   {
     return (Source, null);
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is NumberLiteralNode lit && Source == lit.Source;
   }
 }

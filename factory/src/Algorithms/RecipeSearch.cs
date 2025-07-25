@@ -1,4 +1,3 @@
-using CommandLine;
 using SharpParse.Functional;
 
 namespace Factory;

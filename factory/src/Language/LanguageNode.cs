@@ -3,6 +3,17 @@ using static SharpParse.Util.Formatting;
 
 namespace Factory;
 
+public class SourceCodeInfo(string source, (int start, int length) range)
+{
+  public string Source => source;
+  public (int start, int length) Range => range;
+
+  public static SourceCodeInfo FromSpan((int start, int length) span)
+  {
+    return new SourceCodeInfo("", span);
+  }
+}
+
 public abstract class LanguageNode : ITree<LanguageNode>
 {
   [Source]
@@ -23,6 +34,13 @@ public abstract class LanguageNode : ITree<LanguageNode>
       }
       return factoryType;
     }
+  }
+
+  public LanguageNode() { }
+
+  public LanguageNode(SourceCodeInfo sourceInfo)
+  {
+    SetSourceInfo(sourceInfo);
   }
 
   public bool HasIndex(int index)
@@ -163,5 +181,40 @@ public abstract class LanguageNode : ITree<LanguageNode>
       );
     }
     factoryType = overrideType;
+  }
+
+  protected void SetSourceInfo(SourceCodeInfo sourceInfo)
+  {
+    Source = sourceInfo.Source;
+    Range = sourceInfo.Range;
+  }
+
+  public virtual bool Equivalent(object other)
+  {
+    throw new NotImplementedException();
+  }
+}
+
+public static class LanguageNodeExtensions
+{
+  public static bool SafeEquivalent(this LanguageNode? self, LanguageNode? other)
+  {
+    if (self == null && other == null)
+    {
+      return true;
+    }
+    if (self == null || other == null)
+    {
+      return false;
+    }
+    return self.Equivalent(other);
+  }
+
+  public static bool SetEquivalent(
+    this IEnumerable<LanguageNode?> self,
+    IEnumerable<LanguageNode?> other
+  )
+  {
+    return self.OuterZip(other).All(x => x.Item1.SafeEquivalent(x.Item2));
   }
 }

@@ -3,11 +3,17 @@ using SharpParse.Util;
 
 namespace Factory;
 
-[ASTClass("SpreadExp")]
-public class SpreadExpNode : RecipeExpNode
+public class SpreadExpNode : LineExpNode
 {
-  [ASTField("symbol")]
   public SymbolNode symbol;
+
+  public SpreadExpNode() { }
+
+  public SpreadExpNode(SourceCodeInfo sourceCodeInfo, SymbolNode symbol)
+    : base(sourceCodeInfo)
+  {
+    this.symbol = symbol;
+  }
 
   public override (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
@@ -29,5 +35,10 @@ public class SpreadExpNode : RecipeExpNode
   public override (string?, string?) PrintSelf()
   {
     return ("...", null);
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is SpreadExpNode spread && symbol.Equivalent(spread.symbol);
   }
 }

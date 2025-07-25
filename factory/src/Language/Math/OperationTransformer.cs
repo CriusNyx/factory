@@ -1,6 +1,5 @@
 using SharpParse.Parsing;
 
-[ASTClass("FactorOperation", "TermOperation")]
 public class OperationTransformer(ASTNode astNode) : ASTTransformer
 {
   public object Transform()

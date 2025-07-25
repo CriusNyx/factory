@@ -1,12 +1,15 @@
 using SharpParse.Functional;
-using SharpParse.Parsing;
 using SharpParse.Util;
 
 namespace Factory;
 
-[ASTClass("stringLiteral")]
 public class StringLiteralNode : LiteralNode
 {
+  public StringLiteralNode() { }
+
+  public StringLiteralNode(SourceCodeInfo sourceInfo)
+    : base(sourceInfo) { }
+
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
     return [];
@@ -27,5 +30,10 @@ public class StringLiteralNode : LiteralNode
   public override (string?, string?) PrintSelf()
   {
     return (Source, null);
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is StringLiteralNode lit && Source == lit.Source;
   }
 }

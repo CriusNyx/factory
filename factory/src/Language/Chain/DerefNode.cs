@@ -3,11 +3,17 @@ using SharpParse.Util;
 
 namespace Factory;
 
-[ASTClass("Deref")]
 public class DerefNode : ChainNode
 {
-  [ASTField("symbol")]
   public SymbolNode derefSymbol;
+
+  public DerefNode() { }
+
+  public DerefNode(SourceCodeInfo sourceInfo, SymbolNode derefSymbol)
+    : base(sourceInfo)
+  {
+    this.derefSymbol = derefSymbol;
+  }
 
   public override FactVal Evaluate(FactVal target, ExecutionContext context)
   {
@@ -83,5 +89,10 @@ public class DerefNode : ChainNode
     var pos = Range;
     context.AddError(pos.start, pos.length, $"{refType} has no member {derefSymbol.symbolName}");
     return FactoryType.VoidType;
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is DerefNode deref && derefSymbol.Equivalent(deref.derefSymbol);
   }
 }
