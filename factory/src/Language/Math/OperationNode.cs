@@ -1,11 +1,10 @@
 using Factory;
 using SharpParse.Util;
 
-[ASTClass("FactorOperation", "TermOperation")]
-public class OperationNode : LanguageNode
+public class OperationNode(string operation) : LanguageNode
 {
   // TODO: Make this throw not implemented until refactor is done.
-  public string operation => astNode.children.First().SourceCode();
+  public string Operation => operation;
 
   public override FactoryType CalculateType(TypeContext context)
   {
@@ -19,6 +18,6 @@ public class OperationNode : LanguageNode
 
   public override (string?, string?) PrintSelf()
   {
-    return (operation, null);
+    return (Operation, null);
   }
 }

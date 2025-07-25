@@ -18,7 +18,7 @@ public class FactorChainNode : LanguageNode
   public NumVal Evaluate(NumVal leftOperand, ref Factory.ExecutionContext context)
   {
     var thisVal = factor.Evaluate(ref context).To<NumVal>();
-    switch (operation.operation)
+    switch (operation.Operation)
     {
       case "*":
         return new NumVal(leftOperand.value * thisVal.value);

@@ -13,7 +13,7 @@ public class TermChainNode : LanguageNode
   public NumVal Evaluate(NumVal leftOperand, ref Factory.ExecutionContext context)
   {
     var thisVal = term.Evaluate(ref context).To<NumVal>();
-    switch (operation.operation)
+    switch (operation.Operation)
     {
       case "+":
         return new NumVal(leftOperand.value + thisVal.value);

@@ -6,13 +6,11 @@ namespace Factory;
 
 public abstract class LanguageNode : ITree<LanguageNode>
 {
-  [AST]
-  public ASTNode astNode;
-
   [Source]
   public string Source { get; set; }
 
-  public (int start, int length) Range => astNode.CalculatePosition();
+  [Range]
+  public (int start, int length) Range { get; set; }
 
   private FactoryType factoryType;
 
@@ -30,10 +28,6 @@ public abstract class LanguageNode : ITree<LanguageNode>
 
   public bool HasIndex(int index)
   {
-    if (astNode == null)
-    {
-      throw new InvalidOperationException("astNode is null!?!?! WTF?");
-    }
     var (pos, len) = Range;
     return index >= pos && index < pos + len;
   }
