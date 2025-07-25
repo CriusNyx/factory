@@ -1,6 +1,5 @@
 using Factory;
 using SharpParse.Functional;
-using SharpParse.Parsing;
 using SharpParse.Util;
 
 [ASTClass("Factor")]

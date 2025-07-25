@@ -25,7 +25,7 @@ public static class LexonExtensions
       case FactoryLexon.percent:
         return FactorySemanticType.@operator;
       case FactoryLexon.letKeyword:
-      case FactoryLexon.recipeKeyword:
+      case FactoryLexon.lineKeyword:
       case FactoryLexon.printKeyword:
       case FactoryLexon.altKeyword:
       case FactoryLexon.outKeyword:

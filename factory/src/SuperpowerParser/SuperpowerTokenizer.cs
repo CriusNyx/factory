@@ -9,42 +9,42 @@ namespace SuperpowerParser;
 
 public static class SuperpowerTokenizer
 {
-  public static readonly Superpower.Tokenizer<SpracheTokenType> tokenizer =
-    new TokenizerBuilder<SpracheTokenType>()
+  public static readonly Superpower.Tokenizer<SuperpowerTokenType> tokenizer =
+    new TokenizerBuilder<SuperpowerTokenType>()
       // Non Semantic
       .Ignore(Span.WhiteSpace)
       .Ignore(Comment.CPlusPlusStyle)
       // Language Symbols
-      .Match(Span.EqualTo("..."), SpracheTokenType.spread)
-      .Match(Character.EqualTo('.'), SpracheTokenType.dot)
-      .Match(Character.EqualTo(','), SpracheTokenType.comma)
-      .Match(Character.EqualTo('('), SpracheTokenType.openParen)
-      .Match(Character.EqualTo(')'), SpracheTokenType.closedParen)
-      .Match(Character.EqualTo('='), SpracheTokenType.equalSign)
-      .Match(Character.EqualTo(';'), SpracheTokenType.semicolon)
+      .Match(Span.EqualTo("..."), SuperpowerTokenType.spread)
+      .Match(Character.EqualTo('.'), SuperpowerTokenType.dot)
+      .Match(Character.EqualTo(','), SuperpowerTokenType.comma)
+      .Match(Character.EqualTo('('), SuperpowerTokenType.openParen)
+      .Match(Character.EqualTo(')'), SuperpowerTokenType.closedParen)
+      .Match(Character.EqualTo('='), SuperpowerTokenType.equalSign)
+      .Match(Character.EqualTo(';'), SuperpowerTokenType.semicolon)
       // Math
-      .Match(Character.EqualTo('+'), SpracheTokenType.plus)
-      .Match(Character.EqualTo('-'), SpracheTokenType.minus)
-      .Match(Character.EqualTo('*'), SpracheTokenType.asterisk)
-      .Match(Character.EqualTo('/'), SpracheTokenType.forwardSlash)
-      .Match(Character.EqualTo('%'), SpracheTokenType.percent)
+      .Match(Character.EqualTo('+'), SuperpowerTokenType.plus)
+      .Match(Character.EqualTo('-'), SuperpowerTokenType.minus)
+      .Match(Character.EqualTo('*'), SuperpowerTokenType.asterisk)
+      .Match(Character.EqualTo('/'), SuperpowerTokenType.forwardSlash)
+      .Match(Character.EqualTo('%'), SuperpowerTokenType.percent)
       // Keywords
-      .Match(Span.EqualTo("inline").Keyword(), SpracheTokenType.inlineKeyword)
-      .Match(Span.EqualTo("line").Keyword(), SpracheTokenType.lineKeyword)
-      .Match(Span.EqualTo("out").Keyword(), SpracheTokenType.outKeyword)
-      .Match(Span.EqualTo("in").Keyword(), SpracheTokenType.inKeyword)
-      .Match(Span.EqualTo("alt").Keyword(), SpracheTokenType.altKeyword)
-      .Match(Span.EqualTo("print").Keyword(), SpracheTokenType.printKeyword)
-      .Match(Span.EqualTo("tally").Keyword(), SpracheTokenType.tallyKeyword)
-      .Match(Span.EqualTo("limit").Keyword(), SpracheTokenType.limitKeyword)
+      .Match(Span.EqualTo("inline").Keyword(), SuperpowerTokenType.inlineKeyword)
+      .Match(Span.EqualTo("line").Keyword(), SuperpowerTokenType.lineKeyword)
+      .Match(Span.EqualTo("out").Keyword(), SuperpowerTokenType.outKeyword)
+      .Match(Span.EqualTo("in").Keyword(), SuperpowerTokenType.inKeyword)
+      .Match(Span.EqualTo("alt").Keyword(), SuperpowerTokenType.altKeyword)
+      .Match(Span.EqualTo("print").Keyword(), SuperpowerTokenType.printKeyword)
+      .Match(Span.EqualTo("tally").Keyword(), SuperpowerTokenType.tallyKeyword)
+      .Match(Span.EqualTo("limit").Keyword(), SuperpowerTokenType.limitKeyword)
       // Literals
-      .Match(QuotedString.CStyle, SpracheTokenType.stringLiteral)
-      .Match(Span.Regex("[+-]?([0-9]*[.])?[0-9]+"), SpracheTokenType.numberLiteral)
+      .Match(QuotedString.CStyle, SuperpowerTokenType.stringLiteral)
+      .Match(Span.Regex("[+-]?([0-9]*[.])?[0-9]+"), SuperpowerTokenType.numberLiteral)
       // Symbol
-      .Match(Identifier.CStyle, SpracheTokenType.symbol)
+      .Match(Identifier.CStyle, SuperpowerTokenType.symbol)
       .Build();
 
-  public static TokenList<SpracheTokenType> Tokenize(string source)
+  public static TokenList<SuperpowerTokenType> Tokenize(string source)
   {
     return tokenizer.Tokenize(source);
   }

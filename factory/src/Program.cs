@@ -49,7 +49,7 @@ try
       }
     }
 #if !DEBUG
-    catch (ParseException<FactoryLexon> e)
+    catch (ParseException e)
     {
       throw new FactoryParseException(sourceLocation, sourceCode, e.failedParseResult);
     }

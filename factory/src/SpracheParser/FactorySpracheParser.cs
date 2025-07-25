@@ -1,4 +1,3 @@
-using System.Security.Cryptography;
 using SharpParse.Functional;
 using Sprache;
 using SpracheParser;
@@ -8,7 +7,7 @@ namespace FactorySpracheParser;
 [AttributeUsage(AttributeTargets.Field)]
 class NonSemantic : Attribute { }
 
-public enum SpracheTokenType
+public enum SuperpowerTokenType
 {
   // Non Semantic
   comment,
@@ -49,16 +48,16 @@ public enum SpracheTokenType
   symbol,
 }
 
-public class SpracheToken(SpracheTokenType type, string source, int index, int length)
+public class SpracheToken(SuperpowerTokenType type, string source, int index, int length)
   : ProgramEquivalent,
     ASTNode
 {
-  public SpracheTokenType Type => type;
+  public SuperpowerTokenType Type => type;
   public string Source => source;
   public int Index => index;
   public int Length => length;
 
-  public static SpracheToken CreateTestToken(SpracheTokenType type, string source)
+  public static SpracheToken CreateTestToken(SuperpowerTokenType type, string source)
   {
     return new SpracheToken(type, source, 0, 0);
   }
@@ -71,7 +70,10 @@ public class SpracheToken(SpracheTokenType type, string source, int index, int l
 
 public static class FactoryParser
 {
-  static Parser<SpracheToken> Tokenize(this Parser<IEnumerable<char>> parser, SpracheTokenType type)
+  static Parser<SpracheToken> Tokenize(
+    this Parser<IEnumerable<char>> parser,
+    SuperpowerTokenType type
+  )
   {
     return parser
       .Text()
@@ -93,132 +95,132 @@ public static class FactoryParser
   public static readonly Parser<SpracheToken> commentParser = Parse
     .String("//")
     .Concat(Parse.AnyChar.Until(Parse.LineTerminator))
-    .Tokenize(SpracheTokenType.comment);
+    .Tokenize(SuperpowerTokenType.comment);
 
   public static readonly Parser<SpracheToken> whitespaceParser = Parse
     .WhiteSpace.Many()
-    .Tokenize(SpracheTokenType.whitespace);
+    .Tokenize(SuperpowerTokenType.whitespace);
 
   public static readonly Parser<SpracheToken> skip = whitespaceParser.Or(commentParser);
 
   // Language Symbols
   public static readonly Parser<SpracheToken> spreadParser = Parse
     .String("...")
-    .Tokenize(SpracheTokenType.spread)
+    .Tokenize(SuperpowerTokenType.spread)
     .Semantic();
 
   public static readonly Parser<SpracheToken> dotParser = Parse
     .String(".")
-    .Tokenize(SpracheTokenType.dot)
+    .Tokenize(SuperpowerTokenType.dot)
     .Semantic();
 
   public static readonly Parser<SpracheToken> commaParser = Parse
     .String(",")
-    .Tokenize(SpracheTokenType.comma)
+    .Tokenize(SuperpowerTokenType.comma)
     .Semantic();
 
   public static readonly Parser<SpracheToken> openParenParser = Parse
     .String("(")
-    .Tokenize(SpracheTokenType.openParen)
+    .Tokenize(SuperpowerTokenType.openParen)
     .Semantic();
 
   public static readonly Parser<SpracheToken> closedParenParser = Parse
     .String(")")
-    .Tokenize(SpracheTokenType.closedParen)
+    .Tokenize(SuperpowerTokenType.closedParen)
     .Semantic();
 
   public static readonly Parser<SpracheToken> equalSignParser = Parse
     .String("=")
-    .Tokenize(SpracheTokenType.equalSign)
+    .Tokenize(SuperpowerTokenType.equalSign)
     .Semantic();
 
   public static readonly Parser<SpracheToken> semicolonParser = Parse
     .String(";")
-    .Tokenize(SpracheTokenType.semicolon)
+    .Tokenize(SuperpowerTokenType.semicolon)
     .Semantic();
 
   // Math Symbols
 
   public static readonly Parser<SpracheToken> plusParser = Parse
     .String("+")
-    .Tokenize(SpracheTokenType.plus)
+    .Tokenize(SuperpowerTokenType.plus)
     .Semantic();
 
   public static readonly Parser<SpracheToken> minusParser = Parse
     .String("-")
-    .Tokenize(SpracheTokenType.minus)
+    .Tokenize(SuperpowerTokenType.minus)
     .Semantic();
 
   public static readonly Parser<SpracheToken> asteriskParser = Parse
     .String("*")
-    .Tokenize(SpracheTokenType.asterisk)
+    .Tokenize(SuperpowerTokenType.asterisk)
     .Semantic();
 
   public static readonly Parser<SpracheToken> forwardSlashParser = Parse
     .String("/")
-    .Tokenize(SpracheTokenType.forwardSlash)
+    .Tokenize(SuperpowerTokenType.forwardSlash)
     .Semantic();
 
   public static readonly Parser<SpracheToken> percentParser = Parse
     .String("%")
-    .Tokenize(SpracheTokenType.percent)
+    .Tokenize(SuperpowerTokenType.percent)
     .Semantic();
 
   // Keywords
   public static readonly Parser<SpracheToken> lineKeywordParser = Parse
     .String("line")
-    .Tokenize(SpracheTokenType.lineKeyword)
+    .Tokenize(SuperpowerTokenType.lineKeyword)
     .Semantic();
 
   public static readonly Parser<SpracheToken> altKeywordParser = Parse
     .String("alt")
-    .Tokenize(SpracheTokenType.altKeyword)
+    .Tokenize(SuperpowerTokenType.altKeyword)
     .Semantic();
 
   public static readonly Parser<SpracheToken> outKeywordParser = Parse
     .String("out")
-    .Tokenize(SpracheTokenType.outKeyword)
+    .Tokenize(SuperpowerTokenType.outKeyword)
     .Semantic();
 
   public static readonly Parser<SpracheToken> printKeywordParser = Parse
     .String("print")
-    .Tokenize(SpracheTokenType.printKeyword)
+    .Tokenize(SuperpowerTokenType.printKeyword)
     .Semantic();
 
   public static readonly Parser<SpracheToken> tallyKeywordParser = Parse
     .String("tally")
-    .Tokenize(SpracheTokenType.tallyKeyword)
+    .Tokenize(SuperpowerTokenType.tallyKeyword)
     .Semantic();
 
   public static readonly Parser<SpracheToken> inlineKeywordParser = Parse
     .String("inline")
-    .Tokenize(SpracheTokenType.inlineKeyword)
+    .Tokenize(SuperpowerTokenType.inlineKeyword)
     .Semantic();
 
   public static readonly Parser<SpracheToken> inKeywordParser = Parse
     .String("in")
-    .Tokenize(SpracheTokenType.inKeyword)
+    .Tokenize(SuperpowerTokenType.inKeyword)
     .Semantic();
 
   public static readonly Parser<SpracheToken> limitKeywordParser = Parse
     .String("limit")
-    .Tokenize(SpracheTokenType.limitKeyword)
+    .Tokenize(SuperpowerTokenType.limitKeyword)
     .Semantic();
 
   // Literals
   public static readonly Parser<SpracheToken> stringLiteralParser = Parse
     .Regex("\".*?\"")
-    .Tokenize(SpracheTokenType.stringLiteral)
+    .Tokenize(SuperpowerTokenType.stringLiteral)
     .Semantic();
 
   public static readonly Parser<SpracheToken> numberLiteralParser = Parse
-    .Decimal.Tokenize(SpracheTokenType.numberLiteral)
+    .Decimal.Tokenize(SuperpowerTokenType.numberLiteral)
     .Semantic();
 
   // Symbol
   public static readonly Parser<SpracheToken> symbolTokenParser = Parse
     .Regex("\\p{L}\\w*")
-    .Tokenize(SpracheTokenType.symbol)
+    .Tokenize(SuperpowerTokenType.symbol)
     .Semantic();
 
   static Parser<SpracheToken>[] tokenParsers =>

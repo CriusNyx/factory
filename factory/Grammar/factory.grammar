@@ -21,7 +21,7 @@ percent = /\%/;
 
 # keywords
 letKeyword = /let/;
-recipeKeyword = /recipe/;
+lineKeyword = /line/;
 altKeyword = /alt/;
 outKeyword = /out/;
 printKeyword = /print/;
@@ -46,7 +46,7 @@ ProgramExp = Recipe;
 ProgramExp = PrintExp;
 
 # Recipe
-Recipe = recipeKeyword symbol RecipeExp*;
+Recipe = lineKeyword symbol RecipeExp*;
 
 RecipeExp = OutExp;
 RecipeExp = InExp;

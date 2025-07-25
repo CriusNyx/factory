@@ -6,7 +6,7 @@ public static class ParserTestUtil
   public static void TokenParserTest(
     Parser<SpracheToken> parser,
     string source,
-    SpracheTokenType type
+    SuperpowerTokenType type
   )
   {
     var expected = SpracheToken.CreateTestToken(type, source);

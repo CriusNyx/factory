@@ -27,7 +27,7 @@ public static class FactoryLexon
 
   // keywords
   public const string letKeyword = "letKeyword";
-  public const string recipeKeyword = "recipeKeyword";
+  public const string lineKeyword = "lineKeyword";
   public const string altKeyword = "altKeyword";
   public const string outKeyword = "outKeyword";
   public const string inKeyword = "inKeyword";

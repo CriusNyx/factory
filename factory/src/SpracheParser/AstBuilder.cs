@@ -17,17 +17,21 @@ public static class AstBuilder
 
   public static Symbol Sym(string value)
   {
-    return new Symbol(SpracheToken.CreateTestToken(SpracheTokenType.symbol, value));
+    return new Symbol(SpracheToken.CreateTestToken(SuperpowerTokenType.symbol, value));
   }
 
   public static NumberLiteral NumLit(string value)
   {
-    return new NumberLiteral(SpracheToken.CreateTestToken(SpracheTokenType.numberLiteral, value));
+    return new NumberLiteral(
+      SpracheToken.CreateTestToken(SuperpowerTokenType.numberLiteral, value)
+    );
   }
 
   public static StringLiteral StrLit(string value)
   {
-    return new StringLiteral(SpracheToken.CreateTestToken(SpracheTokenType.stringLiteral, value));
+    return new StringLiteral(
+      SpracheToken.CreateTestToken(SuperpowerTokenType.stringLiteral, value)
+    );
   }
 
   public static BinaryExpression BinExp(string op, RightHandExpression lhs, RightHandExpression rhs)
