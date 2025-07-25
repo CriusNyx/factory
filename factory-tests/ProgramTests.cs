@@ -1,5 +1,5 @@
 using Factory;
-using SharpParse.Functional;
+using Factory.Util;
 
 namespace factory_tests
 {

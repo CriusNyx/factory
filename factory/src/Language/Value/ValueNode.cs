@@ -1,6 +1,6 @@
 namespace Factory;
 
-public abstract class ValueNode : LanguageNode
+public abstract class ValueNode : LanguageNode, Simplifier<ValueNode>
 {
   public ValueNode() { }
 
@@ -8,6 +8,12 @@ public abstract class ValueNode : LanguageNode
     : base(sourceInfo) { }
 
   public abstract (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context);
+
+  public virtual bool TrySimplify(out ValueNode? value)
+  {
+    value = null;
+    return false;
+  }
 }
 
 public static class ValueNodeExtensions

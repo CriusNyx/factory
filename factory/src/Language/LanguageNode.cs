@@ -1,5 +1,5 @@
-using SharpParse.Functional;
-using static SharpParse.Util.Formatting;
+using Factory.Util;
+using static Factory.Util.Formatting;
 
 namespace Factory;
 
@@ -16,10 +16,8 @@ public class SourceCodeInfo(string source, (int start, int length) range)
 
 public abstract class LanguageNode : ITree<LanguageNode>
 {
-  [Source]
   public string Source { get; set; }
 
-  [Range]
   public (int start, int length) Range { get; set; }
 
   private FactoryType factoryType;

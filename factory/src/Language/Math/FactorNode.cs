@@ -1,8 +1,7 @@
 using Factory;
-using SharpParse.Functional;
-using SharpParse.Util;
+using Factory.Util;
 
-public class FactorNode : ValueNode, ASTSimplifier
+public class FactorNode : ValueNode
 {
   public bool negative;
   public ValueNode primitive;
@@ -43,7 +42,7 @@ public class FactorNode : ValueNode, ASTSimplifier
     return (negative ? "-" : "", null);
   }
 
-  public bool TrySimplify(out object result)
+  public override bool TrySimplify(out ValueNode result)
   {
     result = null!;
     if (!negative)

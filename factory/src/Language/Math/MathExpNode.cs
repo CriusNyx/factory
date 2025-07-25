@@ -1,8 +1,7 @@
 using Factory;
-using SharpParse.Functional;
-using SharpParse.Util;
+using Factory.Util;
 
-public class MathExpNode : ValueNode, ASTSimplifier
+public class MathExpNode : ValueNode
 {
   public ValueNode term;
   public TermChainNode[] termChain;
@@ -53,7 +52,7 @@ public class MathExpNode : ValueNode, ASTSimplifier
     return [term, .. termChain];
   }
 
-  public bool TrySimplify(out object result)
+  public override bool TrySimplify(out ValueNode result)
   {
     result = null!;
     if (termChain.Length == 0)

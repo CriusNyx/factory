@@ -1,7 +1,6 @@
 using System.Text;
 using Factory.Superpower;
-using SharpParse.Functional;
-using SharpParse.Util;
+using Factory.Util;
 using Superpower;
 using Superpower.Model;
 

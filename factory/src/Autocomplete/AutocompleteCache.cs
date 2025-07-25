@@ -1,7 +1,6 @@
 using System.Reflection;
 using Factory;
-using SharpParse.Functional;
-using SharpParse.Util;
+using Factory.Util;
 
 public static class AutocompleteCache
 {

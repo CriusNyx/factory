@@ -1,6 +1,6 @@
 using CommandLine;
 using Factory;
-using SharpParse.Functional;
+using Factory.Util;
 
 public class RecipeArgSet(RecipeArgVal[] values) : FactVal
 {
