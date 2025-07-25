@@ -18,7 +18,7 @@ public static class FactoryLanguage
   /// <returns></returns>
   public static FactorySemanticToken[] AnalyzeSemanticTokens(string sourceCode)
   {
-    var lexons = SuperpowerTokenizer.tokenizer.Tokenize(sourceCode).ToArray();
+    var lexons = SuperpowerTokenizer.Tokenize(sourceCode, false).ToArray();
     return lexons
       .Map(x => (lexon: x, semanticType: x.GetSemanticType()))
       .Filter(x => x.semanticType != FactorySemanticType.whitespace)
@@ -74,7 +74,7 @@ public static class FactoryLanguage
   )
   {
     Token<SuperpowerTokenType>?[] tokens = SuperpowerTokenizer
-      .tokenizer.Tokenize(sourceCode)
+      .Tokenize(sourceCode)
       .Select(x => x as Token<SuperpowerTokenType>?)
       .ToArray();
     var owner = tokens.FirstOrDefault(x =>
@@ -134,9 +134,7 @@ public static class FactoryLanguage
 
     try
     {
-      Token<SuperpowerTokenType>[] lexons = SuperpowerTokenizer
-        .tokenizer.Tokenize(sourceCode)
-        .ToArray();
+      Token<SuperpowerTokenType>[] lexons = SuperpowerTokenizer.Tokenize(sourceCode).ToArray();
 
       // Crawl lexons and check for errors
       for (int i = 0; i < lexons.Length; i++)

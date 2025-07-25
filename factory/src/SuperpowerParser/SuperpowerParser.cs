@@ -343,19 +343,19 @@ public static class SuperpowerParser
 
   public static T ParseString<T>(string source, TokenListParser<SuperpowerTokenType, T> parser)
   {
-    var tokens = SuperpowerTokenizer.tokenizer.Tokenize(source);
+    var tokens = SuperpowerTokenizer.Tokenize(source);
     return parser.AtEnd().Parse(tokens);
   }
 
   public static ProgramNode ParseString(string source)
   {
-    var tokens = SuperpowerTokenizer.tokenizer.Tokenize(source);
+    var tokens = SuperpowerTokenizer.Tokenize(source);
     return ProgramParser.AtEnd().Parse(tokens);
   }
 
   public static TokenListParserResult<SuperpowerTokenType, ProgramNode> TryParse(string source)
   {
-    var tokens = SuperpowerTokenizer.tokenizer.Tokenize(source);
+    var tokens = SuperpowerTokenizer.Tokenize(source);
     return ProgramParser.AtEnd().TryParse(tokens);
   }
 }

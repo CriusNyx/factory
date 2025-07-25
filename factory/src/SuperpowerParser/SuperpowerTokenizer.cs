@@ -7,11 +7,11 @@ namespace Factory.Superpower;
 
 public static class SuperpowerTokenizer
 {
-  public static readonly Tokenizer<SuperpowerTokenType> tokenizer =
+  private static readonly Tokenizer<SuperpowerTokenType> tokenizer =
     new TokenizerBuilder<SuperpowerTokenType>()
       // Non Semantic
-      .Ignore(Span.WhiteSpace)
-      .Ignore(Comment.CPlusPlusStyle)
+      .Match(Span.WhiteSpace, SuperpowerTokenType.whitespace)
+      .Match(Comment.CPlusPlusStyle, SuperpowerTokenType.comment)
       // Language Symbols
       .Match(Span.EqualTo("..."), SuperpowerTokenType.spread)
       .Match(Character.EqualTo('.'), SuperpowerTokenType.dot)
@@ -44,9 +44,11 @@ public static class SuperpowerTokenizer
       .Match(Character.AnyChar, SuperpowerTokenType.unknown)
       .Build();
 
-  public static TokenList<SuperpowerTokenType> Tokenize(string source)
+  public static TokenList<SuperpowerTokenType> Tokenize(string source, bool filterWhitespace = true)
   {
-    return tokenizer.Tokenize(source);
+    return new TokenList<SuperpowerTokenType>(
+      tokenizer.Tokenize(source).Where(x => !filterWhitespace || x.IsSemantic()).ToArray()
+    );
   }
 
   public static TextParser<T> ThenIgnore<T, U>(this TextParser<T> parser, TextParser<U> ignored)
@@ -64,6 +66,12 @@ public static class SuperpowerTokenizer
 
 public static class SuperpowerTokenizerExtensions
 {
+  public static bool IsSemantic(this Token<SuperpowerTokenType> token)
+  {
+    return token.Kind != SuperpowerTokenType.whitespace
+      && token.Kind != SuperpowerTokenType.comment;
+  }
+
   public static FactorySemanticType GetSemanticType(this Token<SuperpowerTokenType> token)
   {
     return token.Kind.GetSemanticType();
