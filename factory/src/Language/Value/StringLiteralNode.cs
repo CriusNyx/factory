@@ -14,7 +14,7 @@ public class StringLiteralNode : LiteralNode
 
   public override (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
-    var sourceCode = astNode.SourceCode();
+    var sourceCode = Source;
     var stringSegment = sourceCode.Substring(1, sourceCode.Length - 2);
     return new StringVal(stringSegment).With(context);
   }
@@ -26,6 +26,6 @@ public class StringLiteralNode : LiteralNode
 
   public override (string?, string?) PrintSelf()
   {
-    return (astNode.SourceCode(), null);
+    return (Source, null);
   }
 }

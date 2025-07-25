@@ -1,11 +1,11 @@
 using Factory;
-using SharpParse.Parsing;
 using SharpParse.Util;
 
 [ASTClass("FactorOperation", "TermOperation")]
-public class OperationNode(ASTNode astNode) : LanguageNode
+public class OperationNode : LanguageNode
 {
-  public readonly string operation = astNode.children.First().SourceCode();
+  // TODO: Make this throw not implemented until refactor is done.
+  public string operation => astNode.children.First().SourceCode();
 
   public override FactoryType CalculateType(TypeContext context)
   {

@@ -1,5 +1,4 @@
 using SharpParse.Functional;
-using SharpParse.Parsing;
 using SharpParse.Util;
 
 namespace Factory;
@@ -14,7 +13,7 @@ public class NumberLiteralNode : LiteralNode
 
   public override (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
-    return decimal.Parse(astNode.SourceCode()).ToNumVal().With(context);
+    return decimal.Parse(Source).ToNumVal().With(context);
   }
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
@@ -24,11 +23,11 @@ public class NumberLiteralNode : LiteralNode
 
   public override string ToString()
   {
-    return $"{base.ToString()} {astNode.SourceCode()}";
+    return $"{base.ToString()} {Source}";
   }
 
   public override (string?, string?) PrintSelf()
   {
-    return (astNode.SourceCode(), null);
+    return (Source, null);
   }
 }

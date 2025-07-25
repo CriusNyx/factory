@@ -1,6 +1,5 @@
 using System.Reflection;
 using SharpParse.Functional;
-using SharpParse.Parsing;
 using SharpParse.Util;
 
 namespace Factory;
@@ -61,7 +60,7 @@ public class InvocationNode : ChainNode
 
     if (methodType == null)
     {
-      var pos = astNode.CalculatePosition();
+      var pos = Range;
       context.AddError(
         pos.start,
         pos.length,
@@ -75,7 +74,7 @@ public class InvocationNode : ChainNode
     {
       if (!success)
       {
-        var errorPos = param.astNode.CalculatePosition();
+        var errorPos = param.Range;
         context.AddError(
           errorPos.start,
           errorPos.length,

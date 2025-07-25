@@ -23,7 +23,7 @@ public class AssignExpNode : ProgramExp
       && primType.type == FactoryPrimitiveTypeType.Void
     )
     {
-      var pos = right.astNode.CalculatePosition();
+      var pos = right.Range;
       context.AddError(pos.start, pos.length, $"Cannot resolve value from expression");
     }
     if (assignType is ReferenceType refType)
@@ -44,7 +44,7 @@ public class AssignExpNode : ProgramExp
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
-    return new Formatting.ITree<LanguageNode>[] { left, right };
+    return [left, right];
   }
 
   public override (string?, string?) PrintSelf()

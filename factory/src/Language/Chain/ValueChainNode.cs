@@ -10,6 +10,7 @@ public class ValueChainNode : LanguageNode
 
   public ValueChainNode? valueChainNode;
 
+  // TODO: It's necessary to refactor this to make it work with the new parser because we can't have references to the AST Node.
   public ValueChainNode(ASTNode astNode)
   {
     if (astNode.TryMatch(["ValueExp", "ValueChain"], out var elements))

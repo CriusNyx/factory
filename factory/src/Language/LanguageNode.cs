@@ -9,6 +9,11 @@ public abstract class LanguageNode : ITree<LanguageNode>
   [AST]
   public ASTNode astNode;
 
+  [Source]
+  public string Source { get; set; }
+
+  public (int start, int length) Range => astNode.CalculatePosition();
+
   private FactoryType factoryType;
 
   public FactoryType FactoryType
@@ -29,7 +34,7 @@ public abstract class LanguageNode : ITree<LanguageNode>
     {
       throw new InvalidOperationException("astNode is null!?!?! WTF?");
     }
-    var (pos, len) = astNode.CalculatePosition();
+    var (pos, len) = Range;
     return index >= pos && index < pos + len;
   }
 

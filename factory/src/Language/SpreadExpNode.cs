@@ -1,5 +1,4 @@
 using SharpParse.Functional;
-using SharpParse.Parsing;
 using SharpParse.Util;
 
 namespace Factory;
@@ -14,12 +13,12 @@ public class SpreadExpNode : RecipeExpNode
   {
     var target = context.Resolve(symbol.Evaluate());
     var spreadMethod = target?.GetType().GetFactorySpreadMethod();
-    return (spreadMethod?.Invoke(target, new object[] { }) as FactVal).NotNull().With(context);
+    return (spreadMethod?.Invoke(target, []) as FactVal).NotNull().With(context);
   }
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
-    return new Formatting.ITree<LanguageNode>[] { symbol };
+    return [symbol];
   }
 
   public override FactoryType CalculateType(TypeContext context)

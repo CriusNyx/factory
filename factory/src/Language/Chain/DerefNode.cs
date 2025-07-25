@@ -80,7 +80,7 @@ public class DerefNode : ChainNode
         }
       }
     }
-    var pos = astNode.CalculatePosition();
+    var pos = Range;
     context.AddError(pos.start, pos.length, $"{refType} has no member {derefSymbol.symbolName}");
     return FactoryType.VoidType;
   }

@@ -19,7 +19,7 @@ public static class FactoryLanguage
   static FactoryLanguage()
   {
     GrammarSource = File.ReadAllText(Resources.GetPathForResource("Grammar/factory.grammar"));
-    languageGrammar = GrammarParser.TestParse(GrammarSource);
+    languageGrammar = GrammarParser.ParseGrammar(GrammarSource);
     factoryLexerParser = new LexerParser(languageGrammar, []);
   }
 

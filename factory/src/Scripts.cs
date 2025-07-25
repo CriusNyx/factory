@@ -56,7 +56,7 @@ public class Scripts
   {
     var grammarFilePath = "Grammar/factory.grammar";
     var grammarFileText = File.ReadAllText(grammarFilePath);
-    var grammar = GrammarParser.TestParse(grammarFileText);
+    var grammar = GrammarParser.ParseGrammar(grammarFileText);
     Console.WriteLine(grammar);
   }
 }
