@@ -1,14 +1,20 @@
 using Factory;
-using SharpParse.Util;
+using Factory.Util;
 
-[ASTClass("FactorChain")]
 public class FactorChainNode : LanguageNode
 {
-  [ASTField("FactorOperation")]
   public OperationNode operation;
 
-  [ASTField("Factor")]
   public ValueNode factor;
+
+  public FactorChainNode() { }
+
+  public FactorChainNode(SourceCodeInfo sourceInfo, OperationNode operation, ValueNode factor)
+    : base(sourceInfo)
+  {
+    this.operation = operation;
+    this.factor = factor;
+  }
 
   public override FactoryType CalculateType(TypeContext context)
   {
@@ -18,7 +24,7 @@ public class FactorChainNode : LanguageNode
   public NumVal Evaluate(NumVal leftOperand, ref Factory.ExecutionContext context)
   {
     var thisVal = factor.Evaluate(ref context).To<NumVal>();
-    switch (operation.operation)
+    switch (operation.Operation)
     {
       case "*":
         return new NumVal(leftOperand.value * thisVal.value);
@@ -34,5 +40,12 @@ public class FactorChainNode : LanguageNode
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
     return [operation, factor];
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is FactorChainNode chain
+      && operation.Equivalent(chain.operation)
+      && factor.Equivalent(chain.factor);
   }
 }

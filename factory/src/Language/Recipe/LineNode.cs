@@ -1,16 +1,20 @@
-using SharpParse.Functional;
-using SharpParse.Util;
+using Factory.Util;
 
 namespace Factory;
 
-[ASTClass("Recipe")]
-public class RecipeNode : ProgramExp
+public class LineNode : ProgramExp
 {
-  [ASTField("symbol")]
   public SymbolNode name;
+  public LineExpNode[] expressions;
 
-  [ASTField("RecipeExp*")]
-  public RecipeExpNode[] expressions;
+  public LineNode() { }
+
+  public LineNode(SourceCodeInfo sourceInfo, SymbolNode name, LineExpNode[] expressions)
+    : base(sourceInfo)
+  {
+    this.name = name;
+    this.expressions = expressions;
+  }
 
   public override FactoryType CalculateType(TypeContext context)
   {
@@ -42,5 +46,12 @@ public class RecipeNode : ProgramExp
   public override (string?, string?) PrintSelf()
   {
     return ("recipe", null);
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is LineNode line
+      && name.Equivalent(line.name)
+      && expressions.SetEquivalent(line.expressions);
   }
 }

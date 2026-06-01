@@ -1,17 +1,20 @@
-using SharpParse.Functional;
-using SharpParse.Parsing;
-using SharpParse.Util;
+using Factory.Util;
 
 namespace Factory;
 
-[ASTClass("TallyExp")]
-public class TallyExpNode : RecipeExpNode
+public class TallyExpNode : LineExpNode
 {
-  [ASTField("inlineKeyword?")]
   public bool inline;
-
-  [ASTField("symbol*")]
   public SymbolNode[] symbols;
+
+  public TallyExpNode() { }
+
+  public TallyExpNode(SourceCodeInfo sourceInfo, bool inline, SymbolNode[] symbols)
+    : base(sourceInfo)
+  {
+    this.inline = inline;
+    this.symbols = symbols;
+  }
 
   public override string ToString()
   {
@@ -41,5 +44,12 @@ public class TallyExpNode : RecipeExpNode
       output += " inline";
     }
     return (output, null);
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is TallyExpNode tally
+      && inline == tally.inline
+      && symbols.SetEquivalent(tally.symbols);
   }
 }

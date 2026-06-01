@@ -1,27 +1,31 @@
 using System.Reflection;
-using SharpParse.Functional;
-using SharpParse.Parsing;
-using SharpParse.Util;
+using Factory.Util;
 
 namespace Factory;
 
-[ASTClass("Invocation")]
 public class InvocationNode : ChainNode
 {
-  [ASTField("InvocationParamSet")]
-  public ValueNode[] parameters;
+  public ValueNode[] arguments;
 
   private FactoryType[] argumentTypes;
   private MethodType methodType;
 
+  public InvocationNode() { }
+
+  public InvocationNode(SourceCodeInfo sourceInfo, ValueNode[] arguments)
+    : base(sourceInfo)
+  {
+    this.arguments = arguments;
+  }
+
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
-    return parameters;
+    return arguments;
   }
 
   public override FactVal Evaluate(FactVal target, ExecutionContext context)
   {
-    var invocationParams = parameters.Map(x => x.Evaluate(ref context));
+    var invocationParams = arguments.Map(x => x.Evaluate(ref context));
     if (target is FuncVal funcVal)
     {
       return funcVal.Invoke(invocationParams, argumentTypes)!;
@@ -44,7 +48,7 @@ public class InvocationNode : ChainNode
   {
     // Get the parent
     refType = context.Peek().ResolveType(context);
-    argumentTypes = parameters.Map(x => x.GetFactoryType(context));
+    argumentTypes = arguments.Map(x => x.GetFactoryType(context));
 
     if (refType is CSharpType cSharpType)
     {
@@ -61,7 +65,7 @@ public class InvocationNode : ChainNode
 
     if (methodType == null)
     {
-      var pos = astNode.CalculatePosition();
+      var pos = Range;
       context.AddError(
         pos.start,
         pos.length,
@@ -71,11 +75,11 @@ public class InvocationNode : ChainNode
     }
 
     var mapping = methodType.GenerateTypeMappings(argumentTypes, out var succ);
-    foreach (var (success, type, param) in succ.Zip(argumentTypes, parameters))
+    foreach (var (success, type, param) in succ.Zip(argumentTypes, arguments))
     {
       if (!success)
       {
-        var errorPos = param.astNode.CalculatePosition();
+        var errorPos = param.Range;
         context.AddError(
           errorPos.start,
           errorPos.length,
@@ -90,6 +94,11 @@ public class InvocationNode : ChainNode
   public override (string?, string?) PrintSelf()
   {
     return ("(", ")");
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is InvocationNode invocation && arguments.SetEquivalent(invocation.arguments);
   }
 }
 

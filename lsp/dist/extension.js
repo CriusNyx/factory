@@ -18548,6 +18548,22 @@ module.exports = __toCommonJS(extension_exports);
 var path = __toESM(require("path"));
 var import_vscode = require("vscode");
 var import_node = __toESM(require_node3());
+var schemes = [
+  "file",
+  "untitled",
+  "git",
+  "github",
+  "azurerepos",
+  "buffer",
+  "zipfile",
+  "vsls",
+  "walkThroughSnippet",
+  "vs-code-notebook-cell",
+  "vscode-notebook-cell",
+  "memfs",
+  "vscode-vfs",
+  "office-script"
+];
 var client;
 function activate(context) {
   const serverModule = context.asAbsolutePath(
@@ -18562,10 +18578,33 @@ function activate(context) {
   };
   const clientOptions = {
     // Register the server for plain text documents
-    documentSelector: [{ scheme: "file", language: "factory" }, {
-      scheme: "file",
-      pattern: "**/*.factory"
-    }, { scheme: "vscode-notebook-cell", language: "factory" }],
+    // documentSelector: [
+    // 	{ scheme: "file", language: "factory" },
+    // 	{ scheme: "untitled", language: "factory" },
+    // 	{
+    // 		scheme: "file",
+    // 		pattern: "**/*.factory",
+    // 	},
+    // 	{
+    // 		scheme: "file",
+    // 		pattern: "**/*.md",
+    // 		language: "factory",
+    // 	},
+    // 	{
+    // 		scheme: "untitled",
+    // 		pattern: "**/*.md",
+    // 		language: "factory",
+    // 	},
+    // ],
+    documentSelector: schemes.flatMap(
+      (x) => [{ scheme: x, language: "factory" }, {
+        scheme: x,
+        language: "markdown"
+      }, {
+        scheme: x,
+        pattern: "**/*.factory"
+      }, { scheme: x, pattern: "**/*.md" }]
+    ),
     synchronize: {
       // Notify the server about file changes to '.clientrc files contained in the workspace
       fileEvents: import_vscode.workspace.createFileSystemWatcher("**/.clientrc")

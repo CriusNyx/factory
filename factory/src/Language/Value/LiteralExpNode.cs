@@ -1,4 +1,4 @@
-using SharpParse.Util;
+using Factory.Util;
 
 namespace Factory;
 
@@ -11,6 +11,6 @@ public class LiteralExpNode : LanguageNode
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
-    return new Formatting.ITree<LanguageNode>[] { };
+    return [];
   }
 }

@@ -1,7 +1,7 @@
-﻿using Factory;
+﻿using System.Linq.Expressions;
+using Factory;
 #if !DEBUG
-using SharpParse.Util;
-using SharpParse.Functional;
+using Factory.Util;
 #endif
 
 bool debug = false;
@@ -49,13 +49,12 @@ try
       }
     }
 #if !DEBUG
-    catch (ParseException<FactoryLexon> e)
+    catch (Exception e)
     {
-      throw new FactoryParseException(sourceLocation, sourceCode, e.failedParseResult);
+      Console.WriteLine(e);
     }
 #endif
   }
-
   if (options.script != null)
   {
     Scripts.RunScript(options);
@@ -70,16 +69,7 @@ try
 
   if (options.debugGrammar)
   {
-    var parser = FactoryParser.parser;
-    foreach (var (setName, setValue) in parser.productionSets)
-    {
-      var name = setName;
-      Console.WriteLine(name);
-      foreach (var element in parser.ComputeHead(name))
-      {
-        Console.WriteLine($"  {element}");
-      }
-    }
+    throw new NotImplementedException();
   }
   else if (options.stream)
   {
@@ -135,23 +125,6 @@ try
 #if !DEBUG
 catch (Exception e)
 {
-  if (e is FactoryParseException parseException)
-  {
-    var lexon = parseException.failedParseResult.offendingLexon;
-    var source =
-      $"{parseException.Message}\n\n".Colorize(CColor.Red)
-      + $"Failed to parse program from {parseException.sourceLocation}\n\n".Colorize(CColor.Red)
-      + "---------------------------\n\n"
-      + parseException.sourceCode.ReplaceAt(
-        lexon?.index ?? 0,
-        lexon?.length ?? 0,
-        lexon?.sourceCode.Colorize(CColor.Red) ?? ""
-      );
-    Console.Error.WriteLine(source);
-  }
-  else
-  {
-    Console.Error.WriteLine(e.Message.Colorize(CColor.Red));
-  }
+  Console.WriteLine(e);
 }
 #endif

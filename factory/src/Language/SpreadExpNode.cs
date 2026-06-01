@@ -1,25 +1,29 @@
-using SharpParse.Functional;
-using SharpParse.Parsing;
-using SharpParse.Util;
+using Factory.Util;
 
 namespace Factory;
 
-[ASTClass("SpreadExp")]
-public class SpreadExpNode : RecipeExpNode
+public class SpreadExpNode : LineExpNode
 {
-  [ASTField("symbol")]
   public SymbolNode symbol;
+
+  public SpreadExpNode() { }
+
+  public SpreadExpNode(SourceCodeInfo sourceCodeInfo, SymbolNode symbol)
+    : base(sourceCodeInfo)
+  {
+    this.symbol = symbol;
+  }
 
   public override (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
     var target = context.Resolve(symbol.Evaluate());
     var spreadMethod = target?.GetType().GetFactorySpreadMethod();
-    return (spreadMethod?.Invoke(target, new object[] { }) as FactVal).NotNull().With(context);
+    return (spreadMethod?.Invoke(target, []) as FactVal).NotNull().With(context);
   }
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
-    return new Formatting.ITree<LanguageNode>[] { symbol };
+    return [symbol];
   }
 
   public override FactoryType CalculateType(TypeContext context)
@@ -30,5 +34,10 @@ public class SpreadExpNode : RecipeExpNode
   public override (string?, string?) PrintSelf()
   {
     return ("...", null);
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is SpreadExpNode spread && symbol.Equivalent(spread.symbol);
   }
 }

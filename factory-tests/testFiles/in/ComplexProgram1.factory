@@ -1,6 +1,6 @@
 let DirectSol = Plastic(limit 60 CrudeOil)
 
-recipe Reprocess
+line Reprocess
   out Plastic
   in HeavyOilResidue Rubber
   alt ResidualFuel RecycledPlastic

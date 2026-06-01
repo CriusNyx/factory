@@ -1,8 +1,8 @@
-recipe A
+line A
   out ReinforcedIronPlate
 	in IronIngot
 
-recipe B
+line B
   ...A
 	alt CastScrew
 

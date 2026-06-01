@@ -1,15 +1,19 @@
 using Factory;
-using SharpParse.Functional;
-using SharpParse.Util;
+using Factory.Util;
 
-[ASTClass("MathExp")]
-public class MathExpNode : ValueNode, ASTSimplifier
+public class MathExpNode : ValueNode
 {
-  [ASTField("Term")]
   public ValueNode term;
-
-  [ASTField("TermChain*")]
   public TermChainNode[] termChain;
+
+  public MathExpNode() { }
+
+  public MathExpNode(SourceCodeInfo sourceInfo, ValueNode term, TermChainNode[] termChain)
+    : base(sourceInfo)
+  {
+    this.term = term;
+    this.termChain = termChain;
+  }
 
   public override FactoryType CalculateType(TypeContext context)
   {
@@ -48,7 +52,7 @@ public class MathExpNode : ValueNode, ASTSimplifier
     return [term, .. termChain];
   }
 
-  public bool TrySimplify(out object result)
+  public override bool TrySimplify(out ValueNode result)
   {
     result = null!;
     if (termChain.Length == 0)
@@ -57,5 +61,12 @@ public class MathExpNode : ValueNode, ASTSimplifier
       return true;
     }
     return false;
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is MathExpNode math
+      && term.Equivalent(math.term)
+      && termChain.SetEquivalent(math.termChain);
   }
 }

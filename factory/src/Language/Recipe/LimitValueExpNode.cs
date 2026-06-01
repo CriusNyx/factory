@@ -1,16 +1,20 @@
-using SharpParse.Parsing;
-using SharpParse.Util;
+using Factory.Util;
 
 namespace Factory;
 
-[ASTClass("LimitValueExp")]
 public class LimitValueExpNode : LanguageNode
 {
-  [ASTField("ValueExp")]
   public ValueNode value;
-
-  [ASTField("symbol")]
   public SymbolNode symbol;
+
+  public LimitValueExpNode() { }
+
+  public LimitValueExpNode(SourceCodeInfo sourceInfo, ValueNode value, SymbolNode symbol)
+    : base(sourceInfo)
+  {
+    this.value = value;
+    this.symbol = symbol;
+  }
 
   public override FactoryType CalculateType(TypeContext context)
   {
@@ -26,6 +30,13 @@ public class LimitValueExpNode : LanguageNode
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
-    return new Formatting.ITree<LanguageNode>[] { value, symbol };
+    return [value, symbol];
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is LimitValueExpNode val
+      && value.Equivalent(val.value)
+      && symbol.Equivalent(val.symbol);
   }
 }

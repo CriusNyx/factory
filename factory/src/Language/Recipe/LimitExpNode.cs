@@ -1,15 +1,18 @@
-using System.Reflection.Metadata.Ecma335;
-using SharpParse.Functional;
-using SharpParse.Parsing;
-using SharpParse.Util;
+using Factory.Util;
 
 namespace Factory;
 
-[ASTClass("LimitExp")]
-public class LimitExpNode : RecipeExpNode
+public class LimitExpNode : LineExpNode
 {
-  [ASTField("LimitValueExp*")]
   public LimitValueExpNode[] expressions;
+
+  public LimitExpNode() { }
+
+  public LimitExpNode(SourceCodeInfo sourceInfo, LimitValueExpNode[] expressions)
+    : base(sourceInfo)
+  {
+    this.expressions = expressions;
+  }
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
@@ -33,5 +36,10 @@ public class LimitExpNode : RecipeExpNode
   public override (string?, string?) PrintSelf()
   {
     return ("limit", null);
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is LimitExpNode limit && expressions.SetEquivalent(limit.expressions);
   }
 }

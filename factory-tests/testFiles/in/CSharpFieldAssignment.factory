@@ -1,4 +1,4 @@
-recipe A
+line A
   out ReinforcedIronPlate
 
 let B = A

@@ -1,11 +1,20 @@
 using Factory;
-using SharpParse.Parsing;
-using SharpParse.Util;
+using Factory.Util;
 
-[ASTClass("FactorOperation", "TermOperation")]
-public class OperationNode(ASTNode astNode) : LanguageNode
+public class OperationNode : LanguageNode
 {
-  public readonly string operation = astNode.children.First().SourceCode();
+  public string Operation;
+
+  public OperationNode(string operation)
+  {
+    Operation = operation;
+  }
+
+  public OperationNode(SourceCodeInfo sourceCodeInfo)
+    : base(sourceCodeInfo)
+  {
+    Operation = sourceCodeInfo.Source;
+  }
 
   public override FactoryType CalculateType(TypeContext context)
   {
@@ -19,6 +28,11 @@ public class OperationNode(ASTNode astNode) : LanguageNode
 
   public override (string?, string?) PrintSelf()
   {
-    return (operation, null);
+    return (Operation, null);
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is OperationNode op && Operation == op.Operation;
   }
 }

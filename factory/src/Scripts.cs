@@ -1,9 +1,6 @@
-using System;
-using System.Linq;
 using System.Reflection;
 using Factory;
-using SharpParse.Functional;
-using SharpParse.Grammar;
+using Factory.Util;
 
 public class Scripts
 {
@@ -54,10 +51,7 @@ public class Scripts
 
   public static void TestGrammar()
   {
-    var grammarFilePath = "Grammar/factory.grammar";
-    var grammarFileText = File.ReadAllText(grammarFilePath);
-    var grammar = GrammarParser.TestParse(grammarFileText);
-    Console.WriteLine(grammar);
+    throw new NotImplementedException();
   }
 }
 

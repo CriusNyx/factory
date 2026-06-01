@@ -1,16 +1,19 @@
 using Factory;
-using SharpParse.Functional;
-using SharpParse.Parsing;
-using SharpParse.Util;
+using Factory.Util;
 
-[ASTClass("Factor")]
-public class FactorNode : ValueNode, ASTSimplifier
+public class FactorNode : ValueNode
 {
-  [ASTField("minus?")]
   public bool negative;
-
-  [ASTField("Primitive")]
   public ValueNode primitive;
+
+  public FactorNode() { }
+
+  public FactorNode(SourceCodeInfo sourceInfo, bool negative, ValueNode primitive)
+    : base(sourceInfo)
+  {
+    this.negative = negative;
+    this.primitive = primitive;
+  }
 
   public override FactoryType CalculateType(TypeContext context)
   {
@@ -39,7 +42,7 @@ public class FactorNode : ValueNode, ASTSimplifier
     return (negative ? "-" : "", null);
   }
 
-  public bool TrySimplify(out object result)
+  public override bool TrySimplify(out ValueNode result)
   {
     result = null!;
     if (!negative)
@@ -48,5 +51,21 @@ public class FactorNode : ValueNode, ASTSimplifier
       return true;
     }
     return false;
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is FactorNode factorNode
+      && negative == factorNode.negative
+      && primitive.Equivalent(factorNode.primitive);
+  }
+
+  public static FactorNode Create(SourceCodeInfo sourceInfo, bool negate, ValueNode primitive)
+  {
+    var output = new FactorNode();
+    output.SetSourceInfo(sourceInfo);
+    output.negative = negate;
+    output.primitive = primitive;
+    return output;
   }
 }

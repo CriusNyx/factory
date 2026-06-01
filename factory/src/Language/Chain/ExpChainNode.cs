@@ -1,24 +1,35 @@
-using SharpParse.Functional;
-using SharpParse.Util;
+using Factory.Util;
 
 namespace Factory;
 
-[ASTClass("ExpChain")]
 public class ExpChainNode : ValueNode
 {
   // The symbol for this node, if this is the first node in the chain.
-  [ASTField("symbol")]
   public SymbolNode symbol;
 
   // The link if this is not the first node in the chain.
   public ChainNode chainLink;
 
   // The next element in the ref chain
-
-  [ASTField("ChainContinue?")]
-  public ExpChainNode chainContinue;
+  public ExpChainNode? chainContinue;
   public ReferenceType refType { get; private set; }
   public FactoryType chainType { get; private set; }
+
+  public ExpChainNode() { }
+
+  public ExpChainNode(SourceCodeInfo sourceInfo, SymbolNode symbol, ExpChainNode chainContinue)
+    : base(sourceInfo)
+  {
+    this.symbol = symbol;
+    this.chainContinue = chainContinue;
+  }
+
+  public ExpChainNode(SourceCodeInfo sourceInfo, ChainNode chainLink, ExpChainNode chainContinue)
+    : base(sourceInfo)
+  {
+    this.chainLink = chainLink;
+    this.chainContinue = chainContinue;
+  }
 
   public override (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
@@ -89,7 +100,7 @@ public class ExpChainNode : ValueNode
     {
       symbol,
       chainLink,
-      chainContinue,
+      chainContinue!,
     }.FilterDefined();
   }
 
@@ -142,5 +153,13 @@ public class ExpChainNode : ValueNode
     {
       symbol?.OverrideType(factoryType);
     }
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is ExpChainNode chainNode
+      && symbol.SafeEquivalent(chainNode.symbol)
+      && chainLink.SafeEquivalent(chainNode.chainLink)
+      && chainContinue.SafeEquivalent(chainNode.chainContinue);
   }
 }

@@ -1,13 +1,24 @@
-using SharpParse.Functional;
-using SharpParse.Parsing;
-using static SharpParse.Util.Formatting;
+using Factory.Util;
+using static Factory.Util.Formatting;
 
 namespace Factory;
 
+public class SourceCodeInfo(string source, (int start, int length) range)
+{
+  public string Source => source;
+  public (int start, int length) Range => range;
+
+  public static SourceCodeInfo FromSpan((int start, int length) span)
+  {
+    return new SourceCodeInfo("", span);
+  }
+}
+
 public abstract class LanguageNode : ITree<LanguageNode>
 {
-  [AST]
-  public ASTNode astNode;
+  public string Source { get; set; }
+
+  public (int start, int length) Range { get; set; }
 
   private FactoryType factoryType;
 
@@ -23,13 +34,16 @@ public abstract class LanguageNode : ITree<LanguageNode>
     }
   }
 
+  public LanguageNode() { }
+
+  public LanguageNode(SourceCodeInfo sourceInfo)
+  {
+    SetSourceInfo(sourceInfo);
+  }
+
   public bool HasIndex(int index)
   {
-    if (astNode == null)
-    {
-      throw new InvalidOperationException("astNode is null!?!?! WTF?");
-    }
-    var (pos, len) = astNode.CalculatePosition();
+    var (pos, len) = Range;
     return index >= pos && index < pos + len;
   }
 
@@ -165,5 +179,40 @@ public abstract class LanguageNode : ITree<LanguageNode>
       );
     }
     factoryType = overrideType;
+  }
+
+  protected void SetSourceInfo(SourceCodeInfo sourceInfo)
+  {
+    Source = sourceInfo.Source;
+    Range = sourceInfo.Range;
+  }
+
+  public virtual bool Equivalent(object other)
+  {
+    throw new NotImplementedException();
+  }
+}
+
+public static class LanguageNodeExtensions
+{
+  public static bool SafeEquivalent(this LanguageNode? self, LanguageNode? other)
+  {
+    if (self == null && other == null)
+    {
+      return true;
+    }
+    if (self == null || other == null)
+    {
+      return false;
+    }
+    return self.Equivalent(other);
+  }
+
+  public static bool SetEquivalent(
+    this IEnumerable<LanguageNode?> self,
+    IEnumerable<LanguageNode?> other
+  )
+  {
+    return self.OuterZip(other).All(x => x.Item1.SafeEquivalent(x.Item2));
   }
 }

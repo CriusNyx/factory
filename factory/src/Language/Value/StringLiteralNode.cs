@@ -1,12 +1,14 @@
-using SharpParse.Functional;
-using SharpParse.Parsing;
-using SharpParse.Util;
+using Factory.Util;
 
 namespace Factory;
 
-[ASTClass("stringLiteral")]
 public class StringLiteralNode : LiteralNode
 {
+  public StringLiteralNode() { }
+
+  public StringLiteralNode(SourceCodeInfo sourceInfo)
+    : base(sourceInfo) { }
+
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
     return [];
@@ -14,7 +16,7 @@ public class StringLiteralNode : LiteralNode
 
   public override (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
-    var sourceCode = astNode.SourceCode();
+    var sourceCode = Source;
     var stringSegment = sourceCode.Substring(1, sourceCode.Length - 2);
     return new StringVal(stringSegment).With(context);
   }
@@ -26,6 +28,11 @@ public class StringLiteralNode : LiteralNode
 
   public override (string?, string?) PrintSelf()
   {
-    return (astNode.SourceCode(), null);
+    return (Source, null);
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is StringLiteralNode lit && Source == lit.Source;
   }
 }

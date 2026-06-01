@@ -1,16 +1,20 @@
-using SharpParse.Functional;
-using SharpParse.Util;
+using Factory.Util;
 
 namespace Factory;
 
-[ASTClass("AssignExp")]
 public class AssignExpNode : ProgramExp
 {
-  [ASTField("ExpChain")]
   public ExpChainNode left;
-
-  [ASTField("ValueExp")]
   public ValueNode right;
+
+  public AssignExpNode() { }
+
+  public AssignExpNode(SourceCodeInfo sourceInfo, ExpChainNode left, ValueNode right)
+    : base(sourceInfo)
+  {
+    this.left = left;
+    this.right = right;
+  }
 
   public override FactoryType CalculateType(TypeContext context)
   {
@@ -23,7 +27,7 @@ public class AssignExpNode : ProgramExp
       && primType.type == FactoryPrimitiveTypeType.Void
     )
     {
-      var pos = right.astNode.CalculatePosition();
+      var pos = right.Range;
       context.AddError(pos.start, pos.length, $"Cannot resolve value from expression");
     }
     if (assignType is ReferenceType refType)
@@ -44,11 +48,27 @@ public class AssignExpNode : ProgramExp
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
-    return new Formatting.ITree<LanguageNode>[] { left, right };
+    return [left, right];
   }
 
   public override (string?, string?) PrintSelf()
   {
     return ("let", null);
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is AssignExpNode assign
+      && left.Equivalent(assign.left)
+      && right.Equivalent(assign.right);
+  }
+
+  public static AssignExpNode Create(SourceCodeInfo sourceInfo, ExpChainNode lhs, ValueNode rhs)
+  {
+    var output = new AssignExpNode();
+    output.SetSourceInfo(sourceInfo);
+    output.left = lhs;
+    output.right = rhs;
+    return output;
   }
 }

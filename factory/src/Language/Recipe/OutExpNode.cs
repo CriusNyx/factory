@@ -1,14 +1,18 @@
-using SharpParse.Functional;
-using SharpParse.Parsing;
-using SharpParse.Util;
+using Factory.Util;
 
 namespace Factory;
 
-[ASTClass("OutExp")]
-public class OutExpNode : RecipeExpNode
+public class OutExpNode : LineExpNode
 {
-  [ASTField("symbol*")]
   public SymbolNode[] symbols;
+
+  public OutExpNode() { }
+
+  public OutExpNode(SourceCodeInfo sourceInfo, SymbolNode[] symbols)
+    : base(sourceInfo)
+  {
+    this.symbols = symbols;
+  }
 
   public override (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
@@ -29,5 +33,10 @@ public class OutExpNode : RecipeExpNode
   public override (string?, string?) PrintSelf()
   {
     return ("out", null);
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is OutExpNode exp && symbols.SetEquivalent(exp.symbols);
   }
 }

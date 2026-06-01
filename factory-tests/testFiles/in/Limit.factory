@@ -1,4 +1,4 @@
-recipe ReinforcedIronPlate
+line ReinforcedIronPlate
   out ReinforcedIronPlate
 	in IronIngot
 	limit 60 IronIngot

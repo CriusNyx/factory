@@ -1,12 +1,14 @@
-using SharpParse.Functional;
-using SharpParse.Parsing;
-using SharpParse.Util;
+using Factory.Util;
 
 namespace Factory;
 
-[ASTClass("numberLiteral")]
 public class NumberLiteralNode : LiteralNode
 {
+  public NumberLiteralNode() { }
+
+  public NumberLiteralNode(SourceCodeInfo sourceCodeInfo)
+    : base(sourceCodeInfo) { }
+
   public override FactoryType CalculateType(TypeContext context)
   {
     return FactoryType.FromCSharpType(typeof(NumVal));
@@ -14,7 +16,7 @@ public class NumberLiteralNode : LiteralNode
 
   public override (FactVal value, ExecutionContext context) Evaluate(ExecutionContext context)
   {
-    return decimal.Parse(astNode.SourceCode()).ToNumVal().With(context);
+    return decimal.Parse(Source).ToNumVal().With(context);
   }
 
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
@@ -24,11 +26,16 @@ public class NumberLiteralNode : LiteralNode
 
   public override string ToString()
   {
-    return $"{base.ToString()} {astNode.SourceCode()}";
+    return $"{base.ToString()} {Source}";
   }
 
   public override (string?, string?) PrintSelf()
   {
-    return (astNode.SourceCode(), null);
+    return (Source, null);
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is NumberLiteralNode lit && Source == lit.Source;
   }
 }

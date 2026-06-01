@@ -1,5 +1,3 @@
-using SharpParse.Functional;
-
 namespace Factory;
 
 public class CSharpType(Type type) : FactoryType

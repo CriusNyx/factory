@@ -1,4 +1,4 @@
-recipe MyRecipe
+line MyRecipe
   out ReinforcedIronPlate
 	in IronIngot
 

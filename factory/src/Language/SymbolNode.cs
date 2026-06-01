@@ -1,13 +1,10 @@
-using Microsoft.VisualBasic.FileIO;
-using SharpParse.Functional;
-using SharpParse.Util;
+using Factory.Util;
 
 namespace Factory;
 
-[ASTClass("symbol")]
 public class SymbolNode : ValueNode
 {
-  public string symbolName => astNode.SourceCode();
+  public string symbolName => Source;
   private RefInfo _refInfo;
   public RefInfo refInfo
   {
@@ -15,9 +12,14 @@ public class SymbolNode : ValueNode
     set { _refInfo = value; }
   }
 
+  public SymbolNode() { }
+
+  public SymbolNode(SourceCodeInfo sourceInfo)
+    : base(sourceInfo) { }
+
   public override IEnumerable<Formatting.ITree<LanguageNode>> GetChildren()
   {
-    return new Formatting.ITree<LanguageNode>[] { };
+    return [];
   }
 
   public SymbolVal Evaluate()
@@ -30,7 +32,7 @@ public class SymbolNode : ValueNode
     return Evaluate().With(context);
   }
 
-  public override string ToString() => $"Symbol {astNode.SourceCode()}";
+  public override string ToString() => $"Symbol {Source}";
 
   public override FactoryType CalculateType(TypeContext context)
   {
@@ -70,5 +72,10 @@ public class SymbolNode : ValueNode
       }
     }
     return null;
+  }
+
+  public override bool Equivalent(object other)
+  {
+    return other is SymbolNode symNode && this.symbolName == symNode.symbolName;
   }
 }
