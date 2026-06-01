@@ -8,7 +8,7 @@ public class RecipeSearchRequest
   /// <summary>
   /// The recipe to solve.
   /// </summary>
-  public readonly RecipeValue recipe;
+  public readonly LineValue recipe;
 
   /// <summary>
   /// The amount to solve for.
@@ -20,7 +20,7 @@ public class RecipeSearchRequest
   /// </summary>
   /// <param name="recipe"></param>
   /// <param name="quantity"></param>
-  public RecipeSearchRequest(RecipeValue recipe, decimal quantity)
+  public RecipeSearchRequest(LineValue recipe, decimal quantity)
   {
     this.recipe = recipe;
     this.quantity = quantity;

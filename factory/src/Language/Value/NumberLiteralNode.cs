@@ -9,7 +9,7 @@ public class NumberLiteralNode : LiteralNode
   public NumberLiteralNode(SourceCodeInfo sourceCodeInfo)
     : base(sourceCodeInfo) { }
 
-  public override FactoryType CalculateType(TypeContext context)
+  protected override FactoryType CalculateType(TypeContext context)
   {
     return FactoryType.FromCSharpType(typeof(NumVal));
   }

@@ -13,9 +13,9 @@ public class ParentheticalUnit : ValueNode
     this.value = value;
   }
 
-  public override FactoryType CalculateType(TypeContext context)
+  protected override FactoryType CalculateType(TypeContext context)
   {
-    return value.CalculateType(context);
+    return value.GetFactoryType(context);
   }
 
   public override (FactVal value, Factory.ExecutionContext context) Evaluate(

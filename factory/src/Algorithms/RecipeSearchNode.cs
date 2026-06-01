@@ -7,11 +7,16 @@ public class RecipeSearchNode
   public readonly decimal quantity;
   public decimal productionQuantity => quantity * (recipe?.product?.FirstOrDefault()?.Amount ?? 1);
   public readonly string nodeName;
-  public readonly Recipe recipe;
+  public readonly SatisfactoryRecipe recipe;
   public readonly Item item;
   public readonly RecipeSearchNode[] children;
 
-  public RecipeSearchNode(Recipe recipe, decimal quantity, RecipeSearchNode[] children, Item item)
+  public RecipeSearchNode(
+    SatisfactoryRecipe recipe,
+    decimal quantity,
+    RecipeSearchNode[] children,
+    Item item
+  )
     : this(quantity, null, recipe, item, children)
   {
     this.quantity = quantity;
@@ -26,7 +31,7 @@ public class RecipeSearchNode
   public RecipeSearchNode(
     decimal quantity,
     string? nodeName,
-    Recipe? recipe,
+    SatisfactoryRecipe? recipe,
     Item? item,
     RecipeSearchNode[] children
   )

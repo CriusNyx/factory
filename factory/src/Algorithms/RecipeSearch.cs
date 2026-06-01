@@ -4,7 +4,7 @@ namespace Factory;
 
 public static class RecipeSearch
 {
-  static string[] resourceIdentifiers = new string[]
+  public static string[] resourceIdentifiers = new string[]
   {
     "Limestone",
     "IronOre",
@@ -16,8 +16,19 @@ public static class RecipeSearch
     "RawQuartz",
     "Uranium",
     "CrudeOil",
+    "Nitrogen",
     "SAM",
     "Water",
+    "Leaves",
+    "Wood",
+    "BaconAgaric",
+    "Berry",
+    "Nut",
+    "ExcitedPhotonicMatter",
+    "MercerSphere",
+    "Mycelia",
+    "Somersloop",
+    "Gift",
   };
 
   public static RecipeSolution Search(RecipeSearchRequest request)
@@ -30,15 +41,15 @@ public static class RecipeSearch
     return new RecipeSolution(request, root!);
   }
 
-  public static RecipeSearchNode? ResolveRecipe(RecipeValue recipeValue, decimal amount)
+  public static RecipeSearchNode? ResolveRecipe(LineValue recipeValue, decimal amount)
   {
     var recOut = recipeValue.arguments.outVal;
     return MakeResult(ResolveRecipe(recOut.identifier, recipeValue, amount), recipeValue);
   }
 
   public static RecipeSearchNode? MakeResult(
-    (Recipe? recipe, string? identifier, decimal quantity) input,
-    RecipeValue context
+    (SatisfactoryRecipe? recipe, string? identifier, decimal quantity) input,
+    LineValue context
   )
   {
     var (recipe, identifier, amount) = input;
@@ -60,7 +71,7 @@ public static class RecipeSearch
     );
   }
 
-  public static RecipeSearchNode[] MakeBiproducts(Recipe? recipe, decimal quantity)
+  public static RecipeSearchNode[] MakeBiproducts(SatisfactoryRecipe? recipe, decimal quantity)
   {
     if (recipe == null)
     {
@@ -71,9 +82,9 @@ public static class RecipeSearch
       .Map(x => new RecipeSearchNode(x.identifier, -quantity * x.Amount, x.item!));
   }
 
-  public static (Recipe? recipe, string? name, decimal quantity) ResolveRecipe(
+  public static (SatisfactoryRecipe? recipe, string? name, decimal quantity) ResolveRecipe(
     string itemIdentifier,
-    RecipeValue context,
+    LineValue context,
     decimal amount
   )
   {

@@ -4,7 +4,7 @@ namespace Factory;
 
 public class LiteralExpNode : LanguageNode
 {
-  public override FactoryType CalculateType(TypeContext context)
+  protected override FactoryType CalculateType(TypeContext context)
   {
     throw new NotImplementedException();
   }

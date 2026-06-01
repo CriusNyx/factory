@@ -16,7 +16,7 @@ public class FactorChainNode : LanguageNode
     this.factor = factor;
   }
 
-  public override FactoryType CalculateType(TypeContext context)
+  protected override FactoryType CalculateType(TypeContext context)
   {
     return factor.GetFactoryType(context);
   }

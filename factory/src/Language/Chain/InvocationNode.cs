@@ -44,7 +44,7 @@ public class InvocationNode : ChainNode
     throw new Exception("Invocation nodes cannot be converted to identifiers.");
   }
 
-  public override FactoryType CalculateType(TypeContext context)
+  protected override FactoryType CalculateType(TypeContext context)
   {
     // Get the parent
     refType = context.Peek().ResolveType(context);

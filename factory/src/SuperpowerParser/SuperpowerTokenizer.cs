@@ -12,14 +12,17 @@ public static class SuperpowerTokenizer
       // Non Semantic
       .Match(Span.WhiteSpace, SuperpowerTokenType.whitespace)
       .Match(Comment.CPlusPlusStyle, SuperpowerTokenType.comment)
+      .Match(Comment.CStyle, SuperpowerTokenType.comment)
       // Language Symbols
       .Match(Span.EqualTo("..."), SuperpowerTokenType.spread)
       .Match(Character.EqualTo('.'), SuperpowerTokenType.dot)
       .Match(Character.EqualTo(','), SuperpowerTokenType.comma)
       .Match(Character.EqualTo('('), SuperpowerTokenType.openParen)
       .Match(Character.EqualTo(')'), SuperpowerTokenType.closedParen)
+      .Match(Span.EqualTo("=>"), SuperpowerTokenType.arrowOw)
       .Match(Character.EqualTo('='), SuperpowerTokenType.equalSign)
       .Match(Character.EqualTo(';'), SuperpowerTokenType.semicolon)
+      .Match(Character.EqualTo('_'), SuperpowerTokenType.underscore)
       // Math
       .Match(Character.EqualTo('+'), SuperpowerTokenType.plus)
       .Match(Character.EqualTo('-'), SuperpowerTokenType.minus)
@@ -27,6 +30,8 @@ public static class SuperpowerTokenizer
       .Match(Character.EqualTo('/'), SuperpowerTokenType.forwardSlash)
       .Match(Character.EqualTo('%'), SuperpowerTokenType.percent)
       // Keywords
+      .Match(Span.EqualTo("recipe").Keyword(), SuperpowerTokenType.recipeKeyword)
+      .Match(Span.EqualTo("resource").Keyword(), SuperpowerTokenType.resourceKeyword)
       .Match(Span.EqualTo("inline").Keyword(), SuperpowerTokenType.inlineKeyword)
       .Match(Span.EqualTo("line").Keyword(), SuperpowerTokenType.lineKeyword)
       .Match(Span.EqualTo("out").Keyword(), SuperpowerTokenType.outKeyword)
@@ -36,6 +41,7 @@ public static class SuperpowerTokenizer
       .Match(Span.EqualTo("tally").Keyword(), SuperpowerTokenType.tallyKeyword)
       .Match(Span.EqualTo("limit").Keyword(), SuperpowerTokenType.limitKeyword)
       .Match(Span.EqualTo("let").Keyword(), SuperpowerTokenType.letKeyword)
+      .Match(Span.EqualTo("import").Keyword(), SuperpowerTokenType.import)
       // Literals
       .Match(QuotedString.CStyle, SuperpowerTokenType.stringLiteral)
       .Match(Span.Regex("[+-]?([0-9]*[.])?[0-9]+"), SuperpowerTokenType.numberLiteral)
@@ -94,8 +100,10 @@ public static class SuperpowerTokenizerExtensions
       case SuperpowerTokenType.comma:
       case SuperpowerTokenType.openParen:
       case SuperpowerTokenType.closedParen:
+      case SuperpowerTokenType.arrowOw:
       case SuperpowerTokenType.equalSign:
       case SuperpowerTokenType.semicolon:
+      case SuperpowerTokenType.underscore:
 
       // Language Operators
       case SuperpowerTokenType.plus:
@@ -115,6 +123,9 @@ public static class SuperpowerTokenizerExtensions
       case SuperpowerTokenType.inKeyword:
       case SuperpowerTokenType.limitKeyword:
       case SuperpowerTokenType.letKeyword:
+      case SuperpowerTokenType.resourceKeyword:
+      case SuperpowerTokenType.recipeKeyword:
+      case SuperpowerTokenType.import:
         return FactorySemanticType.keyword;
 
       // String

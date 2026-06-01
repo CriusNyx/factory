@@ -1,0 +1,318 @@
+resource Limestone
+resource IronOre
+resource CopperOre
+resource CateriumOre
+resource Coal
+resource Sulfur
+resource Bauxite
+resource RawQuartz
+resource Uranium
+resource CrudeOil
+resource Nitrogen
+resource SAM
+resource Water
+resource Leaves
+resource Wood
+resource BaconAgaric
+resource Berry
+resource Nut
+resource ExcitedPhotonicMatter
+resource MercerSphere
+resource Mycelia
+resource Somersloop
+resource FICSMASGift
+
+recipe IronPlate = 3 IronIngot => 2 IronPlate
+recipe IronRod = 1 IronIngot => 1 IronRod
+recipe IronIngot = 1 IronOre => 1 IronIngot
+recipe RocketFuel = 6 Turbofuel + 1 NitricAcid => 10 RocketFuel + 1 CompactedCoal
+recipe PackagedRocketFuel = 2 RocketFuel + 1 EmptyFluidTank => 1 PackagedRocketFuel
+recipe UnpackageRocketFuel = 1 PackagedRocketFuel => 2 RocketFuel + 1 EmptyFluidTank
+recipe DarkMatterResidue = 5 ReanimatedSAM => 10 DarkMatterResidue
+recipe ExcitedPhotonicMatter = _ => 10 ExcitedPhotonicMatter
+recipe DarkMatterCrystal = 1 Diamonds + 5 DarkMatterResidue => 1 DarkMatterCrystal
+recipe SuperpositionOscillator = 6 DarkMatterCrystal + 1 CrystalOscillator + 9 AlcladAluminumSheet + 25 ExcitedPhotonicMatter => 1 SuperpositionOscillator + 25 DarkMatterResidue
+recipe NeuralQuantumProcessor = 5 TimeCrystal + 1 Supercomputer + 15 FicsiteTrigon + 25 ExcitedPhotonicMatter => 1 NeuralQuantumProcessor + 25 DarkMatterResidue
+recipe AIExpansionServer = 1 MagneticFieldGenerator + 1 NeuralQuantumProcessor + 1 SuperpositionOscillator + 25 ExcitedPhotonicMatter => 1 AIExpansionServer + 25 DarkMatterResidue
+recipe IonizedFuel = 16 RocketFuel + 1 PowerShard => 16 IonizedFuel + 2 CompactedCoal
+recipe PackagedIonizedFuel = 4 IonizedFuel + 2 EmptyFluidTank => 2 PackagedIonizedFuel
+recipe UnpackageIonizedFuel = 2 PackagedIonizedFuel => 4 IonizedFuel + 2 EmptyFluidTank
+recipe SAMFluctuator = 6 ReanimatedSAM + 5 Wire + 3 SteelPipe => 1 SAMFluctuator
+recipe FicsiteTrigon = 1 FicsiteIngot => 3 FicsiteTrigon
+recipe FicsiteIngotIron = 4 ReanimatedSAM + 24 IronIngot => 1 FicsiteIngot
+recipe TimeCrystal = 2 Diamonds => 1 TimeCrystal
+recipe Diamonds = 20 Coal => 1 Diamonds
+recipe ReanimatedSAM = 4 SAM => 1 ReanimatedSAM
+recipe BiochemicalSculptor = 1 AssemblyDirectorSystem + 80 FicsiteTrigon + 20 Water => 4 BiochemicalSculptor
+recipe FicsiteIngotAluminum = 2 ReanimatedSAM + 4 AluminumIngot => 1 FicsiteIngot
+recipe FicsiteIngotCaterium = 3 ReanimatedSAM + 4 CateriumIngot => 1 FicsiteIngot
+recipe BauxiteCaterium = 1 ReanimatedSAM + 15 CateriumOre => 12 Bauxite
+recipe BauxiteCopper = 1 ReanimatedSAM + 18 CopperOre => 12 Bauxite
+recipe CateriumOreCopper = 1 ReanimatedSAM + 15 CopperOre => 12 CateriumOre
+recipe CateriumOreQuartz = 1 ReanimatedSAM + 12 RawQuartz => 12 CateriumOre
+recipe CoalIron = 1 ReanimatedSAM + 18 IronOre => 12 Coal
+recipe CoalLimestone = 1 ReanimatedSAM + 36 Limestone => 12 Coal
+recipe CopperOreQuartz = 1 ReanimatedSAM + 10 RawQuartz => 12 CopperOre
+recipe CopperOreSulfur = 1 ReanimatedSAM + 12 Sulfur => 12 CopperOre
+recipe IronOreLimestone = 1 ReanimatedSAM + 24 Limestone => 12 IronOre
+recipe LimestoneSulfur = 1 ReanimatedSAM + 2 Sulfur => 12 Limestone
+recipe NitrogenGasBauxite = 1 ReanimatedSAM + 10 Bauxite => 12 NitrogenGas
+recipe NitrogenGasCaterium = 1 ReanimatedSAM + 12 CateriumOre => 12 NitrogenGas
+recipe RawQuartzBauxite = 1 ReanimatedSAM + 10 Bauxite => 12 RawQuartz
+recipe RawQuartzCoal = 1 ReanimatedSAM + 24 Coal => 12 RawQuartz
+recipe SulfurCoal = 1 ReanimatedSAM + 20 Coal => 12 Sulfur
+recipe SulfurIron = 1 ReanimatedSAM + 30 IronOre => 12 Sulfur
+recipe UraniumOreBauxite = 1 ReanimatedSAM + 48 Bauxite => 12 Uranium
+recipe Turbofuel = 6 Fuel + 4 CompactedCoal => 5 Turbofuel
+recipe PackagedTurbofuel = 2 Turbofuel + 2 EmptyCanister => 2 PackagedTurbofuel
+recipe UnpackageTurbofuel = 2 PackagedTurbofuel => 2 Turbofuel + 2 EmptyCanister
+recipe CompactedCoal = 5 Coal + 5 Sulfur => 5 CompactedCoal
+recipe CircuitBoard = 2 CopperSheet + 4 Plastic => 1 CircuitBoard
+recipe Fuel = 6 CrudeOil => 4 Fuel + 3 PolymerResin
+recipe PetroleumCoke = 4 HeavyOilResidue => 12 PetroleumCoke
+recipe Plastic = 3 CrudeOil => 2 Plastic + 1 HeavyOilResidue
+recipe Rubber = 3 CrudeOil => 2 Rubber + 2 HeavyOilResidue
+recipe ResidualFuel = 6 HeavyOilResidue => 4 Fuel
+recipe ResidualPlastic = 6 PolymerResin + 2 Water => 2 Plastic
+recipe ResidualRubber = 4 PolymerResin + 4 Water => 2 Rubber
+recipe SteelBeam = 4 SteelIngot => 1 SteelBeam
+recipe SteelPipe = 3 SteelIngot => 2 SteelPipe
+recipe SteelIngot = 3 IronOre + 3 Coal => 3 SteelIngot
+recipe VersatileFramework = 1 ModularFrame + 12 SteelBeam => 2 VersatileFramework
+recipe EmptyCanister = 2 Plastic => 4 EmptyCanister
+recipe PackagedFuel = 2 Fuel + 2 EmptyCanister => 2 PackagedFuel
+recipe LiquidBiofuel = 6 SolidBiofuel + 3 Water => 4 LiquidBiofuel
+recipe PackagedLiquidBiofuel = 2 LiquidBiofuel + 2 EmptyCanister => 2 PackagedLiquidBiofuel
+recipe PackagedOil = 2 CrudeOil + 2 EmptyCanister => 2 PackagedOil
+recipe PackagedHeavyOilResidue = 2 HeavyOilResidue + 2 EmptyCanister => 2 PackagedHeavyOilResidue
+recipe PackagedWater = 2 Water + 2 EmptyCanister => 2 PackagedWater
+recipe UnpackageLiquidBiofuel = 2 PackagedLiquidBiofuel => 2 LiquidBiofuel + 2 EmptyCanister
+recipe UnpackageFuel = 2 PackagedFuel => 2 Fuel + 2 EmptyCanister
+recipe UnpackageOil = 2 PackagedOil => 2 CrudeOil + 2 EmptyCanister
+recipe UnpackageHeavyOilResidue = 2 PackagedHeavyOilResidue => 2 HeavyOilResidue + 2 EmptyCanister
+recipe UnpackageWater = 2 PackagedWater => 2 Water + 2 EmptyCanister
+recipe QuartzCrystal = 5 RawQuartz => 3 QuartzCrystal
+recipe AluminumCasing = 3 AluminumIngot => 2 AluminumCasing
+recipe AlcladAluminumSheet = 3 AluminumIngot + 1 CopperIngot => 3 AlcladAluminumSheet
+recipe AluminaSolution = 12 Bauxite + 18 Water => 12 AluminaSolution + 5 Silica
+recipe AluminumScrap = 4 AluminaSolution + 2 Coal => 6 AluminumScrap + 2 Water
+recipe PackagedAluminaSolution = 2 AluminaSolution + 2 EmptyCanister => 2 PackagedAluminaSolution
+recipe AluminumIngot = 6 AluminumScrap + 5 Silica => 4 AluminumIngot
+recipe Silica = 3 RawQuartz => 5 Silica
+recipe CrystalOscillator = 36 QuartzCrystal + 28 Cable + 5 ReinforcedIronPlate => 2 CrystalOscillator
+recipe UnpackageAluminaSolution = 2 PackagedAluminaSolution => 2 AluminaSolution + 2 EmptyCanister
+recipe EncasedIndustrialBeam = 3 SteelBeam + 6 Concrete => 1 EncasedIndustrialBeam
+recipe Motor = 2 Rotor + 2 Stator => 1 Motor
+recipe Stator = 3 SteelPipe + 8 Wire => 1 Stator
+recipe AutomatedWiring = 1 Stator + 20 Cable => 1 AutomatedWiring
+recipe AILimiter = 5 CopperSheet + 20 Quickwire => 1 AILimiter
+recipe HeavyOilResidue = 3 CrudeOil => 4 HeavyOilResidue + 2 PolymerResin
+recipe Computer = 4 CircuitBoard + 8 Cable + 16 Plastic => 1 Computer
+recipe HeavyModularFrame = 5 ModularFrame + 20 SteelPipe + 5 EncasedIndustrialBeam + 120 Screw => 1 HeavyModularFrame
+recipe ModularEngine = 2 Motor + 15 Rubber + 2 SmartPlating => 1 ModularEngine
+recipe AdaptiveControlUnit = 5 AutomatedWiring + 5 CircuitBoard + 1 HeavyModularFrame + 2 Computer => 1 AdaptiveControlUnit
+recipe ModularFrame = 3 ReinforcedIronPlate + 12 IronRod => 2 ModularFrame
+recipe Rotor = 5 IronRod + 25 Screw => 1 Rotor
+recipe CopperSheet = 2 CopperIngot => 1 CopperSheet
+recipe SmartPlating = 1 ReinforcedIronPlate + 1 Rotor => 1 SmartPlating
+recipe EncasedPlutoniumCell = 2 PlutoniumPellet + 4 Concrete => 1 EncasedPlutoniumCell
+recipe PressureConversionCube = 1 FusedModularFrame + 2 RadioControlUnit => 1 PressureConversionCube
+recipe NitricAcid = 12 NitrogenGas + 3 Water + 1 IronPlate => 3 NitricAcid
+recipe NonFissileUranium = 15 UraniumWaste + 10 Silica + 6 NitricAcid + 6 SulfuricAcid => 20 NonFissileUranium + 6 Water
+recipe CopperPowder = 30 CopperIngot => 5 CopperPowder
+recipe PlutoniumPellet = 100 NonFissileUranium + 25 UraniumWaste => 30 PlutoniumPellet
+recipe PlutoniumFuelRod = 30 EncasedPlutoniumCell + 18 SteelBeam + 6 ElectromagneticControlRod + 10 HeatSink => 1 PlutoniumFuelRod
+recipe PackagedNitricAcid = 1 NitricAcid + 1 EmptyFluidTank => 1 PackagedNitricAcid
+recipe NuclearPasta = 200 CopperPowder + 1 PressureConversionCube => 1 NuclearPasta
+recipe UnpackageNitricAcid = 1 PackagedNitricAcid => 1 NitricAcid + 1 EmptyFluidTank
+recipe EncasedUraniumCell = 10 Uranium + 3 Concrete + 8 SulfuricAcid => 5 EncasedUraniumCell + 2 SulfuricAcid
+recipe CoolingSystem = 2 HeatSink + 2 Rubber + 5 Water + 25 NitrogenGas => 1 CoolingSystem
+recipe Battery = 2.5 SulfuricAcid + 2 AluminaSolution + 1 AluminumCasing => 1 Battery + 1.5 Water
+recipe Supercomputer = 4 Computer + 2 AILimiter + 3 HighSpeedConnector + 28 Plastic => 1 Supercomputer
+recipe RadioControlUnit = 32 AluminumCasing + 1 CrystalOscillator + 2 Computer => 2 RadioControlUnit
+recipe SulfuricAcid = 5 Sulfur + 5 Water => 5 SulfuricAcid
+recipe PackagedSulfuricAcid = 2 SulfuricAcid + 2 EmptyCanister => 2 PackagedSulfuricAcid
+recipe AssemblyDirectorSystem = 2 AdaptiveControlUnit + 1 Supercomputer => 1 AssemblyDirectorSystem
+recipe HighSpeedConnector = 56 Quickwire + 10 Cable + 1 CircuitBoard => 1 HighSpeedConnector
+recipe UnpackageSulfuricAcid = 1 PackagedSulfuricAcid => 1 SulfuricAcid + 1 EmptyCanister
+recipe ElectromagneticControlRod = 3 Stator + 2 AILimiter => 2 ElectromagneticControlRod
+recipe UraniumFuelRod = 50 EncasedUraniumCell + 3 EncasedIndustrialBeam + 5 ElectromagneticControlRod => 1 UraniumFuelRod
+recipe MagneticFieldGenerator = 5 VersatileFramework + 2 ElectromagneticControlRod => 2 MagneticFieldGenerator
+recipe HeatSink = 5 AlcladAluminumSheet + 3 CopperSheet => 1 HeatSink
+recipe FusedModularFrame = 1 HeavyModularFrame + 50 AluminumCasing + 25 NitrogenGas => 1 FusedModularFrame
+recipe EmptyFluidTank = 1 AluminumIngot => 1 EmptyFluidTank
+recipe PackagedNitrogenGas = 4 NitrogenGas + 1 EmptyFluidTank => 1 PackagedNitrogenGas
+recipe UnpackageNitrogenGas = 1 PackagedNitrogenGas => 4 NitrogenGas + 1 EmptyFluidTank
+recipe CateriumIngot = 3 CateriumOre => 1 CateriumIngot
+recipe TurboMotor = 4 CoolingSystem + 2 RadioControlUnit + 4 Motor + 24 Rubber => 1 TurboMotor
+recipe ThermalPropulsionRocket = 5 ModularEngine + 2 TurboMotor + 6 CoolingSystem + 2 FusedModularFrame => 2 ThermalPropulsionRocket
+recipe Ficsonium = 1 PlutoniumWaste + 1 SingularityCell + 20 DarkMatterResidue => 1 Ficsonium
+recipe FicsoniumFuelRod = 2 Ficsonium + 2 ElectromagneticControlRod + 40 FicsiteTrigon + 20 ExcitedPhotonicMatter => 1 FicsoniumFuelRod + 20 DarkMatterResidue
+recipe SingularityCell = 1 NuclearPasta + 20 DarkMatterCrystal + 100 IronPlate + 200 Concrete => 10 SingularityCell
+recipe BallisticWarpDrive = 1 ThermalPropulsionRocket + 5 SingularityCell + 2 SuperpositionOscillator + 40 DarkMatterCrystal => 1 BallisticWarpDrive
+recipe IodineInfusedFilter = 1 GasFilter + 8 Quickwire + 1 AluminumCasing => 1 IodineInfusedFilter
+recipe Quickwire = 1 CateriumIngot => 5 Quickwire
+recipe SolidBiofuel = 8 Biomass => 4 SolidBiofuel
+recipe HogProtein = 1 HogRemains => 1 AlienProtein
+recipe SpitterProtein = 1 SpitterRemains => 1 AlienProtein
+recipe BiomassMycelia = 1 Mycelia => 10 Biomass
+recipe PowerShard1 = 1 BluePowerSlug => 1 PowerShard
+recipe BlackPowder = 1 Coal + 1 Sulfur => 2 BlackPowder
+recipe AlienPowerMatrix = 5 SAMFluctuator + 3 PowerShard + 3 SuperpositionOscillator + 24 ExcitedPhotonicMatter => 1 AlienPowerMatrix + 24 DarkMatterResidue
+recipe StingerProtein = 1 StingerRemains => 1 AlienProtein
+recipe HatcherProtein = 1 HatcherRemains => 1 AlienProtein
+recipe AlienDNACapsule = 1 AlienProtein => 1 AlienDNACapsule
+recipe BiomassAlienProtein = 1 AlienProtein => 100 Biomass
+recipe IronRebar = 1 IronRod => 1 IronRebar
+recipe HomingRifleAmmo = 20 RifleAmmo + 1 HighSpeedConnector => 10 HomingRifleAmmo
+recipe StunRebar = 1 IronRebar + 5 Quickwire => 1 StunRebar
+recipe GasFilter = 2 Fabric + 4 Coal + 2 IronPlate => 1 GasFilter
+recipe GasNobelisk = 1 Nobelisk + 10 Biomass => 1 GasNobelisk
+recipe Fabric = 1 Mycelia + 5 Biomass => 1 Fabric
+recipe SyntheticPowerShard = 2 TimeCrystal + 2 DarkMatterCrystal + 12 QuartzCrystal + 12 ExcitedPhotonicMatter => 1 PowerShard + 12 DarkMatterResidue
+recipe PowerShard5 = 1 PurplePowerSlug => 5 PowerShard
+recipe PowerShard2 = 1 YellowPowerSlug => 2 PowerShard
+recipe PulseNobelisk = 5 Nobelisk + 1 CrystalOscillator => 5 PulseNobelisk
+recipe ShatterRebar = 2 IronRebar + 3 QuartzCrystal => 1 ShatterRebar
+recipe PackagedTurboRifleAmmo = 25 RifleAmmo + 3 AluminumCasing + 3 PackagedTurbofuel => 50 TurboRifleAmmo
+recipe TurboRifleAmmo = 25 RifleAmmo + 3 AluminumCasing + 3 Turbofuel => 50 TurboRifleAmmo
+recipe NukeNobelisk = 5 Nobelisk + 20 EncasedUraniumCell + 10 SmokelessPowder + 6 AILimiter => 1 NukeNobelisk
+recipe RifleAmmo = 3 CopperSheet + 2 SmokelessPowder => 15 RifleAmmo
+recipe ExplosiveRebar = 2 IronRebar + 2 SmokelessPowder + 2 SteelPipe => 1 ExplosiveRebar
+recipe ClusterNobelisk = 3 Nobelisk + 4 SmokelessPowder => 1 ClusterNobelisk
+recipe Nobelisk = 2 BlackPowder + 2 SteelPipe => 1 Nobelisk
+recipe SmokelessPowder = 2 BlackPowder + 1 HeavyOilResidue => 2 SmokelessPowder
+recipe Snowball = 3 ActualSnow => 1 Snowball
+recipe FICSMASWonderStar = 5 FICSMASDecoration + 20 CandyCane => 1 FICSMASWonderStar
+recipe FICSMASDecoration = 15 FICSMASTreeBranch + 6 FICSMASOrnamentBundle => 2 FICSMASDecoration
+recipe FICSMASOrnamentBundle = 1 CopperFICSMASOrnament + 1 IronFICSMASOrnament => 1 FICSMASOrnamentBundle
+recipe RedFICSMASOrnament = 1 FICSMASGift => 1 RedFICSMASOrnament
+recipe BlueFICSMASOrnament = 1 FICSMASGift => 2 BlueFICSMASOrnament
+recipe CopperFICSMASOrnament = 2 RedFICSMASOrnament + 2 CopperIngot => 1 CopperFICSMASOrnament
+recipe IronFICSMASOrnament = 3 BlueFICSMASOrnament + 3 IronIngot => 1 IronFICSMASOrnament
+recipe ActualSnow = 5 FICSMASGift => 2 ActualSnow
+recipe FICSMASTreeBranch = 1 FICSMASGift => 1 FICSMASTreeBranch
+recipe FICSMASBow = 2 FICSMASGift => 1 FICSMASBow
+recipe CandyCane = 3 FICSMASGift => 1 CandyCane
+recipe BiomassLeaves = 10 Leaves => 5 Biomass
+recipe BiomassWood = 4 Wood => 20 Biomass
+recipe ReinforcedIronPlate = 6 IronPlate + 12 Screw => 1 ReinforcedIronPlate
+recipe Concrete = 3 Limestone => 1 Concrete
+recipe Screw = 1 IronRod => 4 Screw
+recipe Cable = 2 Wire => 1 Cable
+recipe Wire = 1 CopperIngot => 2 Wire
+recipe CopperIngot = 1 CopperOre => 1 CopperIngot
+recipe SweetFireworks = 6 FICSMASTreeBranch + 3 CandyCane => 1 SweetFireworks
+recipe FancyFireworks = 4 FICSMASTreeBranch + 3 FICSMASBow => 1 FancyFireworks
+recipe SparklyFireworks = 3 FICSMASTreeBranch + 2 ActualSnow => 1 SparklyFireworks
+
+recipe Test = 1 A => 1 B
+
+recipe alt NitroRocketFuel = 4 Fuel + 3 NitrogenGas + 4 Sulfur + 2 Coal => 6 RocketFuel + 1 CompactedCoal
+recipe alt DarkIonFuel = 12 PackagedRocketFuel + 4 DarkMatterCrystal => 10 IonizedFuel + 2 CompactedCoal
+recipe alt TurboDiamonds = 30 Coal + 2 PackagedTurbofuel => 3 Diamonds
+recipe alt Charcoal = 1 Wood => 10 Coal
+recipe alt Biocoal = 5 Biomass => 6 Coal
+recipe alt PinkDiamonds = 8 Coal + 3 QuartzCrystal => 1 Diamonds
+recipe alt PetroleumDiamonds = 24 PetroleumCoke => 1 Diamonds
+recipe alt OilBasedDiamonds = 10 CrudeOil => 2 Diamonds
+recipe alt CloudyDiamonds = 12 Coal + 24 Limestone => 1 Diamonds
+recipe alt DarkMatterTrap = 1 TimeCrystal + 5 DarkMatterResidue => 2 DarkMatterCrystal
+recipe alt DarkMatterCrystallization = 10 DarkMatterResidue => 1 DarkMatterCrystal
+recipe alt WetConcrete = 6 Limestone + 5 Water => 4 Concrete
+recipe alt TurboHeavyFuel = 5 HeavyOilResidue + 4 CompactedCoal => 4 Turbofuel
+recipe alt SteelRod = 1 SteelIngot => 4 IronRod
+recipe alt SteelCanister = 4 SteelIngot => 4 EmptyCanister
+recipe alt SteamedCopperSheet = 3 CopperIngot + 3 Water => 3 CopperSheet
+recipe alt RubberConcrete = 10 Limestone + 2 Rubber => 9 Concrete
+recipe alt RecycledRubber = 6 Plastic + 6 Fuel => 12 Rubber
+recipe alt PureQuartzCrystal = 9 RawQuartz + 5 Water => 7 QuartzCrystal
+recipe alt PureIronIngot = 7 IronOre + 4 Water => 13 IronIngot
+recipe alt PureCopperIngot = 6 CopperOre + 4 Water => 15 CopperIngot
+recipe alt PureCateriumIngot = 2 CateriumOre + 2 Water => 1 CateriumIngot
+recipe alt PureAluminumIngot = 2 AluminumScrap => 1 AluminumIngot
+recipe alt PolymerResin = 6 CrudeOil => 13 PolymerResin + 2 HeavyOilResidue
+recipe alt PlasticSmartPlating = 1 ReinforcedIronPlate + 1 Rotor + 3 Plastic => 2 SmartPlating
+recipe alt AutomatedSpeedWiring = 2 Stator + 40 Wire + 1 HighSpeedConnector => 4 AutomatedWiring
+recipe alt HeavyFlexibleFrame = 5 ModularFrame + 3 EncasedIndustrialBeam + 20 Rubber + 104 Screw => 1 HeavyModularFrame
+recipe alt FusedWire = 4 CopperIngot + 1 CateriumIngot => 30 Wire
+recipe alt FlexibleFramework = 1 ModularFrame + 6 SteelBeam + 8 Rubber => 2 VersatileFramework
+recipe alt ElectrodeCircuitBoard = 4 Rubber + 8 PetroleumCoke => 1 CircuitBoard
+recipe alt ElectrodeAluminumScrap = 12 AluminaSolution + 4 PetroleumCoke => 20 AluminumScrap + 7 Water
+recipe alt DilutedPackagedFuel = 1 HeavyOilResidue + 2 PackagedWater => 2 PackagedFuel
+recipe alt CopperRotor = 6 CopperSheet + 52 Screw => 3 Rotor
+recipe alt CopperAlloyIngot = 5 CopperOre + 5 IronOre => 10 CopperIngot
+recipe alt CokeSteelIngot = 15 IronOre + 15 PetroleumCoke => 20 SteelIngot
+recipe alt CoatedIronPlate = 5 IronIngot + 1 Plastic => 10 IronPlate
+recipe alt CoatedIronCanister = 2 IronPlate + 1 CopperSheet => 4 EmptyCanister
+recipe alt CoatedCable = 5 Wire + 2 HeavyOilResidue => 9 Cable
+recipe alt BoltedFrame = 3 ReinforcedIronPlate + 56 Screw => 2 ModularFrame
+recipe alt AdheredIronPlate = 3 IronPlate + 1 Rubber => 1 ReinforcedIronPlate
+recipe alt TurboPressureMotor = 4 Motor + 1 PressureConversionCube + 24 PackagedNitrogenGas + 8 Stator => 2 TurboMotor
+recipe alt TurboBlendFuel = 2 Fuel + 4 HeavyOilResidue + 3 Sulfur + 3 PetroleumCoke => 6 Turbofuel
+recipe alt SuperStateComputer = 3 Computer + 1 ElectromagneticControlRod + 10 Battery + 25 Wire => 1 Supercomputer
+recipe alt SloppyAlumina = 10 Bauxite + 10 Water => 12 AluminaSolution
+recipe alt RadioControlSystem = 1 CrystalOscillator + 10 CircuitBoard + 60 AluminumCasing + 30 Rubber => 3 RadioControlUnit
+recipe alt PlutoniumFuelUnit = 20 EncasedPlutoniumCell + 1 PressureConversionCube => 1 PlutoniumFuelRod
+recipe alt OCSupercomputer = 2 RadioControlUnit + 2 CoolingSystem => 1 Supercomputer
+recipe alt InstantScrap = 15 Bauxite + 10 Coal + 5 SulfuricAcid + 6 Water => 30 AluminumScrap + 5 Water
+recipe alt InstantPlutoniumCell = 150 NonFissileUranium + 20 AluminumCasing => 20 EncasedPlutoniumCell
+recipe alt HeatFusedFrame = 1 HeavyModularFrame + 50 AluminumIngot + 8 NitricAcid + 10 Fuel => 1 FusedModularFrame
+recipe alt FertileUranium = 5 Uranium + 5 UraniumWaste + 3 NitricAcid + 5 SulfuricAcid => 20 NonFissileUranium + 8 Water
+recipe alt ElectricMotor = 1 ElectromagneticControlRod + 2 Rotor => 2 Motor
+recipe alt DilutedFuel = 5 HeavyOilResidue + 10 Water => 10 Fuel
+recipe alt CoolingDevice = 4 HeatSink + 1 Motor + 24 NitrogenGas => 2 CoolingSystem
+recipe alt ClassicBattery = 6 Sulfur + 7 AlcladAluminumSheet + 8 Plastic + 12 Wire => 4 Battery
+recipe alt AutomatedMiner = 4 SteelPipe + 4 IronPlate => 1 BP_ItemDescriptorPortableMiner_C
+recipe alt AlcladCasing = 20 AluminumIngot + 10 CopperIngot => 15 AluminumCasing
+recipe alt MoldedSteelPipe = 5 SteelIngot + 3 Concrete => 5 SteelPipe
+recipe alt IronPipe = 20 IronIngot => 5 SteelPipe
+recipe alt SteelCastPlate = 1 IronIngot + 1 SteelIngot => 3 IronPlate
+recipe alt MoldedBeam = 24 SteelIngot + 16 Concrete => 9 SteelBeam
+recipe alt AluminumBeam = 3 AluminumIngot => 3 SteelBeam
+recipe alt AluminumRod = 1 AluminumIngot => 7 IronRod
+recipe alt PlasticAILimiter = 30 Quickwire + 7 Plastic => 2 AILimiter
+recipe alt DistilledSilica = 12 DissolvedSilica + 5 Limestone + 10 Water => 27 Silica + 8 Water
+recipe alt QuartzPurification = 24 RawQuartz + 2 NitricAcid => 15 QuartzCrystal + 12 DissolvedSilica
+recipe alt FusedQuartzCrystal = 25 RawQuartz + 12 Coal => 18 QuartzCrystal
+recipe alt LeachedIroningot = 5 IronOre + 1 SulfuricAcid => 10 IronIngot
+recipe alt BasicIronIngot = 5 IronOre + 8 Limestone => 10 IronIngot
+recipe alt TemperedCopperIngot = 5 CopperOre + 8 PetroleumCoke => 12 CopperIngot
+recipe alt LeachedCopperIngot = 9 CopperOre + 5 SulfuricAcid => 22 CopperIngot
+recipe alt TemperedCateriumIngot = 6 CateriumOre + 2 PetroleumCoke => 3 CateriumIngot
+recipe alt LeachedCateriumIngot = 9 CateriumOre + 5 SulfuricAcid => 6 CateriumIngot
+recipe alt CateriumWire = 1 CateriumIngot => 8 Wire
+recipe alt IronWire = 5 IronIngot => 9 Wire
+recipe alt InfusedUraniumCell = 5 Uranium + 3 Silica + 5 Sulfur + 15 Quickwire => 4 EncasedUraniumCell
+recipe alt TurboElectricMotor = 7 Motor + 9 RadioControlUnit + 5 ElectromagneticControlRod + 7 Rotor => 3 TurboMotor
+recipe alt QuickwireStator = 4 SteelPipe + 15 Quickwire => 2 Stator
+recipe alt CheapSilica = 3 RawQuartz + 5 Limestone => 7 Silica
+recipe alt SteelScrew = 1 SteelBeam => 52 Screw
+recipe alt CastScrew = 5 IronIngot => 20 Screw
+recipe alt SteelRotor = 2 SteelPipe + 6 Wire => 1 Rotor
+recipe alt EncasedIndustrialPipe = 6 SteelPipe + 5 Concrete => 1 EncasedIndustrialBeam
+recipe alt StitchedIronPlate = 10 IronPlate + 20 Wire => 3 ReinforcedIronPlate
+recipe alt BoltedIronPlate = 18 IronPlate + 50 Screw => 3 ReinforcedIronPlate
+recipe alt RadioConnectionUnit = 4 HeatSink + 2 HighSpeedConnector + 12 QuartzCrystal => 1 RadioControlUnit
+recipe alt FusedQuickwire = 1 CateriumIngot + 5 CopperIngot => 12 Quickwire
+recipe alt RecycledPlastic = 6 Rubber + 6 Fuel => 12 Plastic
+recipe alt UraniumFuelUnit = 100 EncasedUraniumCell + 10 ElectromagneticControlRod + 3 CrystalOscillator + 10 Rotor => 3 UraniumFuelRod
+recipe alt RigorMotor = 3 Rotor + 3 Stator + 1 CrystalOscillator => 6 Motor
+recipe alt SteeledFrame = 2 ReinforcedIronPlate + 10 SteelPipe => 3 ModularFrame
+recipe alt CompactedSteelIngot = 2 IronOre + 1 CompactedCoal => 4 SteelIngot
+recipe alt SolidSteelIngot = 2 IronIngot + 2 Coal => 3 SteelIngot
+recipe alt IronAlloyIngot = 8 IronOre + 2 CopperOre => 15 IronIngot
+recipe alt SiliconHighSpeedConnector = 60 Quickwire + 25 Silica + 2 CircuitBoard => 2 HighSpeedConnector
+recipe alt HeavyEncasedFrame = 8 ModularFrame + 10 EncasedIndustrialBeam + 36 SteelPipe + 22 Concrete => 3 HeavyModularFrame
+recipe alt HeatExchanger = 3 AluminumCasing + 3 Rubber => 1 HeatSink
+recipe alt FineBlackPowder = 1 Sulfur + 2 CompactedCoal => 6 BlackPowder
+recipe alt ElectromagneticConnectionRod = 2 Stator + 1 HighSpeedConnector => 2 ElectromagneticControlRod
+recipe alt InsulatedCrystalOscillator = 10 QuartzCrystal + 7 Rubber + 1 AILimiter => 1 CrystalOscillator
+recipe alt FineConcrete = 3 Silica + 12 Limestone => 10 Concrete
+recipe alt CrystalComputer = 3 CircuitBoard + 1 CrystalOscillator => 2 Computer
+recipe alt CateriumComputer = 4 CircuitBoard + 14 Quickwire + 6 Rubber => 1 Computer
+recipe alt CateriumCircuitBoard = 10 Plastic + 30 Quickwire => 7 CircuitBoard
+recipe alt SiliconCircuitBoard = 11 CopperSheet + 11 Silica => 5 CircuitBoard
+recipe alt QuickwireCable = 3 Quickwire + 2 Rubber => 11 Cable
+recipe alt InsulatedCable = 9 Wire + 6 Rubber => 20 Cable
+recipe alt PolyesterFabric = 1 PolymerResin + 1 Water => 1 Fabric

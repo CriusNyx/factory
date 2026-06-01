@@ -34,7 +34,7 @@ public class SymbolNode : ValueNode
 
   public override string ToString() => $"Symbol {Source}";
 
-  public override FactoryType CalculateType(TypeContext context)
+  protected override FactoryType CalculateType(TypeContext context)
   {
     return context.GetType(symbolName) ?? FactoryType.VoidType;
   }

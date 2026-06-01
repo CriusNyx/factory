@@ -3,13 +3,32 @@ using Factory.Util;
 
 namespace Factory;
 
+/// <summary>
+/// Type of a method that can be invoked.
+/// </summary>
 public class MethodType(string name, FactoryType returnType, MethodArgumentType[] argumentTypes)
   : FactoryType
 {
+  /// <summary>
+  /// Name of the method
+  /// </summary>
   public readonly string name = name;
+
+  /// <summary>
+  /// Return type of the method
+  /// </summary>
   public readonly FactoryType returnType = returnType;
+
+  /// <summary>
+  /// Factory type of the arguments that this method can accept.
+  /// </summary>
   public readonly MethodArgumentType[] argumentTypes = argumentTypes;
 
+  /// <summary>
+  /// Create a method from a C# method.
+  /// </summary>
+  /// <param name="methodInfo"></param>
+  /// <returns></returns>
   public static MethodType FromCSharpMethod(MethodInfo methodInfo)
   {
     return new MethodType(
@@ -21,9 +40,17 @@ public class MethodType(string name, FactoryType returnType, MethodArgumentType[
 
   public bool CanAcceptValue(FactoryType other)
   {
+    // Not Assignable
     throw new NotImplementedException();
   }
 
+  /// <summary>
+  /// Generate a set of indices for mapping factory types to method arguments.
+  /// </summary>
+  /// <param name="argumentPosition"></param>
+  /// <param name="types"></param>
+  /// <param name="success"></param>
+  /// <returns></returns>
   public (int argumentPosition, int arrayPosition)[] GenerateTypeMappings(
     FactoryType[] types,
     out bool[] success

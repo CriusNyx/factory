@@ -7,14 +7,14 @@ namespace Factory;
 public class Docs
 {
   public Item[] Desc;
-  public Recipe[] Recipe;
+  public SatisfactoryRecipe[] Recipe;
 
   public static readonly Docs docs;
   public static readonly Dictionary<string, Item> itemsByClass;
   public static readonly Dictionary<string, Item> itemsByIdentifier;
-  public static readonly Dictionary<string, Recipe[]> recipesByProductClass;
-  public static readonly Dictionary<string, Recipe[]> recipesByProductIdentifier;
-  public static readonly Dictionary<string, Recipe[]> recipesByIdentifier;
+  public static readonly Dictionary<string, SatisfactoryRecipe[]> recipesByProductClass;
+  public static readonly Dictionary<string, SatisfactoryRecipe[]> recipesByProductIdentifier;
+  public static readonly Dictionary<string, SatisfactoryRecipe[]> recipesByIdentifier;
 
   static Docs()
   {
@@ -28,12 +28,12 @@ public class Docs
         .Desc.Filter(x => (x.identifier ?? "") != "")
         .ToDictionary(x => x.identifier);
 
-      Dictionary<string, List<Recipe>> _recipesByProductClass =
-        new Dictionary<string, List<Recipe>>();
-      Dictionary<string, List<Recipe>> _recipesByProductIdentifier =
-        new Dictionary<string, List<Recipe>>();
-      Dictionary<string, List<Recipe>> _recipesByIdentifier =
-        new Dictionary<string, List<Recipe>>();
+      Dictionary<string, List<SatisfactoryRecipe>> _recipesByProductClass =
+        new Dictionary<string, List<SatisfactoryRecipe>>();
+      Dictionary<string, List<SatisfactoryRecipe>> _recipesByProductIdentifier =
+        new Dictionary<string, List<SatisfactoryRecipe>>();
+      Dictionary<string, List<SatisfactoryRecipe>> _recipesByIdentifier =
+        new Dictionary<string, List<SatisfactoryRecipe>>();
 
       foreach (var recipe in docs.Recipe.Where(x => x.isMachineRecipe))
       {

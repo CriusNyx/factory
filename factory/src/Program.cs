@@ -1,5 +1,5 @@
-﻿using System.Linq.Expressions;
-using Factory;
+﻿using Factory;
+using Factory.Compiler;
 #if !DEBUG
 using Factory.Util;
 #endif
@@ -55,6 +55,7 @@ try
     }
 #endif
   }
+
   if (options.script != null)
   {
     Scripts.RunScript(options);
@@ -71,9 +72,18 @@ try
   {
     throw new NotImplementedException();
   }
+  else if (options.satisfactorySource)
+  {
+    Console.Out.WriteLine(SourceGenerator.GenerateSatisfactorySource());
+  }
   else if (options.stream)
   {
-    EvaluateSourceCode("stream", Console.In.ReadToEnd());
+    FactoryLanguage.Execute(
+      new StaticResolver(("main.factory", Console.In.ReadToEnd())),
+      "main.factory",
+      new StreamReader(new MemoryStream()),
+      Console.Out
+    );
   }
   else if (options.file != "")
   {
@@ -114,8 +124,13 @@ try
   }
   else if (debug)
   {
-    string debugFile = "./SamplePrograms/debugProgram.factory";
-    EvaluateSourceCode(debugFile, File.ReadAllText(debugFile));
+    string debugPath = Path.GetFullPath("./SamplePrograms");
+    FactoryLanguage.Execute(
+      new FileSystemModuleResolver(debugPath),
+      "debugProgram.factory",
+      new StreamReader(new MemoryStream()),
+      Console.Out
+    );
   }
   else
   {

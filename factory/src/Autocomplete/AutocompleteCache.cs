@@ -25,7 +25,7 @@ public static class AutocompleteCache
     {
       autocompleteStringTypes
         .AddOrGet(recipeName)
-        .Add((null, FactoryType.FromCSharpType(typeof(Recipe))));
+        .Add((null, FactoryType.FromCSharpType(typeof(SatisfactoryRecipe))));
     }
     foreach (var (name, refInfo, factoryType) in memberInfo)
     {

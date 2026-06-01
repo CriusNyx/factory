@@ -2,7 +2,7 @@ using Factory.Util;
 
 namespace Factory;
 
-public class AssignExpNode : ProgramExp
+public class AssignExpNode : StatementNode
 {
   public ExpChainNode left;
   public ValueNode right;
@@ -16,7 +16,7 @@ public class AssignExpNode : ProgramExp
     this.right = right;
   }
 
-  public override FactoryType CalculateType(TypeContext context)
+  protected override FactoryType CalculateType(TypeContext context)
   {
     var evaluationType = right.GetFactoryType(context);
     var assignType = left.ComputeRef(context);
@@ -32,7 +32,7 @@ public class AssignExpNode : ProgramExp
     }
     if (assignType is ReferenceType refType)
     {
-      context.SetType(refType.symbol, evaluationType.ResolveType(context));
+      context.SetLocalType(refType.symbol, evaluationType.ResolveType(context));
     }
     else { }
     return new FactoryPrimitiveType(FactoryPrimitiveTypeType.Void);

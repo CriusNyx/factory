@@ -274,7 +274,7 @@ public static class Functional
     var len = end - startIndex;
     if (len < 0)
     {
-      return new T[] { };
+      return [];
     }
     var output = new T[len];
     Array.Copy(arr, startIndex, output, 0, len);
@@ -282,7 +282,7 @@ public static class Functional
   }
 
   /// <summary>
-  ///
+  /// Traverse an tree and call the visitor for each visited node.
   /// </summary>
   /// <param name="root"></param>
   /// <param name="getChildren"></param>
@@ -325,6 +325,11 @@ public static class Functional
   public static T[] FilterDefined<T>(this T?[] arr)
   {
     return arr.Filter(x => x != null)!;
+  }
+
+  public static IEnumerable<T> WhereDefined<T>(this IEnumerable<T?> arr)
+  {
+    return arr.Where(x => x != null)!;
   }
 
   public static T NotNull<T>(this T? val, string? errorMessage = null)
@@ -420,9 +425,48 @@ public static class Functional
     return func(self);
   }
 
-  public static T Mutate<T>(this T self, Action<T> action)
+  public static U? SafePipe<T, U>(this T? self, Func<T, U> func)
+    where U : class
+  {
+    if (self == null)
+    {
+      return null;
+    }
+    return func(self);
+  }
+
+  public static T Touch<T>(this T self, Action<T> action)
   {
     action(self);
     return self;
+  }
+
+  public static void AddRange<T, U, V>(this IDictionary<T, U> self, IReadOnlyDictionary<T, V> other)
+    where V : U
+  {
+    foreach (var pair in other)
+    {
+      self.Add(pair.Key, pair.Value);
+    }
+  }
+
+  public static void SafeAddRange<T, U, V>(
+    this IDictionary<T, U> self,
+    IReadOnlyDictionary<T, V> other
+  )
+    where V : U
+  {
+    foreach (var pair in other)
+    {
+      self[pair.Key] = pair.Value;
+    }
+  }
+
+  public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
+  {
+    foreach (var element in enumerable)
+    {
+      action(element);
+    }
   }
 }

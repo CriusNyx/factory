@@ -50,6 +50,9 @@ public class CommandLineOptions
   [Option("script", HelpText = "Run a named script")]
   public string script { get; set; }
 
+  [Option("satisfactorySource", HelpText = "Generate Satisfactory Source Files")]
+  public bool satisfactorySource { get; set; }
+
   public static CommandLineOptions Create(params string[] args)
   {
     CommandLineOptions output = null!;

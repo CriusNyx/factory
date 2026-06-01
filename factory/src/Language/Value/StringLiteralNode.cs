@@ -4,6 +4,8 @@ namespace Factory;
 
 public class StringLiteralNode : LiteralNode
 {
+  public string StringValue => Source.Substring(1, Source.Length - 2);
+
   public StringLiteralNode() { }
 
   public StringLiteralNode(SourceCodeInfo sourceInfo)
@@ -21,7 +23,7 @@ public class StringLiteralNode : LiteralNode
     return new StringVal(stringSegment).With(context);
   }
 
-  public override FactoryType CalculateType(TypeContext context)
+  protected override FactoryType CalculateType(TypeContext context)
   {
     return new FactoryPrimitiveType(FactoryPrimitiveTypeType.String);
   }

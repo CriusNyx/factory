@@ -15,7 +15,7 @@ public class TermNode : ValueNode
     this.factorChian = factorChain;
   }
 
-  public override FactoryType CalculateType(TypeContext context)
+  protected override FactoryType CalculateType(TypeContext context)
   {
     foreach (var element in factorChian)
     {

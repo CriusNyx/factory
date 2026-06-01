@@ -26,7 +26,7 @@ public class SpreadExpNode : LineExpNode
     return [symbol];
   }
 
-  public override FactoryType CalculateType(TypeContext context)
+  protected override FactoryType CalculateType(TypeContext context)
   {
     return new FactoryPrimitiveType(FactoryPrimitiveTypeType.Complex);
   }

@@ -15,7 +15,7 @@ public class FactorNode : ValueNode
     this.primitive = primitive;
   }
 
-  public override FactoryType CalculateType(TypeContext context)
+  protected override FactoryType CalculateType(TypeContext context)
   {
     return primitive.GetFactoryType(context);
   }

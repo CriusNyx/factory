@@ -18,6 +18,125 @@ public class ParserTests
     Assert.Equal((0, 5), actual.Range);
   }
 
+  // Recipe
+  [Fact]
+  public void CanParseRecipe()
+  {
+    var expected = Recipe(
+      false,
+      "IronPlate",
+      [Quantity(3, "IronIngot")],
+      [Quantity(2, "IronPlate")]
+    );
+    var actual = ParseString("recipe IronPlate = 3 IronIngot => 2 IronPlate", RecipeParser);
+
+    Assert.True(expected.Equivalent(actual));
+
+    Assert.False(
+      actual.Equivalent(
+        Recipe(true, "IronPlate", [Quantity(3, "IronIngot")], [Quantity(2, "IronPlate")])
+      )
+    );
+    Assert.False(
+      actual.Equivalent(
+        Recipe(false, "RedHerring", [Quantity(3, "IronIngot")], [Quantity(2, "IronPlate")])
+      )
+    );
+    Assert.False(
+      actual.Equivalent(
+        Recipe(false, "IronPlate", [Quantity(3, "RedHerring")], [Quantity(2, "IronPlate")])
+      )
+    );
+    Assert.False(
+      actual.Equivalent(
+        Recipe(false, "IronPlate", [Quantity(3, "IronIngot")], [Quantity(2, "RedHerring")])
+      )
+    );
+
+    Assert.Equal((0, 45), actual.Range);
+  }
+
+  [Fact]
+  public void CanParseMultiRecipe()
+  {
+    var expected = Recipe(
+      false,
+      "IronPlate",
+      [Quantity(1, "A"), Quantity(2, "B")],
+      [Quantity(3, "C"), Quantity(4, "D")]
+    );
+    var actual = ParseString("recipe IronPlate = 1 A + 2 B => 3 C + 4 D", RecipeParser);
+
+    Assert.True(expected.Equivalent(actual));
+
+    Assert.Equal((0, 41), actual.Range);
+  }
+
+  [Fact]
+  public void CanParseUnderscoreRecipe()
+  {
+    var expected = Recipe(false, "IronOre", [], [Quantity(1, "IronOre")]);
+    var actual = ParseString("recipe IronOre = _ => 1 IronOre", RecipeParser);
+
+    Assert.True(expected.Equivalent(actual));
+
+    Assert.Equal((0, 31), actual.Range);
+  }
+
+  // Recipe
+  [Fact]
+  public void CanParseAltRecipes()
+  {
+    var expected = Recipe(
+      true,
+      "IronPlate",
+      [Quantity(3, "IronIngot")],
+      [Quantity(2, "IronPlate")]
+    );
+    var actual = ParseString("recipe alt IronPlate = 3 IronIngot => 2 IronPlate", RecipeParser);
+
+    Assert.True(expected.Equivalent(actual));
+
+    Assert.False(
+      actual.Equivalent(
+        Recipe(false, "IronPlate", [Quantity(3, "IronIngot")], [Quantity(2, "IronPlate")])
+      )
+    );
+
+    Assert.Equal((0, 49), actual.Range);
+  }
+
+  // Quantity
+  [Fact]
+  public void CanParseQuantity()
+  {
+    var expected = Quantity(1, "IronOre");
+    var actual = ParseString("1 IronOre", QuantityParser);
+
+    Assert.True(expected.Equivalent(actual));
+
+    Assert.False(actual.Equivalent(Quantity(2, "IronOre")));
+    Assert.False(actual.Equivalent(Quantity(1, "CopperOre")));
+
+    Assert.Equal((0, 9), actual.Range);
+  }
+
+  // Resource
+  [Fact]
+  public void CanParseResource()
+  {
+    var expected = Resource("IronOre");
+    var actual = ParseString("resource IronOre", StatementParser);
+
+    Assert.True(expected.Equivalent(actual));
+
+    Assert.False(actual.Equivalent(Resource("CopperOre")));
+
+    Assert.Equal((0, 16), actual.Range);
+  }
+
+  // Line
+
   [Fact]
   public void CanParseProductionLine()
   {

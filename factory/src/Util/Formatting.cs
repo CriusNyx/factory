@@ -1,4 +1,5 @@
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Factory.Util;
 
@@ -69,7 +70,8 @@ public static class Formatting
     string[][] lines,
     string columnSeparator = "  | ",
     bool[]? alignRight = null,
-    string eol = ""
+    string eol = "",
+    int truncate = -1
   )
   {
     var height = lines.Length;

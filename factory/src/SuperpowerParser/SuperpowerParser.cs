@@ -6,8 +6,60 @@ using Superpower.Parsers;
 
 namespace Factory.Superpower;
 
+public enum InfoType
+{
+  ResourceDefinition,
+  RecipeDefinition,
+}
+
+public class InfoNode(InfoType type, int infoPosition, string source)
+{
+  public InfoType Type => type;
+  public int InfoPosition => infoPosition;
+  public string Source => source;
+  public bool IsReadonly
+  {
+    get
+    {
+      switch (Type)
+      {
+        case InfoType.ResourceDefinition:
+        case InfoType.RecipeDefinition:
+          return true;
+        default:
+          return false;
+      }
+    }
+  }
+}
+
 public static class SuperpowerParser
 {
+  public static TokenListParser<SuperpowerTokenType, InfoNode?> ShallowTokenParser = Parse.OneOf(
+    Token
+      .EqualTo(SuperpowerTokenType.resourceKeyword)
+      .IgnoreThen(
+        Token
+          .EqualTo(SuperpowerTokenType.symbol)
+          .Select(x => new InfoNode(
+            InfoType.ResourceDefinition,
+            x.Position.Absolute,
+            x.ToStringValue()
+          ))
+      )
+      .Try(),
+    Token
+      .EqualTo(SuperpowerTokenType.recipeKeyword)
+      .IgnoreThen(Token.EqualTo(SuperpowerTokenType.altKeyword).Flag())
+      .IgnoreThen(Token.EqualTo(SuperpowerTokenType.symbol))
+      .Select(x => new InfoNode(InfoType.RecipeDefinition, x.Position.Absolute, x.ToStringValue()))
+      .Try(),
+    Token.Matching<SuperpowerTokenType>(_ => true, "any").Select(_ => null as InfoNode)!
+  )!;
+
+  public static TokenListParser<SuperpowerTokenType, InfoNode?[]> ShallowParser =
+    ShallowTokenParser.Many();
+
   // Program
 
   public static TokenListParser<SuperpowerTokenType, ProgramNode> ProgramParser = Parse.Ref(
@@ -20,13 +72,88 @@ public static class SuperpowerParser
   );
 
   // Statements
-  public static TokenListParser<SuperpowerTokenType, ProgramExp> StatementParser = Parse.Ref(
-    () => Parse.OneOf(LineParser.NotNull(), AssignExpParser.NotNull(), PrintParser.NotNull())
+  public static TokenListParser<SuperpowerTokenType, StatementNode> StatementParser = Parse.Ref(
+    () =>
+      Parse.OneOf(
+        LineParser.NotNull(),
+        AssignExpParser.NotNull(),
+        PrintParser.NotNull(),
+        RecipeParser.NotNull(),
+        ResourceParser.NotNull(),
+        ImportParser.NotNull()
+      )
+  );
+
+  public static TokenListParser<SuperpowerTokenType, StatementNode> ImportParser = Parse.Ref(
+    () =>
+      Token
+        .EqualTo(SuperpowerTokenType.import)
+        .IgnoreThen(StringLiteralParser.NotNull())
+        .WithSourceInfo()
+        .Select(x =>
+          new ImportNode(x.sourceInfo, (x.value as StringLiteralNode).NotNull()) as StatementNode
+        )
+  );
+
+  // Recipe
+  public static TokenListParser<SuperpowerTokenType, StatementNode> RecipeParser = Parse.Ref(
+    () =>
+      (
+        from alt in Token
+          .EqualTo(SuperpowerTokenType.recipeKeyword)
+          .IgnoreThen(Token.EqualTo(SuperpowerTokenType.altKeyword).Flag())
+        from name in SymbolParser.NotNull()
+        from left in Token
+          .EqualTo(SuperpowerTokenType.equalSign)
+          .IgnoreThen(ParseQuantitySet.NotNull())
+        from right in Token
+          .EqualTo(SuperpowerTokenType.arrowOw)
+          .IgnoreThen(ParseQuantitySet.NotNull())
+        select (alt, name, left, right)
+      )
+        .WithSourceInfo()
+        .Select(x =>
+          new RecipeNode(x.sourceInfo, x.value.alt, x.value.name, x.value.left, x.value.right)
+          as StatementNode
+        )
+  );
+
+  // Quantity
+  public static TokenListParser<SuperpowerTokenType, QuantityNode[]> ParseQuantitySet = Parse.Ref(
+    () =>
+      Parse.OneOf(
+        QuantityParser
+          .NotNull()
+          .SeparatedBy(Token.EqualTo(SuperpowerTokenType.plus))
+          .If(x => x.Length > 0),
+        Token.EqualTo(SuperpowerTokenType.underscore).Select(_ => new QuantityNode[] { })
+      )
+  );
+
+  public static TokenListParser<SuperpowerTokenType, QuantityNode> QuantityParser = Parse.Ref(
+    () =>
+      (
+        from quantity in NumberLiteralParser.NotNull().Select(x => x.Cast<NumberLiteralNode>())
+        from symbol in SymbolParser.NotNull()
+        select (quantity, symbol)
+      )
+        .WithSourceInfo()
+        .Select(x => new QuantityNode(x.sourceInfo, x.value.quantity, x.value.symbol))
+  );
+
+  // Resource
+  public static TokenListParser<SuperpowerTokenType, StatementNode> ResourceParser = Parse.Ref(
+    () =>
+      Token
+        .EqualTo(SuperpowerTokenType.resourceKeyword)
+        .IgnoreThen(SymbolParser.NotNull())
+        .WithSourceInfo()
+        .Select(x => new ResourceNode(x.sourceInfo, x.value) as StatementNode)
   );
 
   // Line Exp
 
-  public static TokenListParser<SuperpowerTokenType, ProgramExp> LineParser = Parse.Ref(
+  public static TokenListParser<SuperpowerTokenType, StatementNode> LineParser = Parse.Ref(
     () =>
       (
         from _ in Token.EqualTo(SuperpowerTokenType.lineKeyword)
@@ -35,7 +162,7 @@ public static class SuperpowerParser
         select (name, expressions)
       )
         .WithSourceInfo()
-        .Select(x => new LineNode(x.sourceInfo, x.value.name, x.value.expressions) as ProgramExp)
+        .Select(x => new LineNode(x.sourceInfo, x.value.name, x.value.expressions) as StatementNode)
   );
 
   public static TokenListParser<SuperpowerTokenType, LineExpNode> LineValueExpParser = Parse.Ref(
@@ -112,7 +239,7 @@ public static class SuperpowerParser
   );
 
   // Print
-  public static TokenListParser<SuperpowerTokenType, ProgramExp> PrintParser = Parse.Ref(
+  public static TokenListParser<SuperpowerTokenType, StatementNode> PrintParser = Parse.Ref(
     () =>
       Token
         .EqualTo(SuperpowerTokenType.printKeyword)
@@ -120,17 +247,17 @@ public static class SuperpowerParser
           ValueExpParser.NotNull().SeparatedBy(Token.EqualTo(SuperpowerTokenType.comma).Optional())
         )
         .WithSourceInfo()
-        .Select(x => PrintExpNode.Create(x.sourceInfo, x.value) as ProgramExp)
+        .Select(x => PrintStatementNode.Create(x.sourceInfo, x.value) as StatementNode)
   );
 
   // AssignExp
-  public static TokenListParser<SuperpowerTokenType, ProgramExp> AssignExpParser = Parse.Ref(
+  public static TokenListParser<SuperpowerTokenType, StatementNode> AssignExpParser = Parse.Ref(
     () =>
       Token
         .EqualTo(SuperpowerTokenType.letKeyword)
         .IgnoreThen(AssignParser.NotNull())
         .WithSourceInfo()
-        .Select(x => AssignExpNode.Create(x.sourceInfo, x.value.lhs, x.value.rhs) as ProgramExp)
+        .Select(x => AssignExpNode.Create(x.sourceInfo, x.value.lhs, x.value.rhs) as StatementNode)
   );
 
   public static TokenListParser<
@@ -440,5 +567,33 @@ public static class SuperpowerParserExtensions
       select new T[] { first }.Push(rest),
       Parse.Return<TKind, T[]>([])
     );
+  }
+
+  public static TokenListParser<TKind, T> If<TKind, T>(
+    this TokenListParser<TKind, T> source,
+    Func<T, bool> predicate
+  )
+  {
+    TokenListParser<TKind, T> output = delegate(TokenList<TKind> tokens)
+    {
+      var result = source(tokens);
+      if (result.HasValue && predicate(result.Value))
+      {
+        return result;
+      }
+      else
+      {
+        return TokenListParserResult.Empty<TKind, T>(tokens);
+      }
+    };
+    return output.Try();
+  }
+
+  public static TokenListParser<TKind, (T, U)> ThenWith<TKind, T, U>(
+    this TokenListParser<TKind, T> source,
+    TokenListParser<TKind, U> then
+  )
+  {
+    return source.Then(x => then.Select(y => x.With(y)));
   }
 }

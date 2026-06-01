@@ -12,8 +12,10 @@ public enum SuperpowerTokenType
   comma,
   openParen,
   closedParen,
+  arrowOw,
   equalSign,
   semicolon,
+  underscore,
 
   // Math Symbols
 
@@ -24,6 +26,8 @@ public enum SuperpowerTokenType
   percent,
 
   // Keywords
+  recipeKeyword,
+  resourceKeyword,
   lineKeyword,
   altKeyword,
   outKeyword,
@@ -33,6 +37,7 @@ public enum SuperpowerTokenType
   inKeyword,
   limitKeyword,
   letKeyword,
+  import,
 
   // Literals
   stringLiteral,

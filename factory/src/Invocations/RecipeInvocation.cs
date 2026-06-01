@@ -3,16 +3,16 @@ using Factory.Util;
 namespace Factory;
 
 public class RecipeInvocation(
-  RecipeValue recipeValue,
+  LineValue recipeValue,
   decimal quantity = 1,
   bool hasQuantityValue = false
 )
 {
-  public readonly RecipeValue recipeValue = recipeValue;
+  public readonly LineValue recipeValue = recipeValue;
   public readonly bool hasQuantityValue = hasQuantityValue;
   public readonly decimal quantity = quantity;
 
-  public RecipeInvocation Clone(RecipeValue? recipeValue = null, decimal? quantity = null)
+  public RecipeInvocation Clone(LineValue? recipeValue = null, decimal? quantity = null)
   {
     return new RecipeInvocation(recipeValue ?? this.recipeValue, quantity ?? this.quantity);
   }
@@ -30,7 +30,7 @@ public class RecipeInvocation(
   )
   {
     var recVal = GetRecipeForInvocation(recipe)
-      .AmendInvocation(invocationParams.FilterByType<FactVal, RecipeArgSet>());
+      .AmendInvocation(invocationParams.FilterByType<FactVal, LineArgSet>());
     bool hasQuantity = false;
     foreach (var param in invocationParams)
     {
@@ -43,15 +43,15 @@ public class RecipeInvocation(
     return new RecipeInvocation(recVal, quantity, hasQuantity).Invoke();
   }
 
-  private static RecipeValue GetRecipeForInvocation(object o)
+  private static LineValue GetRecipeForInvocation(object o)
   {
-    if (o is RecipeValue recipeValue)
+    if (o is LineValue recipeValue)
     {
       return recipeValue;
     }
-    else if (o is Recipe recipe)
+    else if (o is SatisfactoryRecipe recipe)
     {
-      return new RecipeValue(recipe.identifier, new RecipeArgSet([new OutVal(recipe.identifier)]));
+      return new LineValue(recipe.identifier, new LineArgSet([new OutVal(recipe.identifier)]));
     }
     throw new InvalidOperationException($"Could not resolve invocation on object {o}");
   }

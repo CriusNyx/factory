@@ -10,7 +10,7 @@ public class RecipeSolution : FactVal
   public readonly RecipeBalance recipeBalance;
 
   [ExposeMember("Recipe")]
-  public RecipeValue Recipe => request.recipe;
+  public LineValue Recipe => request.recipe;
 
   [ExposeMember("Total")]
   public NumVal Output => new NumVal(root.productionQuantity);
@@ -32,7 +32,7 @@ public class RecipeSolution : FactVal
     List<string[]> lines = new List<string[]>();
 
     // Recipe Name
-    lines.Add(new string[] { request.recipe.recipeName }.Push(inlineTallys.Map(x => x.identifier)));
+    lines.Add(new string[] { request.recipe.lineName }.Push(inlineTallys.Map(x => x.identifier)));
 
     // Blank line
     lines.Add(new string[] { "" }.Push(inlineTallys.Map(_ => "")));
@@ -97,7 +97,7 @@ public class RecipeSolution : FactVal
     {
       identifier = stringVal.value;
     }
-    else if (arg is Recipe recipe)
+    else if (arg is SatisfactoryRecipe recipe)
     {
       identifier = recipe.primaryProduct.identifier;
     }

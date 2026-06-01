@@ -7,6 +7,7 @@ public enum FactoryPrimitiveTypeType
 {
   Complex,
   Void,
+  Down,
   Number,
   String,
   Error,
@@ -18,6 +19,9 @@ public interface FactoryType
 
   string ToShortString();
 
+  public static readonly FactoryType DownType = new FactoryPrimitiveType(
+    FactoryPrimitiveTypeType.Void
+  );
   public static readonly FactoryType VoidType = new FactoryPrimitiveType(
     FactoryPrimitiveTypeType.Void
   );

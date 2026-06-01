@@ -3,7 +3,7 @@ using Factory.Util;
 namespace Factory;
 
 [Serializable]
-public class Recipe : FactVal
+public class SatisfactoryRecipe : FactVal
 {
   private static string[] nonAlternateRecipes = new string[]
   {
@@ -59,14 +59,14 @@ public class Recipe : FactVal
   }
 
   [ExposeMember("Invoke")]
-  public RecipeSolution Invoke(NumVal? value = null, [Params] RecipeArgSet[] arguments = null!)
+  public RecipeSolution Invoke(NumVal? value = null, [Params] LineArgSet[] arguments = null!)
   {
     return RecipeInvocation.InvokeRecipe(this, value?.value ?? 1, arguments);
   }
 
   [ExposeMember("Spread")]
-  public RecipeArgVal[] Spread()
+  public LineArgVal[] Spread()
   {
-    return new RecipeArgVal[] { new OutVal(identifier) };
+    return new LineArgVal[] { new OutVal(identifier) };
   }
 }

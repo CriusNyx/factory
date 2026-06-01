@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using CommandLine;
 using Factory.Util;
 using static Factory.Util.Formatting;
 
@@ -131,7 +133,15 @@ public abstract class LanguageNode : ITree<LanguageNode>
     return factoryType;
   }
 
-  public abstract FactoryType CalculateType(TypeContext context);
+  protected virtual void CalculateStaticType(TypeContext context)
+  {
+    foreach (var child in GetChildren())
+    {
+      child.Cast<LanguageNode>().CalculateStaticType(context);
+    }
+  }
+
+  protected abstract FactoryType CalculateType(TypeContext context);
   public abstract IEnumerable<ITree<LanguageNode>> GetChildren();
 
   public virtual (string?, string?) PrintSelf()
@@ -144,7 +154,7 @@ public abstract class LanguageNode : ITree<LanguageNode>
     annotate = annotate ?? ((node) => []);
     List<string[]> lines = new List<string[]>();
     PrintPretty(this, "", lines, annotate);
-    return PrintGrid(lines.ToArray(), "  ");
+    return PrintGrid(lines.ToArray(), " | ");
   }
 
   private void PrintPretty(
@@ -214,5 +224,56 @@ public static class LanguageNodeExtensions
   )
   {
     return self.OuterZip(other).All(x => x.Item1.SafeEquivalent(x.Item2));
+  }
+
+  public static bool DictionaryEquivalent<T, U, V>(
+    this Dictionary<T, U> self,
+    Dictionary<T, V> other
+  )
+    where T : notnull
+    where U : LanguageNode
+    where V : LanguageNode
+  {
+    var keys = self.Keys.Union(other.Keys);
+    foreach (var key in keys)
+    {
+      var a = self.Safe(key);
+      var b = other.Safe(key);
+      if (!a.SafeEquivalent(b))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public static void RuntimeCheckTypeValidity(this LanguageNode languageNode)
+  {
+    languageNode.RuntimeCheckTypeValidity(new Stack<LanguageNode>());
+  }
+
+  private static void RuntimeCheckTypeValidity(
+    this LanguageNode languageNode,
+    Stack<LanguageNode> stack
+  )
+  {
+    stack.Push(languageNode);
+
+    Debug.Assert(
+      languageNode.FactoryType != null,
+      $"Node does not have type {PrintTypeCheckStack(stack)}. Please be sure that CalculateType calls GetType on every child node, or assigns a type to a child."
+    );
+
+    foreach (var child in languageNode.GetChildren())
+    {
+      child.Cast<LanguageNode>().RuntimeCheckTypeValidity(stack);
+    }
+
+    stack.Pop();
+  }
+
+  private static string PrintTypeCheckStack(Stack<LanguageNode> stack)
+  {
+    return string.Join("->", stack.Select(x => x.GetType().Name));
   }
 }

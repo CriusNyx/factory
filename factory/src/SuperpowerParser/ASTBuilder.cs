@@ -91,9 +91,9 @@ public static class ASTBuilder
     return AssignExpNode.Create(Source(""), lhs, rhs);
   }
 
-  public static PrintExpNode Print(params ValueNode[] values)
+  public static PrintStatementNode Print(params ValueNode[] values)
   {
-    return PrintExpNode.Create(Source(""), values);
+    return PrintStatementNode.Create(Source(""), values);
   }
 
   public static OutExpNode Out(params string[] symbols)
@@ -129,5 +129,40 @@ public static class ASTBuilder
   public static LineNode Line(string name, params LineExpNode[] expressions)
   {
     return new LineNode(Source(""), Sym(name), expressions);
+  }
+
+  public static RecipeNode Recipe(
+    bool alt,
+    string name,
+    QuantityNode[] input,
+    QuantityNode[] output
+  )
+  {
+    return new RecipeNode(Source(""), alt, Sym(name), input, output);
+  }
+
+  public static QuantityNode Quantity(decimal number, string name)
+  {
+    return new QuantityNode(Source(""), NumLit(number.ToString()), Sym(name));
+  }
+
+  public static ResourceNode Resource(string name)
+  {
+    return new ResourceNode(Source(""), Sym(name));
+  }
+
+  public static ImportNode Import(string importPath)
+  {
+    return new ImportNode(Source(""), StrLit(importPath));
+  }
+
+  public static ProgramNode Program(params StatementNode[] statements)
+  {
+    return new ProgramNode(Source(""), statements);
+  }
+
+  public static EquivalentIfExists EquivalentIfExists()
+  {
+    return new EquivalentIfExists();
   }
 }

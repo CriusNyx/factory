@@ -61,7 +61,7 @@ public class DerefNode : ChainNode
     return derefSymbol.symbolName;
   }
 
-  public override FactoryType CalculateType(TypeContext context)
+  protected override FactoryType CalculateType(TypeContext context)
   {
     derefSymbol.GetFactoryType(context);
     refType = context.Peek();

@@ -29,7 +29,7 @@ public class TermChainNode : LanguageNode
     }
   }
 
-  public override FactoryType CalculateType(TypeContext context)
+  protected override FactoryType CalculateType(TypeContext context)
   {
     return term.GetFactoryType(context);
   }

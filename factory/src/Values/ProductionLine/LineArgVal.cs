@@ -1,14 +1,14 @@
 using Factory;
 
-public abstract class RecipeArgVal : FactVal { }
+public abstract class LineArgVal : FactVal { }
 
-public abstract class RecipeArgValBase(string identifier) : RecipeArgVal
+public abstract class LineArgValBase(string identifier) : LineArgVal
 {
   public readonly string identifier = identifier;
 
   public override bool Equals(object? obj)
   {
-    return obj is RecipeArgValBase @base && identifier == @base.identifier;
+    return obj is LineArgValBase @base && identifier == @base.identifier;
   }
 
   public override int GetHashCode()
@@ -17,7 +17,7 @@ public abstract class RecipeArgValBase(string identifier) : RecipeArgVal
   }
 }
 
-public class InVal(string identifier) : RecipeArgValBase(identifier)
+public class InVal(string identifier) : LineArgValBase(identifier)
 {
   public override string ToString()
   {
@@ -25,7 +25,7 @@ public class InVal(string identifier) : RecipeArgValBase(identifier)
   }
 }
 
-public class OutVal(string identifier) : RecipeArgValBase(identifier)
+public class OutVal(string identifier) : LineArgValBase(identifier)
 {
   public override string ToString()
   {
@@ -33,7 +33,7 @@ public class OutVal(string identifier) : RecipeArgValBase(identifier)
   }
 }
 
-public class AltVal(string identifier) : RecipeArgValBase(identifier)
+public class AltVal(string identifier) : LineArgValBase(identifier)
 {
   public override string ToString()
   {
@@ -41,7 +41,7 @@ public class AltVal(string identifier) : RecipeArgValBase(identifier)
   }
 }
 
-public class TallyVal(string identifier, bool inline) : RecipeArgValBase(identifier)
+public class TallyVal(string identifier, bool inline) : LineArgValBase(identifier)
 {
   public readonly bool inline = inline;
 
@@ -56,7 +56,7 @@ public class TallyVal(string identifier, bool inline) : RecipeArgValBase(identif
   }
 }
 
-public class LimitVal(string identifier, NumVal value) : RecipeArgValBase(identifier)
+public class LimitVal(string identifier, NumVal value) : LineArgValBase(identifier)
 {
   public readonly NumVal value = value;
 

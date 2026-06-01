@@ -15,7 +15,7 @@ public class MathExpNode : ValueNode
     this.termChain = termChain;
   }
 
-  public override FactoryType CalculateType(TypeContext context)
+  protected override FactoryType CalculateType(TypeContext context)
   {
     foreach (var element in termChain)
     {

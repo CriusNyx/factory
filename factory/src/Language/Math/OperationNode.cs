@@ -16,7 +16,7 @@ public class OperationNode : LanguageNode
     Operation = sourceCodeInfo.Source;
   }
 
-  public override FactoryType CalculateType(TypeContext context)
+  protected override FactoryType CalculateType(TypeContext context)
   {
     return FactoryType.VoidType;
   }
